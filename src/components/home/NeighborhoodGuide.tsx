@@ -68,7 +68,7 @@ export default function NeighborhoodGuide() {
             return (
               <Link
                 key={hood.name}
-                href={`/listings?city=${encodeURIComponent(hood.city)}`}
+                href={`/listings?city=${encodeURIComponent(hood.city)}&neighborhood=${encodeURIComponent(hood.name)}`}
                 className="group relative w-72 h-96 flex-shrink-0 rounded-xl overflow-hidden border-2 border-transparent hover:border-brand-gold transition-all duration-300"
               >
                 <Image

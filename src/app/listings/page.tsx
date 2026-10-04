@@ -27,6 +27,7 @@ const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
   { value: "townhouse", label: "Townhouse" },
   { value: "office", label: "Office" },
   { value: "land", label: "Land" },
+  { value: "retail", label: "Retail" },
 ];
 
 const BEDROOM_OPTIONS = [

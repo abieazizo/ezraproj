@@ -9,6 +9,7 @@ const SCROLL_THRESHOLD = 400;
 
 export default function FloatingElements() {
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [showPulse, setShowPulse] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,6 +19,11 @@ export default function FloatingElements() {
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowPulse(false), 4000);
+    return () => clearTimeout(timer);
   }, []);
 
   const scrollToTop = () => {
@@ -40,8 +46,9 @@ export default function FloatingElements() {
         whileTap={{ scale: 0.95 }}
       >
         <MessageCircle className="h-6 w-6" />
-        {/* Pulse ring */}
-        <span className="absolute inset-0 rounded-full animate-ping bg-[#25D366]/30 pointer-events-none" />
+        {showPulse && (
+          <span className="absolute inset-0 rounded-full animate-ping bg-[#25D366]/30 pointer-events-none" />
+        )}
       </motion.a>
 
       {/* Back to Top Button */}

@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import type { Property } from "@/types";
 
 const SITE_NAME = "Shefa Real Estate";

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   MapPin,
@@ -7,16 +8,17 @@ import {
   Mail,
   Clock,
   Send,
+  CheckCircle,
 } from "lucide-react";
 
 const quickLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Our Team", href: "/about#team" },
-  { label: "Careers", href: "/careers" },
+  { label: "Sell", href: "/sell" },
   { label: "Blog", href: "/blog" },
   { label: "Market Reports", href: "/blog?category=Market+Trends" },
-  { label: "Area Guides", href: "/area-guides" },
+  { label: "Wishlist", href: "/wishlist" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -66,13 +68,15 @@ const socialLinks: SocialLink[] = [
 ];
 
 const policyLinks = [
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms of Service", href: "/terms" },
-  { label: "Cookie Policy", href: "/cookies" },
-  { label: "Sitemap", href: "/sitemap" },
+  { label: "Privacy Policy", href: "/contact" },
+  { label: "Terms of Service", href: "/contact" },
+  { label: "Cookie Policy", href: "/contact" },
+  { label: "Sitemap", href: "/sitemap.xml" },
 ];
 
 export default function Footer() {
+  const [subscribed, setSubscribed] = useState(false);
+
   return (
     <footer className="bg-brand-navy">
       {/* Newsletter Strip */}
@@ -88,27 +92,39 @@ export default function Footer() {
               </p>
             </div>
 
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md"
-            >
-              <div className="relative flex-1 w-full">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/10 rounded-lg text-white placeholder:text-white/40 text-sm focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-colors"
-                  required
-                />
+            {subscribed ? (
+              <div className="flex items-center gap-3 text-white">
+                <CheckCircle className="w-5 h-5 text-green-400" />
+                <span className="text-sm font-medium">
+                  Thank you for subscribing! Check your inbox for a confirmation.
+                </span>
               </div>
-              <button
-                type="submit"
-                className="flex items-center gap-2 px-6 py-3 bg-brand-gold text-brand-navy font-semibold text-sm rounded-lg hover:bg-brand-gold-400 transition-colors shrink-0"
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setSubscribed(true);
+                }}
+                className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md"
               >
-                <Send className="h-4 w-4" />
-                Subscribe
-              </button>
-            </form>
+                <div className="relative flex-1 w-full">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/10 rounded-lg text-white placeholder:text-white/40 text-sm focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-colors"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 px-6 py-3 bg-brand-gold text-brand-navy font-semibold text-sm rounded-lg hover:bg-brand-gold-400 transition-colors shrink-0"
+                >
+                  <Send className="h-4 w-4" />
+                  Subscribe
+                </button>
+              </form>
+            )}
           </div>
           <p className="text-white/30 text-xs text-center lg:text-left mt-4">
             No spam. Unsubscribe anytime.

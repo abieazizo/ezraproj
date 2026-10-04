@@ -1255,7 +1255,7 @@ export const listings: Property[] = [
     specs: {
       bedrooms: 0,
       bathrooms: 0,
-      area: 0,
+      area: 14500,
       lotArea: 14500,
       parking: 0,
       furnished: "unfurnished",
@@ -1301,7 +1301,7 @@ export const listings: Property[] = [
     specs: {
       bedrooms: 0,
       bathrooms: 0,
-      area: 0,
+      area: 8200,
       lotArea: 8200,
       parking: 0,
       furnished: "unfurnished",

@@ -22,8 +22,8 @@ export function formatPrice(
   return `${currency} ${formatted}${suffix}`;
 }
 
-export function formatArea(sqm: number): string {
-  return `${new Intl.NumberFormat("en-US").format(sqm)} sqm`;
+export function formatArea(sqft: number): string {
+  return `${new Intl.NumberFormat("en-US").format(sqft)} sq ft`;
 }
 
 export function formatBeds(n: number): string {
