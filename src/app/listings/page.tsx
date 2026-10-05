@@ -1,12 +1,14 @@
 "use client";
 
 import { Suspense, useState, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   SlidersHorizontal,
   X,
   LayoutGrid,
   List,
+  MapPin,
   ChevronLeft,
   ChevronRight,
   Home,
@@ -17,6 +19,11 @@ import { cn } from "@/lib/utils";
 import { useFilters } from "@/hooks/useFilters";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import type { PropertyType, DealType, FilterState } from "@/types";
+
+const ListingsMap = dynamic(
+  () => import("@/components/map/ListingsMap"),
+  { ssr: false }
+);
 
 const ITEMS_PER_PAGE = 12;
 
@@ -63,9 +70,10 @@ function ListingsContent() {
     hasActiveFilters,
   } = useFilters();
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list" | "map">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [selectedMapProperty, setSelectedMapProperty] = useState<string | undefined>();
 
   // Pagination
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
@@ -424,11 +432,74 @@ function ListingsContent() {
                 >
                   <List className="w-4 h-4" />
                 </button>
+                <button
+                  onClick={() => setViewMode("map")}
+                  className={cn(
+                    "p-2 rounded-md transition-all duration-200",
+                    viewMode === "map"
+                      ? "bg-brand-navy text-white"
+                      : "text-brand-slate hover:text-brand-navy"
+                  )}
+                  aria-label="Map view"
+                >
+                  <MapPin className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
-            {/* Property Grid / List */}
-            {paginatedProperties.length > 0 ? (
+            {/* Property Grid / List / Map */}
+            {viewMode === "map" ? (
+              filteredProperties.length > 0 ? (
+                <div className="flex gap-4 h-[calc(100vh-280px)] min-h-[500px]">
+                  <div className="w-[40%] overflow-y-auto space-y-3 pr-2 hidden lg:block">
+                    {filteredProperties.map((property) => (
+                      <div
+                        key={property.id}
+                        onClick={() => setSelectedMapProperty(property.id)}
+                        className={cn(
+                          "cursor-pointer rounded-xl transition-all duration-200",
+                          selectedMapProperty === property.id
+                            ? "ring-2 ring-brand-gold"
+                            : ""
+                        )}
+                      >
+                        <PropertyCard
+                          property={property}
+                          variant="compact"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex-1 rounded-xl overflow-hidden">
+                    <ListingsMap
+                      properties={filteredProperties}
+                      selectedId={selectedMapProperty}
+                      onSelectProperty={setSelectedMapProperty}
+                      className="h-full w-full"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <div className="w-20 h-20 rounded-full bg-brand-cream flex items-center justify-center mb-6">
+                    <Search className="w-8 h-8 text-brand-slate-400" />
+                  </div>
+                  <h3 className="font-display text-xl font-bold text-brand-navy mb-2">
+                    No properties match your criteria
+                  </h3>
+                  <p className="text-sm text-brand-slate mb-6 max-w-md">
+                    Try adjusting your filters or clearing them to see all
+                    available properties.
+                  </p>
+                  <button
+                    onClick={handleReset}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-brand-gold text-white font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors duration-200"
+                  >
+                    Reset All Filters
+                  </button>
+                </div>
+              )
+            ) : paginatedProperties.length > 0 ? (
               <>
                 <div
                   className={cn(
