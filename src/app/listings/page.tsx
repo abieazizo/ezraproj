@@ -2,21 +2,28 @@
 
 import { Suspense, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   SlidersHorizontal,
   X,
   LayoutGrid,
   List,
+  Map as MapIcon,
   ChevronLeft,
   ChevronRight,
   Home,
   ChevronRight as ChevronBreadcrumb,
   Search,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { useFilters } from "@/hooks/useFilters";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import type { PropertyType, DealType, FilterState } from "@/types";
+
+const LeafletMap = dynamic(
+  () => import("@/components/ui-custom/LeafletMap"),
+  { ssr: false }
+);
 
 const ITEMS_PER_PAGE = 12;
 
@@ -63,7 +70,7 @@ function ListingsContent() {
     hasActiveFilters,
   } = useFilters();
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list" | "map">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -424,12 +431,50 @@ function ListingsContent() {
                 >
                   <List className="w-4 h-4" />
                 </button>
+                <button
+                  onClick={() => setViewMode("map")}
+                  className={cn(
+                    "p-2 rounded-md transition-all duration-200",
+                    viewMode === "map"
+                      ? "bg-brand-navy text-white"
+                      : "text-brand-slate hover:text-brand-navy"
+                  )}
+                  aria-label="Map view"
+                >
+                  <MapIcon className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
-            {/* Property Grid / List */}
+            {/* Property Grid / List / Map */}
             {paginatedProperties.length > 0 ? (
               <>
+                {viewMode === "map" ? (
+                  <div className="flex flex-col lg:flex-row gap-4 h-[600px]">
+                    <div className="lg:w-[40%] overflow-y-auto space-y-3 pr-2">
+                      {filteredProperties.map((property) => (
+                        <PropertyCard
+                          key={property.id}
+                          property={property}
+                          variant="compact"
+                        />
+                      ))}
+                    </div>
+                    <div className="lg:w-[60%] rounded-xl overflow-hidden border border-gray-200">
+                      <LeafletMap
+                        center={[25.2048, 55.2708]}
+                        zoom={11}
+                        markers={filteredProperties.map((p) => ({
+                          lat: p.location.lat,
+                          lng: p.location.lng,
+                          popup: `<strong>${p.title}</strong><br/>${formatPrice(p.price, p.currency, p.priceUnit)}`,
+                        }))}
+                        className="h-full"
+                        scrollWheelZoom
+                      />
+                    </div>
+                  </div>
+                ) : (
                 <div
                   className={cn(
                     viewMode === "grid"
@@ -445,6 +490,7 @@ function ListingsContent() {
                     />
                   ))}
                 </div>
+                )}
 
                 {/* Pagination */}
                 {totalPages > 1 && (
