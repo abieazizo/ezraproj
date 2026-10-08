@@ -1,9 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+
+const LeafletMap = dynamic(
+  () => import("@/components/ui-custom/LeafletMap"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[280px] rounded-xl bg-gray-100 animate-pulse" />
+    ),
+  }
+);
 import {
   MapPin,
   Phone,
@@ -347,23 +358,21 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Map Placeholder */}
-              <div className="bg-gray-100 rounded-xl overflow-hidden h-[280px] flex items-center justify-center relative">
-                <div className="text-center space-y-3">
-                  <MapPin className="w-10 h-10 text-brand-gold mx-auto" />
-                  <p className="text-brand-navy font-semibold">
-                    Bay Square, Business Bay
-                  </p>
-                  <p className="text-brand-slate text-sm">Dubai, UAE</p>
-                  <Link
-                    href="https://maps.google.com/?q=Bay+Square+Business+Bay+Dubai"
-                    target="_blank"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-navy text-white rounded-lg text-sm font-medium hover:bg-brand-navy-800 transition-colors"
-                  >
-                    <MapPin className="w-3.5 h-3.5" />
-                    Open in Google Maps
-                  </Link>
-                </div>
+              {/* Interactive Map */}
+              <div className="rounded-xl overflow-hidden">
+                <LeafletMap
+                  center={[25.1850, 55.2658]}
+                  zoom={15}
+                  height="280px"
+                  markers={[
+                    {
+                      lat: 25.1850,
+                      lng: 55.2658,
+                      title: "Shefa Real Estate",
+                      price: "Bay Square, Business Bay",
+                    },
+                  ]}
+                />
               </div>
             </div>
           </div>

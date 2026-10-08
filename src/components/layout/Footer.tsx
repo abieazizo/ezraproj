@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   MapPin,
@@ -7,6 +8,7 @@ import {
   Mail,
   Clock,
   Send,
+  Check,
 } from "lucide-react";
 
 const quickLinks = [
@@ -21,8 +23,8 @@ const quickLinks = [
 ];
 
 const propertyLinks = [
-  { label: "Apartments for Sale", href: "/listings?type=apartment&dealType=sale" },
-  { label: "Villas for Sale", href: "/listings?type=villa&dealType=sale" },
+  { label: "Apartments for Sale", href: "/listings?type=apartment&deal=sale" },
+  { label: "Villas for Sale", href: "/listings?type=villa&deal=sale" },
   { label: "Penthouses", href: "/listings?type=penthouse" },
   { label: "Townhouses", href: "/listings?type=townhouse" },
   { label: "Commercial", href: "/listings?type=office" },
@@ -73,6 +75,13 @@ const policyLinks = [
 ];
 
 export default function Footer() {
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubscribed(true);
+  };
+
   return (
     <footer className="bg-brand-navy">
       {/* Newsletter Strip */}
@@ -88,27 +97,38 @@ export default function Footer() {
               </p>
             </div>
 
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md"
-            >
-              <div className="relative flex-1 w-full">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/10 rounded-lg text-white placeholder:text-white/40 text-sm focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-colors"
-                  required
-                />
+            {subscribed ? (
+              <div className="flex items-center gap-3 text-white">
+                <div className="w-8 h-8 rounded-full bg-brand-gold flex items-center justify-center">
+                  <Check className="w-4 h-4 text-brand-navy" />
+                </div>
+                <span className="text-sm font-medium">
+                  You&apos;re subscribed! Check your inbox for confirmation.
+                </span>
               </div>
-              <button
-                type="submit"
-                className="flex items-center gap-2 px-6 py-3 bg-brand-gold text-brand-navy font-semibold text-sm rounded-lg hover:bg-brand-gold-400 transition-colors shrink-0"
+            ) : (
+              <form
+                onSubmit={handleSubscribe}
+                className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md"
               >
-                <Send className="h-4 w-4" />
-                Subscribe
-              </button>
-            </form>
+                <div className="relative flex-1 w-full">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/10 rounded-lg text-white placeholder:text-white/40 text-sm focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-colors"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 px-6 py-3 bg-brand-gold text-brand-navy font-semibold text-sm rounded-lg hover:bg-brand-gold-400 transition-colors shrink-0"
+                >
+                  <Send className="h-4 w-4" />
+                  Subscribe
+                </button>
+              </form>
+            )}
           </div>
           <p className="text-white/30 text-xs text-center lg:text-left mt-4">
             No spam. Unsubscribe anytime.

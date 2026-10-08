@@ -1,22 +1,29 @@
 "use client";
 
 import { Suspense, useState, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   SlidersHorizontal,
   X,
   LayoutGrid,
   List,
+  MapIcon,
   ChevronLeft,
   ChevronRight,
   Home,
   ChevronRight as ChevronBreadcrumb,
   Search,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { useFilters } from "@/hooks/useFilters";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import type { PropertyType, DealType, FilterState } from "@/types";
+
+const LeafletMap = dynamic(
+  () => import("@/components/ui-custom/LeafletMap"),
+  { ssr: false }
+);
 
 const ITEMS_PER_PAGE = 12;
 
@@ -63,7 +70,7 @@ function ListingsContent() {
     hasActiveFilters,
   } = useFilters();
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list" | "map">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -294,6 +301,66 @@ function ListingsContent() {
         </div>
       </div>
 
+      {/* Furnishing */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Furnishing
+        </h3>
+        <div className="space-y-2">
+          {[
+            { label: "Unfurnished", value: "unfurnished" },
+            { label: "Semi-Furnished", value: "semi-furnished" },
+            { label: "Fully Furnished", value: "fully-furnished" },
+          ].map(({ label, value }) => (
+            <label key={value} className="flex items-center gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={filters.furnished.includes(value)}
+                onChange={() => {
+                  const current = filters.furnished;
+                  const next = current.includes(value)
+                    ? current.filter((f) => f !== value)
+                    : [...current, value];
+                  handleFilterChange("furnished", next);
+                }}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="flex-1 text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {label}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Amenities */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Amenities
+        </h3>
+        <div className="grid grid-cols-1 gap-2">
+          {["Pool", "Gym", "Sea View", "Parking", "24/7 Security", "Private Garden"].map((amenity) => (
+            <label key={amenity} className="flex items-center gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={filters.amenities.includes(amenity)}
+                onChange={() => {
+                  const current = filters.amenities;
+                  const next = current.includes(amenity)
+                    ? current.filter((a) => a !== amenity)
+                    : [...current, amenity];
+                  handleFilterChange("amenities", next);
+                }}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="flex-1 text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {amenity}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
       {/* Sort By */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
@@ -424,12 +491,54 @@ function ListingsContent() {
                 >
                   <List className="w-4 h-4" />
                 </button>
+                <button
+                  onClick={() => setViewMode("map")}
+                  className={cn(
+                    "p-2 rounded-md transition-all duration-200",
+                    viewMode === "map"
+                      ? "bg-brand-navy text-white"
+                      : "text-brand-slate hover:text-brand-navy"
+                  )}
+                  aria-label="Map view"
+                >
+                  <MapIcon className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
-            {/* Property Grid / List */}
+            {/* Property Grid / List / Map */}
             {paginatedProperties.length > 0 ? (
               <>
+                {viewMode === "map" ? (
+                  <div className="flex flex-col lg:flex-row gap-6" style={{ height: "calc(100vh - 300px)", minHeight: "500px" }}>
+                    <div className="w-full lg:w-2/5 overflow-y-auto space-y-4 pr-2">
+                      {filteredProperties.map((property) => (
+                        <PropertyCard
+                          key={property.id}
+                          property={property}
+                          variant="compact"
+                        />
+                      ))}
+                    </div>
+                    <div className="flex-1 rounded-xl overflow-hidden">
+                      <LeafletMap
+                        center={[25.2048, 55.2708]}
+                        zoom={11}
+                        height="100%"
+                        markers={filteredProperties.map((p) => ({
+                          lat: p.location.lat,
+                          lng: p.location.lng,
+                          title: p.title,
+                          price: formatPrice(p.price, p.currency, p.priceUnit),
+                          id: p.slug,
+                        }))}
+                        onMarkerClick={(slug) => {
+                          window.location.href = `/listings/${slug}`;
+                        }}
+                      />
+                    </div>
+                  </div>
+                ) : (
                 <div
                   className={cn(
                     viewMode === "grid"
@@ -445,9 +554,10 @@ function ListingsContent() {
                     />
                   ))}
                 </div>
+                )}
 
                 {/* Pagination */}
-                {totalPages > 1 && (
+                {viewMode !== "map" && totalPages > 1 && (
                   <div className="flex items-center justify-center gap-2 mt-10">
                     <button
                       onClick={() =>

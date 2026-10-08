@@ -21,7 +21,6 @@ import {
   Hash,
   Clock,
   Activity,
-  ExternalLink,
   Building,
   TreePine,
   GraduationCap,
@@ -43,6 +42,16 @@ const PropertyGallery = dynamic(
 const MortgageCalculator = dynamic(
   () => import("@/components/property/MortgageCalculator"),
   { ssr: false }
+);
+
+const LeafletMap = dynamic(
+  () => import("@/components/ui-custom/LeafletMap"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[300px] rounded-xl bg-gray-100 animate-pulse" />
+    ),
+  }
 );
 
 interface PageProps {
@@ -362,25 +371,21 @@ export default function PropertyDetailPage({ params }: PageProps) {
                   Location
                 </h2>
 
-                {/* Map placeholder */}
-                <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 h-[300px] flex flex-col items-center justify-center">
-                  <MapPin className="w-10 h-10 text-brand-gold mb-3" />
-                  <p className="text-brand-navy font-semibold mb-1">
-                    {property.location.address}
-                  </p>
-                  <p className="text-sm text-brand-slate mb-4">
-                    {property.location.neighborhood},{" "}
-                    {property.location.city}
-                  </p>
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${property.location.lat},${property.location.lng}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-brand-gold text-white text-sm font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View on Google Maps
-                  </a>
+                {/* Interactive Map */}
+                <div className="rounded-xl overflow-hidden border border-gray-200">
+                  <LeafletMap
+                    center={[property.location.lat, property.location.lng]}
+                    zoom={15}
+                    height="300px"
+                    markers={[
+                      {
+                        lat: property.location.lat,
+                        lng: property.location.lng,
+                        title: property.title,
+                        price: formatPrice(property.price, property.currency, property.priceUnit),
+                      },
+                    ]}
+                  />
                 </div>
 
                 {/* Nearby Places */}
