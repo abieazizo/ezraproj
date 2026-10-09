@@ -1,12 +1,14 @@
 "use client";
 
 import { Suspense, useState, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   SlidersHorizontal,
   X,
   LayoutGrid,
   List,
+  Map,
   ChevronLeft,
   ChevronRight,
   Home,
@@ -17,6 +19,11 @@ import { cn } from "@/lib/utils";
 import { useFilters } from "@/hooks/useFilters";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import type { PropertyType, DealType, FilterState } from "@/types";
+
+const ListingsMap = dynamic(
+  () => import("@/components/property/ListingsMap"),
+  { ssr: false }
+);
 
 const ITEMS_PER_PAGE = 12;
 
@@ -63,7 +70,7 @@ function ListingsContent() {
     hasActiveFilters,
   } = useFilters();
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list" | "map">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -424,12 +431,40 @@ function ListingsContent() {
                 >
                   <List className="w-4 h-4" />
                 </button>
+                <button
+                  onClick={() => setViewMode("map")}
+                  className={cn(
+                    "p-2 rounded-md transition-all duration-200",
+                    viewMode === "map"
+                      ? "bg-brand-navy text-white"
+                      : "text-brand-slate hover:text-brand-navy"
+                  )}
+                  aria-label="Map view"
+                >
+                  <Map className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
-            {/* Property Grid / List */}
+            {/* Property Grid / List / Map */}
             {paginatedProperties.length > 0 ? (
               <>
+                {viewMode === "map" ? (
+                  <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-280px)] min-h-[500px]">
+                    <div className="lg:w-[40%] overflow-y-auto space-y-3 pr-2">
+                      {filteredProperties.map((property) => (
+                        <PropertyCard
+                          key={property.id}
+                          property={property}
+                          variant="compact"
+                        />
+                      ))}
+                    </div>
+                    <div className="lg:w-[60%] h-full min-h-[400px]">
+                      <ListingsMap properties={filteredProperties} />
+                    </div>
+                  </div>
+                ) : (
                 <div
                   className={cn(
                     viewMode === "grid"
@@ -445,9 +480,10 @@ function ListingsContent() {
                     />
                   ))}
                 </div>
+                )}
 
                 {/* Pagination */}
-                {totalPages > 1 && (
+                {totalPages > 1 && viewMode !== "map" && (
                   <div className="flex items-center justify-center gap-2 mt-10">
                     <button
                       onClick={() =>
