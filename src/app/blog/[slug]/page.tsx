@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Clock, Calendar, Tag, Share2, ExternalLink, Link2 } from "lucide-react";
+import { ArrowLeft, Clock, Calendar, Tag, Share2, ExternalLink, Link2, List } from "lucide-react";
 import { blogPosts } from "@/data/blog";
 import { listings } from "@/data/listings";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
@@ -62,6 +62,25 @@ export default function BlogPostPage({ params }: PageProps) {
   if (!post) {
     notFound();
   }
+
+  const headings = (post.content.match(/<h2>(.*?)<\/h2>/g) || []).map(
+    (h, i) => {
+      const text = h.replace(/<\/?h2>/g, "");
+      const id = text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+      return { id, text, index: i };
+    }
+  );
+
+  const contentWithIds = post.content.replace(/<h2>(.*?)<\/h2>/g, (_match, text: string) => {
+    const id = text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+    return `<h2 id="${id}">${text}</h2>`;
+  });
 
   const relatedPosts = blogPosts
     .filter((p) => p.id !== post.id)
@@ -152,7 +171,7 @@ export default function BlogPostPage({ params }: PageProps) {
                   prose-blockquote:border-l-brand-gold prose-blockquote:bg-brand-cream prose-blockquote:rounded-r-xl prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic
                   prose-blockquote:text-brand-navy prose-blockquote:font-display
                 "
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                dangerouslySetInnerHTML={{ __html: contentWithIds }}
               />
 
               {/* Tags */}
@@ -287,6 +306,27 @@ export default function BlogPostPage({ params }: PageProps) {
                     Get in Touch
                   </Link>
                 </div>
+
+                {/* Table of Contents */}
+                {headings.length > 0 && (
+                  <div className="bg-white rounded-xl p-6 shadow-card">
+                    <h3 className="font-display text-lg font-bold text-brand-navy mb-4 flex items-center gap-2">
+                      <List className="w-4 h-4 text-brand-gold" />
+                      In This Article
+                    </h3>
+                    <nav className="space-y-2">
+                      {headings.map((heading) => (
+                        <a
+                          key={heading.id}
+                          href={`#${heading.id}`}
+                          className="block text-sm text-brand-slate hover:text-brand-gold transition-colors py-1 border-l-2 border-transparent hover:border-brand-gold pl-3"
+                        >
+                          {heading.text}
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
+                )}
 
                 {/* Latest Listings */}
                 <div>

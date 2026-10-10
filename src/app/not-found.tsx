@@ -78,7 +78,7 @@ export default function NotFound() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/buy"
+            href="/listings"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-gold text-white font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors"
           >
             <Search className="w-4 h-4" />

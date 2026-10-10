@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const ContactMap = dynamic(() => import("./ContactMap"), { ssr: false });
 import {
   MapPin,
   Phone,
@@ -40,11 +44,11 @@ export default function ContactPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ContactFormData>();
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+  });
 
-  const onSubmit = async (data: ContactFormData) => {
-    const result = contactSchema.safeParse(data);
-    if (!result.success) return;
+  const onSubmit = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setSubmitted(true);
   };
@@ -101,10 +105,7 @@ export default function ContactPage() {
                       Full Name *
                     </label>
                     <input
-                      {...register("name", {
-                        required: "Name is required",
-                        minLength: { value: 2, message: "Min 2 characters" },
-                      })}
+                      {...register("name")}
                       type="text"
                       placeholder="Your full name"
                       className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-brand-navy focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none"
@@ -123,13 +124,7 @@ export default function ContactPage() {
                         Email Address *
                       </label>
                       <input
-                        {...register("email", {
-                          required: "Email is required",
-                          pattern: {
-                            value: /^\S+@\S+\.\S+$/,
-                            message: "Invalid email",
-                          },
-                        })}
+                        {...register("email")}
                         type="email"
                         placeholder="you@example.com"
                         className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-brand-navy focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none"
@@ -147,13 +142,7 @@ export default function ContactPage() {
                         Phone Number *
                       </label>
                       <input
-                        {...register("phone", {
-                          required: "Phone is required",
-                          minLength: {
-                            value: 7,
-                            message: "Enter a valid phone number",
-                          },
-                        })}
+                        {...register("phone")}
                         type="tel"
                         placeholder="+971 50 123 4567"
                         className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-brand-navy focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none"
@@ -172,9 +161,7 @@ export default function ContactPage() {
                       Inquiry Type *
                     </label>
                     <select
-                      {...register("inquiryType", {
-                        required: "Please select an inquiry type",
-                      })}
+                      {...register("inquiryType")}
                       className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-brand-navy focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none bg-white"
                     >
                       <option value="">Select inquiry type</option>
@@ -239,13 +226,7 @@ export default function ContactPage() {
                       Message *
                     </label>
                     <textarea
-                      {...register("message", {
-                        required: "Message is required",
-                        minLength: {
-                          value: 10,
-                          message: "Min 10 characters",
-                        },
-                      })}
+                      {...register("message")}
                       rows={5}
                       placeholder="Tell us about your requirements..."
                       className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-brand-navy focus:ring-2 focus:ring-brand-gold focus:border-transparent outline-none resize-none"
@@ -347,23 +328,9 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Map Placeholder */}
-              <div className="bg-gray-100 rounded-xl overflow-hidden h-[280px] flex items-center justify-center relative">
-                <div className="text-center space-y-3">
-                  <MapPin className="w-10 h-10 text-brand-gold mx-auto" />
-                  <p className="text-brand-navy font-semibold">
-                    Bay Square, Business Bay
-                  </p>
-                  <p className="text-brand-slate text-sm">Dubai, UAE</p>
-                  <Link
-                    href="https://maps.google.com/?q=Bay+Square+Business+Bay+Dubai"
-                    target="_blank"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-navy text-white rounded-lg text-sm font-medium hover:bg-brand-navy-800 transition-colors"
-                  >
-                    <MapPin className="w-3.5 h-3.5" />
-                    Open in Google Maps
-                  </Link>
-                </div>
+              {/* Map */}
+              <div className="rounded-xl overflow-hidden h-[350px]">
+                <ContactMap />
               </div>
             </div>
           </div>
