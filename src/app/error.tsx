@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 
 export default function Error({
@@ -9,6 +10,10 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-brand-cream">
       <div className="text-center max-w-md">
@@ -33,11 +38,9 @@ export default function Error({
         <p className="text-brand-slate mb-2">
           We encountered an unexpected error while loading this page.
         </p>
-        {error.message && (
-          <p className="text-sm text-red-500/80 bg-red-50 rounded-lg px-4 py-2 mb-6 font-mono">
-            {error.message}
-          </p>
-        )}
+        <p className="text-sm text-brand-slate mb-6">
+          Please try again or return to the homepage.
+        </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={reset}

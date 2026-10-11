@@ -151,7 +151,7 @@ export default function PropertyCard({
             <span className="w-px h-3 bg-gray-200" />
             <span className="flex items-center gap-1">
               <Maximize className="w-3.5 h-3.5" />
-              {formatArea(property.specs.area)}
+              {formatArea(property.specs.area || property.specs.lotArea || 0)}
             </span>
           </div>
 
@@ -268,7 +268,7 @@ function HorizontalCard({
             <span className="w-px h-3 bg-gray-200" />
             <span className="flex items-center gap-1">
               <Maximize className="w-3.5 h-3.5" />
-              {formatArea(property.specs.area)}
+              {formatArea(property.specs.area || property.specs.lotArea || 0)}
             </span>
           </div>
 

@@ -95,7 +95,7 @@ export default function PropertyDetailPage({ params }: PageProps) {
     "@type": "RealEstateListing",
     name: property.title,
     description: property.description,
-    url: `https://www.shefarealestate.com/listings/${property.slug}`,
+    url: `https://shefa.ae/listings/${property.slug}`,
     image: property.images,
     datePosted: property.createdAt,
     offers: {
@@ -277,7 +277,7 @@ export default function PropertyDetailPage({ params }: PageProps) {
                   <div>
                     <p className="text-xs text-brand-slate">Area</p>
                     <p className="text-sm font-semibold text-brand-navy">
-                      {formatArea(property.specs.area)}
+                      {formatArea(property.specs.area || property.specs.lotArea || 0)}
                     </p>
                   </div>
                 </div>
