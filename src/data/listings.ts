@@ -1211,6 +1211,8 @@ export const listings: Property[] = [
       "Parking",
       "24/7 Security",
       "Retail Nearby",
+      "Concierge",
+      "Gym",
     ],
     features: [
       "Open-plan layout easily customizable for any business",
@@ -1260,7 +1262,14 @@ export const listings: Property[] = [
       parking: 0,
       furnished: "unfurnished",
     },
-    amenities: [],
+    amenities: [
+      "24/7 Security",
+      "Pet Friendly",
+      "Kids Play Area",
+      "Private Garden",
+      "EV Charging",
+      "Parking",
+    ],
     features: [
       "Direct frontage on the 18-hole championship golf course",
       "Approved plans for a 15,000 sq ft custom villa included",
@@ -1306,7 +1315,14 @@ export const listings: Property[] = [
       parking: 0,
       furnished: "unfurnished",
     },
-    amenities: [],
+    amenities: [
+      "24/7 Security",
+      "Parking",
+      "Retail Nearby",
+      "City View",
+      "EV Charging",
+      "Beach Access",
+    ],
     features: [
       "Canal-front position with G+20 building permission",
       "Permitted for mixed-use residential and retail development",
@@ -1361,6 +1377,9 @@ export const listings: Property[] = [
       "Parking",
       "24/7 Security",
       "Retail Nearby",
+      "Beach Access",
+      "Concierge",
+      "Storage Room",
     ],
     features: [
       "Ground-floor unit with 12-meter frontage on Marina Walk promenade",
