@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   MapPin,
   Phone,
@@ -40,11 +41,11 @@ export default function ContactPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ContactFormData>();
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+  });
 
-  const onSubmit = async (data: ContactFormData) => {
-    const result = contactSchema.safeParse(data);
-    if (!result.success) return;
+  const onSubmit = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setSubmitted(true);
   };
@@ -347,7 +348,6 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Map Placeholder */}
               <div className="bg-gray-100 rounded-xl overflow-hidden h-[280px] flex items-center justify-center relative">
                 <div className="text-center space-y-3">
                   <MapPin className="w-10 h-10 text-brand-gold mx-auto" />

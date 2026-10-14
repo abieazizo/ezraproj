@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { CheckCircle } from "lucide-react";
 
@@ -27,14 +28,11 @@ export default function ValuationForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ValuationFormData>();
+  } = useForm<ValuationFormData>({
+    resolver: zodResolver(valuationSchema),
+  });
 
-  const onSubmit = async (data: ValuationFormData) => {
-    // Validate with zod
-    const result = valuationSchema.safeParse(data);
-    if (!result.success) return;
-
-    // Simulate API call
+  const onSubmit = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setSubmitted(true);
   };

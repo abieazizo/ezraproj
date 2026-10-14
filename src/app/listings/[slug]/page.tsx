@@ -356,13 +356,47 @@ export default function PropertyDetailPage({ params }: PageProps) {
                 </section>
               )}
 
+              {/* Virtual Tour */}
+              {property.virtualTourUrl && (
+                <section className="space-y-4">
+                  <h2 className="font-display text-2xl font-bold text-brand-navy">
+                    Virtual Tour
+                  </h2>
+                  <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200">
+                    <iframe
+                      src={property.virtualTourUrl}
+                      className="w-full h-[400px]"
+                      allowFullScreen
+                      title="Virtual Tour"
+                    />
+                  </div>
+                </section>
+              )}
+
+              {/* Floor Plan */}
+              {property.floorPlanUrl && (
+                <section className="space-y-4">
+                  <h2 className="font-display text-2xl font-bold text-brand-navy">
+                    Floor Plan
+                  </h2>
+                  <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 p-4">
+                    <Image
+                      src={property.floorPlanUrl}
+                      alt={`Floor plan for ${property.title}`}
+                      width={800}
+                      height={600}
+                      className="w-full h-auto object-contain rounded-lg"
+                    />
+                  </div>
+                </section>
+              )}
+
               {/* Location Section */}
               <section className="space-y-4">
                 <h2 className="font-display text-2xl font-bold text-brand-navy">
                   Location
                 </h2>
 
-                {/* Map placeholder */}
                 <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 h-[300px] flex flex-col items-center justify-center">
                   <MapPin className="w-10 h-10 text-brand-gold mb-3" />
                   <p className="text-brand-navy font-semibold mb-1">
