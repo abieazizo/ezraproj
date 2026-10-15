@@ -21,8 +21,8 @@ const quickLinks = [
 ];
 
 const propertyLinks = [
-  { label: "Apartments for Sale", href: "/listings?type=apartment&dealType=sale" },
-  { label: "Villas for Sale", href: "/listings?type=villa&dealType=sale" },
+  { label: "Apartments for Sale", href: "/listings?type=apartment&deal=sale" },
+  { label: "Villas for Sale", href: "/listings?type=villa&deal=sale" },
   { label: "Penthouses", href: "/listings?type=penthouse" },
   { label: "Townhouses", href: "/listings?type=townhouse" },
   { label: "Commercial", href: "/listings?type=office" },
@@ -69,7 +69,7 @@ const policyLinks = [
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms of Service", href: "/terms" },
   { label: "Cookie Policy", href: "/cookies" },
-  { label: "Sitemap", href: "/sitemap" },
+  { label: "Sitemap", href: "/sitemap.xml" },
 ];
 
 export default function Footer() {
