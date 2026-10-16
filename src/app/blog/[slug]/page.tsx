@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Clock, Calendar, Tag, Share2, ExternalLink, Link2 } from "lucide-react";
 import { blogPosts } from "@/data/blog";
 import { listings } from "@/data/listings";
+import { agents } from "@/data/agents";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import { format } from "date-fns";
 
@@ -220,10 +221,8 @@ export default function BlogPostPage({ params }: PageProps) {
                   </p>
                   <p className="text-brand-slate text-sm">{post.author.title}</p>
                   <p className="text-brand-slate text-sm mt-2">
-                    A seasoned real estate professional with deep expertise in
-                    the Dubai property market. Committed to providing
-                    data-driven insights that help clients make informed
-                    decisions.
+                    {agents.find((a) => a.name === post.author.name)?.bio ||
+                      "A seasoned real estate professional with deep expertise in the Dubai property market. Committed to providing data-driven insights that help clients make informed decisions."}
                   </p>
                 </div>
               </div>

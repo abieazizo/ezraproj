@@ -6,7 +6,7 @@ import type { FilterState, DealType, PropertyType, Property } from "@/types";
 import { listings } from "@/data/listings";
 
 function parseFiltersFromParams(params: URLSearchParams): FilterState {
-  const dealType = (params.get("deal") as DealType | "all") || "all";
+  const dealType = (params.get("dealType") as DealType | "all") || "all";
   const typeParam = params.get("type");
   const type = typeParam
     ? (typeParam.split(",") as PropertyType[])
@@ -44,7 +44,7 @@ function parseFiltersFromParams(params: URLSearchParams): FilterState {
 function filtersToParams(filters: FilterState): URLSearchParams {
   const params = new URLSearchParams();
 
-  if (filters.dealType !== "all") params.set("deal", filters.dealType);
+  if (filters.dealType !== "all") params.set("dealType", filters.dealType);
   if (filters.type.length > 0) params.set("type", filters.type.join(","));
   if (filters.minPrice > 0) params.set("minPrice", String(filters.minPrice));
   if (filters.maxPrice > 0) params.set("maxPrice", String(filters.maxPrice));

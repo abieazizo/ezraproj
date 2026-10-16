@@ -13,10 +13,10 @@ const quickLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Our Team", href: "/about#team" },
-  { label: "Careers", href: "/careers" },
+  { label: "Sell", href: "/sell" },
   { label: "Blog", href: "/blog" },
   { label: "Market Reports", href: "/blog?category=Market+Trends" },
-  { label: "Area Guides", href: "/area-guides" },
+  { label: "Wishlist", href: "/wishlist" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -66,10 +66,10 @@ const socialLinks: SocialLink[] = [
 ];
 
 const policyLinks = [
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms of Service", href: "/terms" },
-  { label: "Cookie Policy", href: "/cookies" },
-  { label: "Sitemap", href: "/sitemap" },
+  { label: "Privacy Policy", href: "#" },
+  { label: "Terms of Service", href: "#" },
+  { label: "Cookie Policy", href: "#" },
+  { label: "Sitemap", href: "/sitemap.xml" },
 ];
 
 export default function Footer() {
