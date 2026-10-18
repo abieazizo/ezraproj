@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Star } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { testimonials } from "@/data/testimonials";
 import { cn } from "@/lib/utils";
@@ -122,21 +122,41 @@ export default function TestimonialsSection() {
           </div>
         </div>
 
-        {/* Dot Navigation */}
-        <div className="flex items-center justify-center gap-2 mt-8">
-          {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              className={cn(
-                "w-2.5 h-2.5 rounded-full transition-all duration-300",
-                currentIndex === i
-                  ? "bg-brand-gold w-6"
-                  : "bg-brand-slate-400/40 hover:bg-brand-slate-400"
-              )}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
+        {/* Navigation: Arrows + Dots */}
+        <div className="flex items-center justify-center gap-4 mt-8">
+          <button
+            onClick={() => goTo(currentIndex - 1)}
+            disabled={currentIndex === 0}
+            className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-brand-navy hover:bg-brand-cream hover:border-brand-gold disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          <div className="flex items-center gap-2">
+            {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={cn(
+                  "w-2.5 h-2.5 rounded-full transition-all duration-300",
+                  currentIndex === i
+                    ? "bg-brand-gold w-6"
+                    : "bg-brand-slate-400/40 hover:bg-brand-slate-400"
+                )}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            onClick={() => goTo(currentIndex + 1)}
+            disabled={currentIndex >= maxIndex}
+            className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-brand-navy hover:bg-brand-cream hover:border-brand-gold disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            aria-label="Next testimonial"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </section>

@@ -13,10 +13,10 @@ const quickLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Our Team", href: "/about#team" },
-  { label: "Careers", href: "/careers" },
+  { label: "Sell Property", href: "/sell" },
   { label: "Blog", href: "/blog" },
   { label: "Market Reports", href: "/blog?category=Market+Trends" },
-  { label: "Area Guides", href: "/area-guides" },
+  { label: "Wishlist", href: "/wishlist" },
   { label: "Contact", href: "/contact" },
 ];
 

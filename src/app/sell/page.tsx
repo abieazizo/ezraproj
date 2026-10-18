@@ -9,10 +9,17 @@ import {
   Zap,
   TrendingUp,
   Heart,
+  Star,
 } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
+import { testimonials } from "@/data/testimonials";
 import ValuationForm from "./ValuationForm";
 import SellFAQ from "./SellFAQ";
+
+const sellerTestimonials = [
+  testimonials.find((t) => t.role === "Seller")!,
+  testimonials.find((t) => t.role === "Homeowner")!,
+];
 
 export const metadata: Metadata = {
   title: "Sell Your Property",
@@ -152,13 +159,16 @@ export default function SellPage() {
       </section>
 
       {/* Free Valuation Form */}
-      <section className="py-20 bg-brand-cream">
-        <div className="max-w-3xl mx-auto px-4">
-          <SectionHeader
-            eyebrow="Get Started"
-            title="Request a Free Valuation"
-            subtitle="Fill in your property details and one of our valuers will contact you within 24 hours with a comprehensive market assessment."
-          />
+      <section className="py-20 bg-gold-shimmer bg-[length:200%_100%] animate-shimmer relative">
+        <div className="absolute inset-0 bg-brand-gold/90" />
+        <div className="relative z-10 max-w-3xl mx-auto px-4">
+          <div className="[&_span]:text-brand-navy/70 [&_h2]:text-brand-navy [&_p]:text-brand-navy/70 [&_.w-10]:bg-brand-navy">
+            <SectionHeader
+              eyebrow="Get Started"
+              title="Get Your Free Property Valuation"
+              subtitle="Fill in your property details and one of our experts will contact you within 2 hours with a comprehensive market assessment."
+            />
+          </div>
           <div className="mt-10">
             <ValuationForm />
           </div>
@@ -201,8 +211,55 @@ export default function SellPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Seller Testimonials */}
       <section className="py-20 bg-brand-cream">
+        <div className="max-w-5xl mx-auto px-4">
+          <SectionHeader
+            eyebrow="Success Stories"
+            title="What Sellers Say"
+            subtitle="Hear from property owners who trusted Shefa to sell their homes."
+          />
+
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+            {sellerTestimonials.map((t) => (
+              <div
+                key={t.id}
+                className="flex flex-col sm:flex-row gap-5 bg-white rounded-xl p-6 shadow-card"
+              >
+                <Image
+                  src={t.photo}
+                  alt={t.name}
+                  width={80}
+                  height={80}
+                  className="rounded-full object-cover w-20 h-20 flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex gap-0.5 mb-2">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${i < t.rating ? "fill-brand-gold text-brand-gold" : "fill-gray-200 text-gray-200"}`}
+                      />
+                    ))}
+                  </div>
+                  <blockquote className="text-sm text-brand-navy leading-relaxed line-clamp-4 mb-3">
+                    &ldquo;{t.content}&rdquo;
+                  </blockquote>
+                  <p className="text-sm font-semibold text-brand-navy">
+                    {t.name}
+                  </p>
+                  <p className="text-xs text-brand-slate">
+                    {t.role} &middot; {t.location}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4">
           <SectionHeader
             eyebrow="Common Questions"

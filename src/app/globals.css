@@ -1,3 +1,5 @@
+@import "leaflet/dist/leaflet.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -19,4 +21,18 @@
 
 .leaflet-container {
   z-index: 1;
+}
+
+.shefa-popup .leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(10, 22, 40, 0.12);
+  padding: 0;
+}
+
+.shefa-popup .leaflet-popup-content {
+  margin: 8px 12px;
+}
+
+.shefa-popup .leaflet-popup-tip {
+  background: white;
 }

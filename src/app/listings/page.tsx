@@ -1,22 +1,29 @@
 "use client";
 
-import { Suspense, useState, useMemo, useCallback } from "react";
+import { Suspense, useState, useMemo, useCallback, useRef } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   SlidersHorizontal,
   X,
   LayoutGrid,
   List,
+  Map as MapIcon,
   ChevronLeft,
   ChevronRight,
   Home,
   ChevronRight as ChevronBreadcrumb,
   Search,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { useFilters } from "@/hooks/useFilters";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import type { PropertyType, DealType, FilterState } from "@/types";
+
+const LeafletMap = dynamic(
+  () => import("@/components/ui-custom/LeafletMap"),
+  { ssr: false }
+);
 
 const ITEMS_PER_PAGE = 12;
 
@@ -63,9 +70,11 @@ function ListingsContent() {
     hasActiveFilters,
   } = useFilters();
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list" | "map">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [activeMapProperty, setActiveMapProperty] = useState<string | null>(null);
+  const mapCardRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Pagination
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
@@ -114,6 +123,25 @@ function ListingsContent() {
     },
     [handleFilterChange]
   );
+
+  const mapMarkers = useMemo(
+    () =>
+      filteredProperties.map((p) => ({
+        lat: p.location.lat,
+        lng: p.location.lng,
+        label: `${p.title}<br/>${formatPrice(p.price, p.currency, p.priceUnit)}`,
+        id: p.id,
+      })),
+    [filteredProperties]
+  );
+
+  const handleMarkerClick = useCallback((id: string) => {
+    setActiveMapProperty(id);
+    const el = mapCardRefs.current[id];
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, []);
 
   // Page numbers to show
   const pageNumbers = useMemo(() => {
@@ -424,11 +452,83 @@ function ListingsContent() {
                 >
                   <List className="w-4 h-4" />
                 </button>
+                <button
+                  onClick={() => setViewMode("map")}
+                  className={cn(
+                    "p-2 rounded-md transition-all duration-200",
+                    viewMode === "map"
+                      ? "bg-brand-navy text-white"
+                      : "text-brand-slate hover:text-brand-navy"
+                  )}
+                  aria-label="Map view"
+                >
+                  <MapIcon className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
-            {/* Property Grid / List */}
-            {paginatedProperties.length > 0 ? (
+            {/* Map View */}
+            {viewMode === "map" ? (
+              filteredProperties.length > 0 ? (
+                <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-280px)] min-h-[500px]">
+                  {/* Map (top on mobile, right on desktop) */}
+                  <div className="order-1 lg:order-2 lg:w-[60%] h-[300px] lg:h-full rounded-xl overflow-hidden shadow-card">
+                    <LeafletMap
+                      key={filteredProperties.map((p) => p.id).join(",")}
+                      lat={filteredProperties[0].location.lat}
+                      lng={filteredProperties[0].location.lng}
+                      zoom={11}
+                      markers={mapMarkers}
+                      onMarkerClick={handleMarkerClick}
+                      activeMarkerId={activeMapProperty || undefined}
+                      className="h-full"
+                    />
+                  </div>
+
+                  {/* Card list (bottom on mobile, left on desktop) */}
+                  <div className="order-2 lg:order-1 lg:w-[40%] overflow-y-auto space-y-3 pr-1">
+                    {filteredProperties.map((property) => (
+                      <div
+                        key={property.id}
+                        ref={(el) => { mapCardRefs.current[property.id] = el; }}
+                        onClick={() => setActiveMapProperty(property.id)}
+                        className={cn(
+                          "cursor-pointer rounded-xl transition-all duration-200 border-2",
+                          activeMapProperty === property.id
+                            ? "border-brand-gold shadow-gold"
+                            : "border-transparent hover:border-brand-gold/30"
+                        )}
+                      >
+                        <PropertyCard
+                          property={property}
+                          variant="horizontal"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <div className="w-20 h-20 rounded-full bg-brand-cream flex items-center justify-center mb-6">
+                    <Search className="w-8 h-8 text-brand-slate-400" />
+                  </div>
+                  <h3 className="font-display text-xl font-bold text-brand-navy mb-2">
+                    No properties match your criteria
+                  </h3>
+                  <p className="text-sm text-brand-slate mb-6 max-w-md">
+                    Try adjusting your filters or clearing them to see all
+                    available properties.
+                  </p>
+                  <button
+                    onClick={handleReset}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-brand-gold text-white font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors duration-200"
+                  >
+                    Reset All Filters
+                  </button>
+                </div>
+              )
+            ) : /* Property Grid / List */
+            paginatedProperties.length > 0 ? (
               <>
                 <div
                   className={cn(

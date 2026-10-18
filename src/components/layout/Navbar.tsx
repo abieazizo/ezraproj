@@ -18,6 +18,8 @@ import {
   TreePine,
   Star,
   Flame,
+  Map,
+  BarChart3,
   Phone,
   MessageCircle,
 } from "lucide-react";
@@ -31,8 +33,8 @@ interface NavLink {
 }
 
 const mainLinks: NavLink[] = [
-  { label: "Buy", href: "/listings?dealType=sale" },
-  { label: "Rent", href: "/listings?dealType=rent" },
+  { label: "Buy", href: "/buy" },
+  { label: "Rent", href: "/rent" },
   { label: "About", href: "/about" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
@@ -50,6 +52,8 @@ const propertyTypes = [
 const quickActions = [
   { label: "Featured Listings", href: "/listings?featured=true", icon: Star },
   { label: "Hot Deals", href: "/listings?badge=hot-deal", icon: Flame },
+  { label: "Map Search", href: "/listings?view=map", icon: Map },
+  { label: "Market Report", href: "/blog", icon: BarChart3 },
 ];
 
 export default function Navbar() {

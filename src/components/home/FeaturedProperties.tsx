@@ -7,21 +7,22 @@ import { listings } from "@/data/listings";
 import { cn } from "@/lib/utils";
 import type { DealType } from "@/types";
 
-type FilterTab = "all" | DealType;
+type FilterTab = "all" | DealType | "featured";
 
 const tabs: { label: string; value: FilterTab }[] = [
   { label: "All", value: "all" },
   { label: "For Sale", value: "sale" },
   { label: "For Rent", value: "rent" },
+  { label: "Featured", value: "featured" },
 ];
 
 export default function FeaturedProperties() {
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
 
   const featured = useMemo(() => {
-    const base = listings.filter((p) => p.featured);
-    if (activeTab === "all") return base;
-    return base.filter((p) => p.dealType === activeTab);
+    if (activeTab === "all") return listings.filter((p) => p.featured);
+    if (activeTab === "featured") return listings.filter((p) => p.featured);
+    return listings.filter((p) => p.featured && p.dealType === activeTab);
   }, [activeTab]);
 
   return (
