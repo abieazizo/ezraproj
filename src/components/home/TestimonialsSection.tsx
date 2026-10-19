@@ -1,49 +1,19 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useRef } from "react";
 import Image from "next/image";
-import { Star } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import "swiper/css/pagination";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { testimonials } from "@/data/testimonials";
 import { cn } from "@/lib/utils";
 
 export default function TestimonialsSection() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
-  // How many cards visible at once
-  const getVisibleCount = () => {
-    if (typeof window === "undefined") return 3;
-    if (window.innerWidth < 768) return 1;
-    return 3;
-  };
-
-  const [visibleCount, setVisibleCount] = useState(3);
-
-  useEffect(() => {
-    const updateCount = () => setVisibleCount(getVisibleCount());
-    updateCount();
-    window.addEventListener("resize", updateCount);
-    return () => window.removeEventListener("resize", updateCount);
-  }, []);
-
-  const maxIndex = Math.max(0, testimonials.length - visibleCount);
-
-  const goTo = useCallback(
-    (index: number) => {
-      setCurrentIndex(Math.max(0, Math.min(index, maxIndex)));
-    },
-    [maxIndex]
-  );
-
-  // Autoplay
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [isAutoPlaying, maxIndex]);
+  const swiperRef = useRef<SwiperType | null>(null);
 
   return (
     <section className="bg-white py-20">
@@ -54,31 +24,48 @@ export default function TestimonialsSection() {
           subtitle="Trusted by hundreds of property buyers, sellers, and investors across the UAE."
         />
 
-        {/* Carousel */}
-        <div
-          className="mt-12 overflow-hidden"
-          onMouseEnter={() => setIsAutoPlaying(false)}
-          onMouseLeave={() => setIsAutoPlaying(true)}
-        >
-          <div
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{
-              transform: `translateX(-${currentIndex * (100 / visibleCount)}%)`,
+        <div className="mt-12 relative">
+          {/* Navigation Arrows */}
+          <button
+            onClick={() => swiperRef.current?.slidePrev()}
+            className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-card flex items-center justify-center text-brand-navy hover:text-brand-gold hover:shadow-card-lg transition-all duration-200 hidden lg:flex"
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => swiperRef.current?.slideNext()}
+            className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-card flex items-center justify-center text-brand-navy hover:text-brand-gold hover:shadow-card-lg transition-all duration-200 hidden lg:flex"
+            aria-label="Next testimonial"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          <Swiper
+            onSwiper={(swiper) => { swiperRef.current = swiper; }}
+            modules={[Autoplay, Pagination, Navigation]}
+            spaceBetween={24}
+            slidesPerView={1}
+            loop
+            autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            pagination={{
+              clickable: true,
+              bulletClass: "inline-block w-2.5 h-2.5 rounded-full bg-brand-slate-400/40 mx-1 cursor-pointer transition-all duration-300",
+              bulletActiveClass: "!bg-brand-gold !w-6",
             }}
+            breakpoints={{
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
+            className="pb-12"
           >
             {testimonials.map((testimonial) => (
-              <div
-                key={testimonial.id}
-                className="flex-shrink-0 px-3"
-                style={{ width: `${100 / visibleCount}%` }}
-              >
+              <SwiperSlide key={testimonial.id}>
                 <div className="relative bg-white shadow-card rounded-xl p-8 h-full">
-                  {/* Large quote mark */}
                   <span className="absolute top-4 left-4 text-brand-gold/15 font-display text-8xl leading-none select-none pointer-events-none">
                     &ldquo;
                   </span>
 
-                  {/* Stars */}
                   <div className="flex gap-0.5 mb-4 relative z-10">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star
@@ -93,12 +80,10 @@ export default function TestimonialsSection() {
                     ))}
                   </div>
 
-                  {/* Quote */}
                   <blockquote className="font-display italic text-brand-navy text-base leading-relaxed mb-6 relative z-10">
                     &ldquo;{testimonial.content}&rdquo;
                   </blockquote>
 
-                  {/* Author */}
                   <div className="flex items-center gap-3 relative z-10">
                     <Image
                       src={testimonial.photo}
@@ -112,31 +97,14 @@ export default function TestimonialsSection() {
                         {testimonial.name}
                       </p>
                       <p className="text-xs text-brand-slate">
-                        {testimonial.role}
+                        {testimonial.role} &middot; {testimonial.propertyType}
                       </p>
                     </div>
                   </div>
                 </div>
-              </div>
+              </SwiperSlide>
             ))}
-          </div>
-        </div>
-
-        {/* Dot Navigation */}
-        <div className="flex items-center justify-center gap-2 mt-8">
-          {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              className={cn(
-                "w-2.5 h-2.5 rounded-full transition-all duration-300",
-                currentIndex === i
-                  ? "bg-brand-gold w-6"
-                  : "bg-brand-slate-400/40 hover:bg-brand-slate-400"
-              )}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
+          </Swiper>
         </div>
       </div>
     </section>

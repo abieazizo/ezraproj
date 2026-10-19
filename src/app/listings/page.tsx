@@ -1,12 +1,15 @@
 "use client";
 
 import { Suspense, useState, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   SlidersHorizontal,
   X,
   LayoutGrid,
+  Columns2,
   List,
+  Map,
   ChevronLeft,
   ChevronRight,
   Home,
@@ -16,7 +19,13 @@ import {
 import { cn } from "@/lib/utils";
 import { useFilters } from "@/hooks/useFilters";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
+import { formatPrice } from "@/lib/utils";
 import type { PropertyType, DealType, FilterState } from "@/types";
+
+const LeafletMap = dynamic(
+  () => import("@/components/ui-custom/LeafletMap"),
+  { ssr: false }
+);
 
 const ITEMS_PER_PAGE = 12;
 
@@ -63,7 +72,7 @@ function ListingsContent() {
     hasActiveFilters,
   } = useFilters();
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid-3" | "grid-2" | "list" | "map">("grid-3");
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -400,41 +409,68 @@ function ListingsContent() {
 
               {/* View Toggle */}
               <div className="flex items-center gap-1 bg-white rounded-lg shadow-card p-1">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={cn(
-                    "p-2 rounded-md transition-all duration-200",
-                    viewMode === "grid"
-                      ? "bg-brand-navy text-white"
-                      : "text-brand-slate hover:text-brand-navy"
-                  )}
-                  aria-label="Grid view"
-                >
-                  <LayoutGrid className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode("list")}
-                  className={cn(
-                    "p-2 rounded-md transition-all duration-200",
-                    viewMode === "list"
-                      ? "bg-brand-navy text-white"
-                      : "text-brand-slate hover:text-brand-navy"
-                  )}
-                  aria-label="List view"
-                >
-                  <List className="w-4 h-4" />
-                </button>
+                {([
+                  { mode: "grid-3" as const, icon: LayoutGrid, label: "Grid 3 columns" },
+                  { mode: "grid-2" as const, icon: Columns2, label: "Grid 2 columns" },
+                  { mode: "list" as const, icon: List, label: "List view" },
+                  { mode: "map" as const, icon: Map, label: "Map view" },
+                ]).map(({ mode, icon: Icon, label }) => (
+                  <button
+                    key={mode}
+                    onClick={() => setViewMode(mode)}
+                    className={cn(
+                      "p-2 rounded-md transition-all duration-200",
+                      viewMode === mode
+                        ? "bg-brand-navy text-white"
+                        : "text-brand-slate hover:text-brand-navy"
+                    )}
+                    aria-label={label}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Property Grid / List */}
+            {/* Property Grid / List / Map */}
             {paginatedProperties.length > 0 ? (
               <>
+                {viewMode === "map" ? (
+                  <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-280px)] min-h-[500px]">
+                    <div className="lg:w-[40%] overflow-y-auto space-y-4 pr-2">
+                      {paginatedProperties.map((property) => (
+                        <PropertyCard
+                          key={property.id}
+                          property={property}
+                          variant="horizontal"
+                        />
+                      ))}
+                    </div>
+                    <div className="lg:w-[60%] rounded-xl overflow-hidden border border-gray-200">
+                      <LeafletMap
+                        center={[
+                          paginatedProperties.reduce((s, p) => s + p.location.lat, 0) / paginatedProperties.length,
+                          paginatedProperties.reduce((s, p) => s + p.location.lng, 0) / paginatedProperties.length,
+                        ]}
+                        zoom={12}
+                        markers={paginatedProperties.map((p) => ({
+                          lat: p.location.lat,
+                          lng: p.location.lng,
+                          popup: `<strong>${p.title}</strong><br/>${formatPrice(p.price, p.currency, p.priceUnit)}<br/><a href="/listings/${p.slug}" style="color:#C9A84C;font-weight:600;">View Details →</a>`,
+                        }))}
+                        className="h-full min-h-[400px]"
+                        scrollWheelZoom
+                      />
+                    </div>
+                  </div>
+                ) : (
                 <div
                   className={cn(
-                    viewMode === "grid"
+                    viewMode === "grid-3"
                       ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
-                      : "flex flex-col gap-4"
+                      : viewMode === "grid-2"
+                        ? "grid grid-cols-1 sm:grid-cols-2 gap-6"
+                        : "flex flex-col gap-4"
                   )}
                 >
                   {paginatedProperties.map((property) => (
@@ -445,6 +481,7 @@ function ListingsContent() {
                     />
                   ))}
                 </div>
+                )}
 
                 {/* Pagination */}
                 {totalPages > 1 && (
