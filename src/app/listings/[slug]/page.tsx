@@ -135,7 +135,7 @@ export default function PropertyDetailPage({ params }: PageProps) {
 
       <div className="min-h-screen bg-brand-cream/50">
         {/* Breadcrumb */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-4">
           <nav className="flex items-center gap-1.5 text-sm text-brand-slate flex-wrap">
             <Link
               href="/"

@@ -52,7 +52,7 @@ export default function ContactPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-brand-navy py-16 md:py-20">
+      <section className="bg-brand-navy pt-32 pb-16 md:pb-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-brand-gold uppercase tracking-[0.2em] text-sm font-semibold mb-4">
             Get in Touch

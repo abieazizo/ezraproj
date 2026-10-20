@@ -45,6 +45,21 @@ const BATHROOM_OPTIONS = [
   { label: "4+", value: 4 },
 ];
 
+const AMENITY_OPTIONS = [
+  "Pool",
+  "Gym",
+  "Sea View",
+  "Parking",
+  "24/7 Security",
+  "Private Garden",
+];
+
+const FURNISHED_OPTIONS = [
+  { label: "Unfurnished", value: "unfurnished" },
+  { label: "Semi-Furnished", value: "semi-furnished" },
+  { label: "Fully Furnished", value: "fully-furnished" },
+];
+
 const SORT_OPTIONS: { label: string; value: FilterState["sortBy"] }[] = [
   { label: "Newest", value: "newest" },
   { label: "Price: Low to High", value: "price-asc" },
@@ -113,6 +128,28 @@ function ListingsContent() {
       handleFilterChange("dealType", deal);
     },
     [handleFilterChange]
+  );
+
+  const handleAmenityToggle = useCallback(
+    (amenity: string) => {
+      const current = filters.amenities;
+      const next = current.includes(amenity)
+        ? current.filter((a) => a !== amenity)
+        : [...current, amenity];
+      handleFilterChange("amenities", next);
+    },
+    [filters.amenities, handleFilterChange]
+  );
+
+  const handleFurnishedToggle = useCallback(
+    (value: string) => {
+      const current = filters.furnished;
+      const next = current.includes(value)
+        ? current.filter((f) => f !== value)
+        : [...current, value];
+      handleFilterChange("furnished", next);
+    },
+    [filters.furnished, handleFilterChange]
   );
 
   // Page numbers to show
@@ -294,6 +331,87 @@ function ListingsContent() {
         </div>
       </div>
 
+      {/* Area (sqm) */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Area (sqm)
+        </h3>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="relative">
+            <input
+              type="number"
+              placeholder="Min"
+              value={filters.minArea || ""}
+              onChange={(e) =>
+                handleFilterChange("minArea", Number(e.target.value) || 0)
+              }
+              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+            />
+          </div>
+          <div className="relative">
+            <input
+              type="number"
+              placeholder="Max"
+              value={filters.maxArea || ""}
+              onChange={(e) =>
+                handleFilterChange("maxArea", Number(e.target.value) || 0)
+              }
+              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Furnishing */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Furnishing
+        </h3>
+        <div className="space-y-2">
+          {FURNISHED_OPTIONS.map(({ label, value }) => (
+            <label
+              key={value}
+              className="flex items-center gap-3 cursor-pointer group"
+            >
+              <input
+                type="checkbox"
+                checked={filters.furnished.includes(value)}
+                onChange={() => handleFurnishedToggle(value)}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {label}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Amenities */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Amenities
+        </h3>
+        <div className="grid grid-cols-2 gap-2">
+          {AMENITY_OPTIONS.map((amenity) => (
+            <label
+              key={amenity}
+              className="flex items-center gap-2 cursor-pointer group"
+            >
+              <input
+                type="checkbox"
+                checked={filters.amenities.includes(amenity)}
+                onChange={() => handleAmenityToggle(amenity)}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {amenity}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
       {/* Sort By */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
@@ -320,9 +438,9 @@ function ListingsContent() {
   );
 
   return (
-    <div className="min-h-screen bg-brand-cream/50">
-      {/* Sticky Header */}
-      <div className="sticky top-0 z-30 bg-brand-navy">
+    <div className="min-h-screen bg-brand-cream/50 pt-20">
+      {/* Page Header */}
+      <div className="bg-brand-navy">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-sm text-brand-slate-400 mb-4">
@@ -356,7 +474,7 @@ function ListingsContent() {
         <div className="flex gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block w-[280px] flex-shrink-0">
-            <div className="sticky top-[180px] bg-white rounded-xl shadow-card p-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+            <div className="sticky top-[100px] bg-white rounded-xl shadow-card p-6 max-h-[calc(100vh-120px)] overflow-y-auto">
               {filterSidebar}
             </div>
           </aside>

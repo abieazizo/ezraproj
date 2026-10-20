@@ -16,7 +16,7 @@ export default function WishlistPage() {
   return (
     <>
       {/* Header */}
-      <section className="bg-brand-navy py-14">
+      <section className="bg-brand-navy pt-28 pb-14">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-brand-navy-700 mb-4">
             <Heart className="w-7 h-7 text-brand-gold" />

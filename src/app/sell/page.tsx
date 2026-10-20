@@ -9,10 +9,17 @@ import {
   Zap,
   TrendingUp,
   Heart,
+  Star,
 } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import ValuationForm from "./ValuationForm";
 import SellFAQ from "./SellFAQ";
+import { testimonials } from "@/data/testimonials";
+
+const sellerTestimonials = [
+  testimonials.find((t) => t.id === "test-005")!,
+  testimonials.find((t) => t.id === "test-007")!,
+];
 
 export const metadata: Metadata = {
   title: "Sell Your Property",
@@ -201,8 +208,58 @@ export default function SellPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Seller Testimonials */}
       <section className="py-20 bg-brand-cream">
+        <div className="max-w-5xl mx-auto px-4">
+          <SectionHeader
+            eyebrow="Success Stories"
+            title="What Our Sellers Say"
+            subtitle="Real results from sellers who trusted Shefa with their property."
+          />
+
+          <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-8">
+            {sellerTestimonials.map((testimonial) => (
+              <div
+                key={testimonial.id}
+                className="bg-white rounded-xl shadow-card p-8 flex flex-col"
+              >
+                <div className="flex gap-1 mb-4">
+                  {Array.from({ length: testimonial.rating }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-4 h-4 fill-brand-gold text-brand-gold"
+                    />
+                  ))}
+                </div>
+                <p className="text-brand-navy leading-relaxed text-sm flex-1 mb-6">
+                  &ldquo;{testimonial.content}&rdquo;
+                </p>
+                <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+                  <Image
+                    src={testimonial.photo}
+                    alt={testimonial.name}
+                    width={48}
+                    height={48}
+                    className="rounded-full object-cover w-12 h-12"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-brand-navy text-sm">
+                      {testimonial.name}
+                    </p>
+                    <p className="text-xs text-brand-slate">
+                      {testimonial.role} &middot; {testimonial.propertyType} in{" "}
+                      {testimonial.location}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4">
           <SectionHeader
             eyebrow="Common Questions"
