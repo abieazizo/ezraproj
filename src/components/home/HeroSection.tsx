@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MapPin, Building, ChevronDown, Search } from "lucide-react";
+import { MapPin, Building, ChevronDown, Search, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const propertyTypes = [
@@ -15,6 +15,15 @@ const propertyTypes = [
   "Office",
   "Land",
   "Retail",
+];
+
+const budgetOptions = [
+  { label: "Any Budget", value: "" },
+  { label: "< 500K", value: "0-500000" },
+  { label: "500K – 1M", value: "500000-1000000" },
+  { label: "1M – 3M", value: "1000000-3000000" },
+  { label: "3M – 5M", value: "3000000-5000000" },
+  { label: "5M+", value: "5000000-0" },
 ];
 
 const particles = [
@@ -31,6 +40,7 @@ export default function HeroSection() {
   const [location, setLocation] = useState("");
   const [type, setType] = useState("All Types");
   const [dealType, setDealType] = useState<"sale" | "rent">("sale");
+  const [budget, setBudget] = useState("");
   const [scrollOpacity, setScrollOpacity] = useState(1);
 
   useEffect(() => {
@@ -46,7 +56,12 @@ export default function HeroSection() {
     const params = new URLSearchParams();
     if (location.trim()) params.set("city", location.trim());
     if (type !== "All Types") params.set("type", type.toLowerCase());
-    params.set("dealType", dealType);
+    params.set("deal", dealType);
+    if (budget) {
+      const [min, max] = budget.split("-");
+      if (min && Number(min) > 0) params.set("minPrice", min);
+      if (max && Number(max) > 0) params.set("maxPrice", max);
+    }
     router.push(`/listings?${params.toString()}`);
   };
 
@@ -194,13 +209,38 @@ export default function HeroSection() {
                 </button>
               </div>
 
+              {/* Divider */}
+              <div className="hidden md:block w-px bg-brand-navy/10 self-stretch my-2" />
+
+              {/* Budget Field */}
+              <div className="flex items-center gap-2.5 px-4 py-2.5 flex-1 min-w-0">
+                <DollarSign className="w-5 h-5 text-brand-gold flex-shrink-0" />
+                <div className="flex flex-col min-w-0 flex-1">
+                  <label className="text-[10px] font-semibold text-brand-slate uppercase tracking-wider">
+                    Budget
+                  </label>
+                  <select
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    className="text-sm text-brand-navy bg-transparent outline-none cursor-pointer w-full appearance-none"
+                  >
+                    {budgetOptions.map((b) => (
+                      <option key={b.value} value={b.value}>
+                        {b.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               {/* Search Button */}
               <button
                 onClick={handleSearch}
-                className="bg-brand-gold text-brand-navy font-semibold px-8 py-3 rounded-lg hover:-translate-y-0.5 hover:shadow-gold transition-all duration-200 flex items-center justify-center gap-2"
+                className="bg-brand-gold text-brand-navy font-semibold px-8 py-3 rounded-lg hover:-translate-y-0.5 hover:shadow-gold transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 <Search className="w-4 h-4" />
-                <span>Search</span>
+                <span className="hidden sm:inline">Search Properties</span>
+                <span className="sm:hidden">Search</span>
               </button>
             </div>
           </div>

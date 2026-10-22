@@ -49,7 +49,7 @@ export default function ValuationForm() {
           Valuation Request Received
         </h3>
         <p className="text-brand-slate">
-          Thank you! One of our property valuers will contact you within 24
+          Thank you! One of our property valuers will contact you within 2
           hours with a comprehensive market assessment of your property.
         </p>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useMemo, useCallback } from "react";
+import { Suspense, useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Link from "next/link";
 import {
   SlidersHorizontal,
@@ -27,6 +27,22 @@ const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
   { value: "townhouse", label: "Townhouse" },
   { value: "office", label: "Office" },
   { value: "land", label: "Land" },
+  { value: "retail", label: "Retail" },
+];
+
+const FURNISHING_OPTIONS = [
+  { label: "Unfurnished", value: "unfurnished" },
+  { label: "Semi-Furnished", value: "semi-furnished" },
+  { label: "Fully Furnished", value: "fully-furnished" },
+];
+
+const AMENITY_OPTIONS = [
+  "Pool",
+  "Gym",
+  "Sea View",
+  "Parking",
+  "24/7 Security",
+  "Private Garden",
 ];
 
 const BEDROOM_OPTIONS = [
@@ -63,9 +79,22 @@ function ListingsContent() {
     hasActiveFilters,
   } = useFilters();
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewModeState] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("shefa_view_mode");
+      if (saved === "grid" || saved === "list") setViewModeState(saved);
+    } catch {}
+  }, []);
+
+  const setViewMode = useCallback((mode: "grid" | "list") => {
+    setViewModeState(mode);
+    try { localStorage.setItem("shefa_view_mode", mode); } catch {}
+  }, []);
 
   // Pagination
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
@@ -115,6 +144,33 @@ function ListingsContent() {
     [handleFilterChange]
   );
 
+  const handleFurnishingToggle = useCallback(
+    (value: string) => {
+      const current = filters.furnished;
+      const next = current.includes(value)
+        ? current.filter((f) => f !== value)
+        : [...current, value];
+      handleFilterChange("furnished", next);
+    },
+    [filters.furnished, handleFilterChange]
+  );
+
+  const handleAmenityToggle = useCallback(
+    (amenity: string) => {
+      const current = filters.amenities;
+      const next = current.includes(amenity)
+        ? current.filter((a) => a !== amenity)
+        : [...current, amenity];
+      handleFilterChange("amenities", next);
+    },
+    [filters.amenities, handleFilterChange]
+  );
+
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
   // Page numbers to show
   const pageNumbers = useMemo(() => {
     const pages: number[] = [];
@@ -150,6 +206,29 @@ function ListingsContent() {
             Clear All
           </button>
         )}
+      </div>
+
+      {/* Sort By */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Sort By
+        </h3>
+        <select
+          value={filters.sortBy}
+          onChange={(e) =>
+            handleFilterChange(
+              "sortBy",
+              e.target.value as FilterState["sortBy"]
+            )
+          }
+          className="w-full py-2.5 px-3 border border-gray-200 rounded-lg text-sm text-brand-navy bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold appearance-none cursor-pointer"
+        >
+          {SORT_OPTIONS.map(({ label, value }) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Deal Type */}
@@ -294,27 +373,85 @@ function ListingsContent() {
         </div>
       </div>
 
-      {/* Sort By */}
+      {/* Area (sqm) */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
-          Sort By
+          Area (sqm)
         </h3>
-        <select
-          value={filters.sortBy}
-          onChange={(e) =>
-            handleFilterChange(
-              "sortBy",
-              e.target.value as FilterState["sortBy"]
-            )
-          }
-          className="w-full py-2.5 px-3 border border-gray-200 rounded-lg text-sm text-brand-navy bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold appearance-none cursor-pointer"
-        >
-          {SORT_OPTIONS.map(({ label, value }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="relative">
+            <input
+              type="number"
+              placeholder="Min"
+              value={filters.minArea || ""}
+              onChange={(e) =>
+                handleFilterChange("minArea", Number(e.target.value) || 0)
+              }
+              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+            />
+          </div>
+          <div className="relative">
+            <input
+              type="number"
+              placeholder="Max"
+              value={filters.maxArea || ""}
+              onChange={(e) =>
+                handleFilterChange("maxArea", Number(e.target.value) || 0)
+              }
+              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Furnishing */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Furnishing
+        </h3>
+        <div className="space-y-2">
+          {FURNISHING_OPTIONS.map(({ label, value }) => (
+            <label
+              key={value}
+              className="flex items-center gap-3 cursor-pointer group"
+            >
+              <input
+                type="checkbox"
+                checked={filters.furnished.includes(value)}
+                onChange={() => handleFurnishingToggle(value)}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {label}
+              </span>
+            </label>
           ))}
-        </select>
+        </div>
+      </div>
+
+      {/* Amenities */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Amenities
+        </h3>
+        <div className="grid grid-cols-2 gap-2">
+          {AMENITY_OPTIONS.map((amenity) => (
+            <label
+              key={amenity}
+              className="flex items-center gap-2 cursor-pointer group"
+            >
+              <input
+                type="checkbox"
+                checked={filters.amenities.includes(amenity)}
+                onChange={() => handleAmenityToggle(amenity)}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {amenity}
+              </span>
+            </label>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -362,7 +499,7 @@ function ListingsContent() {
           </aside>
 
           {/* Content Area */}
-          <div className="flex-1 min-w-0">
+          <div ref={resultsRef} className="flex-1 min-w-0">
             {/* Top Bar */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
@@ -451,7 +588,7 @@ function ListingsContent() {
                   <div className="flex items-center justify-center gap-2 mt-10">
                     <button
                       onClick={() =>
-                        setCurrentPage((p) => Math.max(1, p - 1))
+                        handlePageChange(Math.max(1, currentPage - 1))
                       }
                       disabled={currentPage === 1}
                       className={cn(
@@ -468,7 +605,7 @@ function ListingsContent() {
                     {pageNumbers[0] > 1 && (
                       <>
                         <button
-                          onClick={() => setCurrentPage(1)}
+                          onClick={() => handlePageChange(1)}
                           className="w-10 h-10 rounded-lg text-sm font-medium text-brand-navy hover:bg-white hover:shadow-card transition-all duration-200"
                         >
                           1
@@ -482,7 +619,7 @@ function ListingsContent() {
                     {pageNumbers.map((page) => (
                       <button
                         key={page}
-                        onClick={() => setCurrentPage(page)}
+                        onClick={() => handlePageChange(page)}
                         className={cn(
                           "w-10 h-10 rounded-lg text-sm font-medium transition-all duration-200",
                           page === currentPage
@@ -501,7 +638,7 @@ function ListingsContent() {
                           <span className="text-brand-slate px-1">...</span>
                         )}
                         <button
-                          onClick={() => setCurrentPage(totalPages)}
+                          onClick={() => handlePageChange(totalPages)}
                           className="w-10 h-10 rounded-lg text-sm font-medium text-brand-navy hover:bg-white hover:shadow-card transition-all duration-200"
                         >
                           {totalPages}
@@ -511,7 +648,7 @@ function ListingsContent() {
 
                     <button
                       onClick={() =>
-                        setCurrentPage((p) => Math.min(totalPages, p + 1))
+                        handlePageChange(Math.min(totalPages, currentPage + 1))
                       }
                       disabled={currentPage === totalPages}
                       className={cn(

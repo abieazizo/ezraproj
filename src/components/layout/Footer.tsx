@@ -21,8 +21,8 @@ const quickLinks = [
 ];
 
 const propertyLinks = [
-  { label: "Apartments for Sale", href: "/listings?type=apartment&dealType=sale" },
-  { label: "Villas for Sale", href: "/listings?type=villa&dealType=sale" },
+  { label: "Apartments for Sale", href: "/listings?type=apartment&deal=sale" },
+  { label: "Villas for Sale", href: "/listings?type=villa&deal=sale" },
   { label: "Penthouses", href: "/listings?type=penthouse" },
   { label: "Townhouses", href: "/listings?type=townhouse" },
   { label: "Commercial", href: "/listings?type=office" },
@@ -241,6 +241,17 @@ export default function Footer() {
                   <br />
                   Sunday: By Appointment
                 </span>
+              </li>
+              <li>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Shefa+Real+Estate+Dubai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-brand-gold hover:text-brand-gold-400 transition-colors duration-200"
+                >
+                  <MapPin className="h-4 w-4" />
+                  Get Directions
+                </a>
               </li>
             </ul>
           </div>
