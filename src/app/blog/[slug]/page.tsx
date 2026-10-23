@@ -2,11 +2,43 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Clock, Calendar, Tag, Share2, ExternalLink, Link2 } from "lucide-react";
+import { ArrowLeft, Clock, Calendar, Tag, Share2, ExternalLink, Link2, ListOrdered } from "lucide-react";
 import { blogPosts } from "@/data/blog";
 import { listings } from "@/data/listings";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import { format } from "date-fns";
+
+function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function extractH2s(html: string): { text: string; id: string }[] {
+  const results: { text: string; id: string }[] = [];
+  const regex = /<h2[^>]*>(.*?)<\/h2>/gi;
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(html)) !== null) {
+    const text = match[1].replace(/<[^>]*>/g, "");
+    results.push({ text, id: slugifyHeading(text) });
+  }
+  return results;
+}
+
+function addIdsToH2s(html: string, headings: { text: string; id: string }[]): string {
+  let result = html;
+  for (const heading of headings) {
+    result = result.replace(
+      new RegExp(`<h2([^>]*)>(${heading.text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})<\\/h2>`, "i"),
+      `<h2$1 id="${heading.id}">${heading.text}</h2>`
+    );
+  }
+  return result;
+}
 
 interface PageProps {
   params: { slug: string };
@@ -70,6 +102,9 @@ export default function BlogPostPage({ params }: PageProps) {
   const latestListings = listings.slice(0, 3);
 
   const shareUrl = `https://shefa.ae/blog/${post.slug}`;
+
+  const headings = extractH2s(post.content);
+  const contentWithIds = addIdsToH2s(post.content, headings);
 
   return (
     <>
@@ -152,7 +187,7 @@ export default function BlogPostPage({ params }: PageProps) {
                   prose-blockquote:border-l-brand-gold prose-blockquote:bg-brand-cream prose-blockquote:rounded-r-xl prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic
                   prose-blockquote:text-brand-navy prose-blockquote:font-display
                 "
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                dangerouslySetInnerHTML={{ __html: contentWithIds }}
               />
 
               {/* Tags */}
@@ -287,6 +322,30 @@ export default function BlogPostPage({ params }: PageProps) {
                     Get in Touch
                   </Link>
                 </div>
+
+                {/* In This Article */}
+                {headings.length > 0 && (
+                  <div className="bg-white rounded-xl p-6 shadow-card">
+                    <h3 className="font-display text-lg font-bold text-brand-navy mb-4 flex items-center gap-2">
+                      <ListOrdered className="w-5 h-5 text-brand-gold" />
+                      In This Article
+                    </h3>
+                    <nav className="space-y-2">
+                      {headings.map((h, i) => (
+                        <a
+                          key={h.id}
+                          href={`#${h.id}`}
+                          className="flex items-start gap-2 text-sm text-brand-slate hover:text-brand-gold transition-colors group"
+                        >
+                          <span className="text-brand-gold text-xs font-semibold mt-0.5 shrink-0">
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <span className="group-hover:underline">{h.text}</span>
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
+                )}
 
                 {/* Latest Listings */}
                 <div>

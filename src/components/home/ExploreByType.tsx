@@ -1,7 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { listings } from "@/data/listings";
+import { fadeInUp, staggerContainer } from "@/lib/animations";
 
 const typeImages: Record<string, string> = {
   Apartments:
@@ -55,14 +59,20 @@ export default function ExploreByType() {
           title="Browse by Property Type"
         />
 
-        <div className="mt-12 flex gap-4 overflow-x-auto pb-4 scrollbar-hide md:justify-center md:flex-wrap">
-          {typeNames.map((name) => {
+        <motion.div
+          className="mt-12 flex gap-4 overflow-x-auto pb-4 scrollbar-hide md:justify-center md:flex-wrap"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          {typeNames.map((name, i) => {
             const count = getCountForType(name);
             return (
+              <motion.div key={name} variants={fadeInUp} custom={i} className="flex-shrink-0">
               <Link
-                key={name}
                 href={`/listings?type=${typeToSlug[name]}`}
-                className="group relative w-44 h-56 flex-shrink-0 rounded-xl overflow-hidden"
+                className="group relative w-44 h-56 block rounded-xl overflow-hidden"
               >
                 <Image
                   src={typeImages[name]}
@@ -81,9 +91,10 @@ export default function ExploreByType() {
                   </p>
                 </div>
               </Link>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
