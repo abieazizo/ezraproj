@@ -2,21 +2,28 @@
 
 import { Suspense, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   SlidersHorizontal,
   X,
   LayoutGrid,
   List,
+  Map as MapIcon,
   ChevronLeft,
   ChevronRight,
   Home,
   ChevronRight as ChevronBreadcrumb,
   Search,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { useFilters } from "@/hooks/useFilters";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import type { PropertyType, DealType, FilterState } from "@/types";
+
+const LeafletMap = dynamic(
+  () => import("@/components/ui-custom/LeafletMap"),
+  { ssr: false }
+);
 
 const ITEMS_PER_PAGE = 12;
 
@@ -63,9 +70,21 @@ function ListingsContent() {
     hasActiveFilters,
   } = useFilters();
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list" | "map">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [selectedMapProperty, setSelectedMapProperty] = useState<string | undefined>();
+
+  const mapMarkers = useMemo(
+    () =>
+      filteredProperties.map((p) => ({
+        position: [p.location.lat, p.location.lng] as [number, number],
+        title: p.title,
+        price: formatPrice(p.price, p.currency, p.priceUnit),
+        id: p.id,
+      })),
+    [filteredProperties]
+  );
 
   // Pagination
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
@@ -424,11 +443,59 @@ function ListingsContent() {
                 >
                   <List className="w-4 h-4" />
                 </button>
+                <button
+                  onClick={() => setViewMode("map")}
+                  className={cn(
+                    "p-2 rounded-md transition-all duration-200",
+                    viewMode === "map"
+                      ? "bg-brand-navy text-white"
+                      : "text-brand-slate hover:text-brand-navy"
+                  )}
+                  aria-label="Map view"
+                >
+                  <MapIcon className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
-            {/* Property Grid / List */}
-            {paginatedProperties.length > 0 ? (
+            {/* Property Grid / List / Map */}
+            {viewMode === "map" ? (
+              <div className="flex flex-col lg:flex-row gap-4" style={{ height: "calc(100vh - 280px)", minHeight: "500px" }}>
+                {/* Scrollable card list */}
+                <div className="w-full lg:w-[40%] overflow-y-auto space-y-3 pr-1">
+                  {filteredProperties.length > 0 ? (
+                    filteredProperties.map((property) => (
+                      <div
+                        key={property.id}
+                        className={cn(
+                          "cursor-pointer rounded-xl transition-all duration-200",
+                          selectedMapProperty === property.id
+                            ? "ring-2 ring-brand-gold shadow-gold"
+                            : ""
+                        )}
+                        onClick={() => setSelectedMapProperty(property.id)}
+                      >
+                        <PropertyCard property={property} variant="compact" />
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-brand-slate py-8 text-center">
+                      No properties match your filters.
+                    </p>
+                  )}
+                </div>
+                {/* Map */}
+                <div className="w-full lg:w-[60%] rounded-xl overflow-hidden shadow-card min-h-[300px]">
+                  <LeafletMap
+                    center={[25.2048, 55.2708]}
+                    zoom={11}
+                    markers={mapMarkers}
+                    height="100%"
+                    className="h-full"
+                  />
+                </div>
+              </div>
+            ) : paginatedProperties.length > 0 ? (
               <>
                 <div
                   className={cn(

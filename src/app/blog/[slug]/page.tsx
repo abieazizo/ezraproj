@@ -56,6 +56,33 @@ export function generateMetadata({ params }: PageProps): Metadata {
   };
 }
 
+function extractHeadings(html: string): { id: string; text: string }[] {
+  const headings: { id: string; text: string }[] = [];
+  const regex = /<h2[^>]*>(.*?)<\/h2>/gi;
+  let match;
+  while ((match = regex.exec(html)) !== null) {
+    const text = match[1].replace(/<[^>]*>/g, "").trim();
+    const id = text
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_]+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    headings.push({ id, text });
+  }
+  return headings;
+}
+
+function addHeadingIds(html: string, headings: { id: string; text: string }[]): string {
+  let result = html;
+  for (const heading of headings) {
+    const escapedText = heading.text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(`<h2([^>]*)>(\\s*${escapedText}\\s*)<\\/h2>`, "i");
+    result = result.replace(regex, `<h2$1 id="${heading.id}">$2</h2>`);
+  }
+  return result;
+}
+
 export default function BlogPostPage({ params }: PageProps) {
   const post = getPostBySlug(params.slug);
 
@@ -70,6 +97,9 @@ export default function BlogPostPage({ params }: PageProps) {
   const latestListings = listings.slice(0, 3);
 
   const shareUrl = `https://shefa.ae/blog/${post.slug}`;
+
+  const headings = extractHeadings(post.content);
+  const contentWithIds = addHeadingIds(post.content, headings);
 
   return (
     <>
@@ -152,7 +182,7 @@ export default function BlogPostPage({ params }: PageProps) {
                   prose-blockquote:border-l-brand-gold prose-blockquote:bg-brand-cream prose-blockquote:rounded-r-xl prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic
                   prose-blockquote:text-brand-navy prose-blockquote:font-display
                 "
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                dangerouslySetInnerHTML={{ __html: contentWithIds }}
               />
 
               {/* Tags */}
@@ -287,6 +317,29 @@ export default function BlogPostPage({ params }: PageProps) {
                     Get in Touch
                   </Link>
                 </div>
+
+                {/* Table of Contents */}
+                {headings.length > 0 && (
+                  <div className="bg-white rounded-xl p-6 shadow-card">
+                    <h3 className="font-display text-lg font-bold text-brand-navy mb-4">
+                      In This Article
+                    </h3>
+                    <nav className="space-y-2">
+                      {headings.map((heading, i) => (
+                        <a
+                          key={heading.id}
+                          href={`#${heading.id}`}
+                          className="flex items-start gap-2 text-sm text-brand-slate hover:text-brand-gold transition-colors group"
+                        >
+                          <span className="w-5 h-5 flex-shrink-0 rounded-full border border-brand-gold/30 flex items-center justify-center text-[10px] font-semibold text-brand-gold group-hover:bg-brand-gold group-hover:text-white transition-colors mt-0.5">
+                            {i + 1}
+                          </span>
+                          <span className="leading-snug">{heading.text}</span>
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
+                )}
 
                 {/* Latest Listings */}
                 <div>
