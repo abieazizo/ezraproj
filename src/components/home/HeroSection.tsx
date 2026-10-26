@@ -46,7 +46,7 @@ export default function HeroSection() {
     const params = new URLSearchParams();
     if (location.trim()) params.set("city", location.trim());
     if (type !== "All Types") params.set("type", type.toLowerCase());
-    params.set("dealType", dealType);
+    params.set("deal", dealType);
     router.push(`/listings?${params.toString()}`);
   };
 
