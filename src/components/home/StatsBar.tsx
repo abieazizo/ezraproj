@@ -1,6 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
 import AnimatedCounter from "@/components/ui-custom/AnimatedCounter";
+import { staggerContainer, fadeInUp } from "@/lib/animations";
 
 const stats = [
   { end: 500, suffix: "+", label: "Properties Listed" },
@@ -13,9 +15,15 @@ export default function StatsBar() {
   return (
     <section className="bg-brand-navy py-12">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0">
+        <motion.div
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+        >
           {stats.map((stat, i) => (
-            <div key={stat.label} className="flex items-center justify-center">
+            <motion.div key={stat.label} variants={fadeInUp} custom={i} className="flex items-center justify-center">
               {/* Divider (desktop only, not before first) */}
               {i > 0 && (
                 <div className="hidden md:block w-px h-14 bg-white/10 mr-8" />
@@ -31,9 +39,9 @@ export default function StatsBar() {
                   {stat.label}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

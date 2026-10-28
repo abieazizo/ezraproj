@@ -10,9 +10,15 @@ import {
   TrendingUp,
   Heart,
 } from "lucide-react";
+import { Star } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import ValuationForm from "./ValuationForm";
 import SellFAQ from "./SellFAQ";
+import { testimonials } from "@/data/testimonials";
+
+const sellerTestimonials = testimonials.filter(
+  (t) => t.role === "Seller" || t.role === "Homeowner"
+).slice(0, 2);
 
 export const metadata: Metadata = {
   title: "Sell Your Property",
@@ -201,8 +207,55 @@ export default function SellPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Seller Testimonials */}
       <section className="py-20 bg-brand-cream">
+        <div className="max-w-5xl mx-auto px-4">
+          <SectionHeader
+            eyebrow="Success Stories"
+            title="What Our Sellers Say"
+          />
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+            {sellerTestimonials.map((t) => (
+              <div
+                key={t.id}
+                className="bg-white rounded-xl shadow-card p-6 flex flex-row gap-5"
+              >
+                <div className="flex-shrink-0">
+                  <Image
+                    src={t.photo}
+                    alt={t.name}
+                    width={64}
+                    height={64}
+                    className="rounded-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex gap-0.5 mb-2">
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-4 h-4 fill-brand-gold text-brand-gold"
+                      />
+                    ))}
+                  </div>
+                  <p className="text-brand-navy text-sm leading-relaxed line-clamp-4 mb-3">
+                    &ldquo;{t.content}&rdquo;
+                  </p>
+                  <p className="font-semibold text-brand-navy text-sm">
+                    {t.name}
+                  </p>
+                  <p className="text-brand-slate text-xs">
+                    {t.role} &middot; {t.location}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4">
           <SectionHeader
             eyebrow="Common Questions"

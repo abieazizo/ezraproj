@@ -237,10 +237,20 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <Clock className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
                 <span className="text-sm text-white/70 leading-relaxed">
-                  Mon - Sat: 9:00 AM - 7:00 PM
+                  Mon–Fri: 9AM–7PM
                   <br />
-                  Sunday: By Appointment
+                  Sat: 10AM–5PM
                 </span>
+              </li>
+              <li>
+                <a
+                  href="https://www.google.com/maps/search/Marina+Plaza+Dubai+Marina+Dubai+UAE"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm text-brand-gold hover:text-brand-gold-400 transition-colors duration-200"
+                >
+                  Get Directions &rarr;
+                </a>
               </li>
             </ul>
           </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MapPin, Building, ChevronDown, Search } from "lucide-react";
+import { MapPin, Building, ChevronDown, Search, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const propertyTypes = [
@@ -31,6 +31,7 @@ export default function HeroSection() {
   const [location, setLocation] = useState("");
   const [type, setType] = useState("All Types");
   const [dealType, setDealType] = useState<"sale" | "rent">("sale");
+  const [budget, setBudget] = useState("any");
   const [scrollOpacity, setScrollOpacity] = useState(1);
 
   useEffect(() => {
@@ -46,7 +47,21 @@ export default function HeroSection() {
     const params = new URLSearchParams();
     if (location.trim()) params.set("city", location.trim());
     if (type !== "All Types") params.set("type", type.toLowerCase());
-    params.set("dealType", dealType);
+    params.set("deal", dealType);
+    if (budget !== "any") {
+      const budgetRanges: Record<string, [number, number]> = {
+        "lt500k": [0, 500000],
+        "500k-1m": [500000, 1000000],
+        "1m-3m": [1000000, 3000000],
+        "3m-5m": [3000000, 5000000],
+        "5m+": [5000000, 0],
+      };
+      const range = budgetRanges[budget];
+      if (range) {
+        if (range[0] > 0) params.set("minPrice", String(range[0]));
+        if (range[1] > 0) params.set("maxPrice", String(range[1]));
+      }
+    }
     router.push(`/listings?${params.toString()}`);
   };
 
@@ -192,6 +207,31 @@ export default function HeroSection() {
                 >
                   For Rent
                 </button>
+              </div>
+
+              {/* Divider */}
+              <div className="hidden md:block w-px bg-brand-navy/10 self-stretch my-2" />
+
+              {/* Budget Field */}
+              <div className="flex items-center gap-2.5 px-4 py-2.5 flex-1 min-w-0">
+                <DollarSign className="w-5 h-5 text-brand-gold flex-shrink-0" />
+                <div className="flex flex-col min-w-0 flex-1">
+                  <label className="text-[10px] font-semibold text-brand-slate uppercase tracking-wider">
+                    Budget
+                  </label>
+                  <select
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    className="text-sm text-brand-navy bg-transparent outline-none cursor-pointer w-full appearance-none"
+                  >
+                    <option value="any">Any</option>
+                    <option value="lt500k">&lt; 500K</option>
+                    <option value="500k-1m">500K – 1M</option>
+                    <option value="1m-3m">1M – 3M</option>
+                    <option value="3m-5m">3M – 5M</option>
+                    <option value="5m+">5M+</option>
+                  </select>
+                </div>
               </div>
 
               {/* Search Button */}

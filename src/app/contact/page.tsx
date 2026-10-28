@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import {
   MapPin,
@@ -15,6 +16,11 @@ import {
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { agents } from "@/data/agents";
 import { z } from "zod";
+
+const LeafletMap = dynamic(
+  () => import("@/components/ui-custom/LeafletMap"),
+  { ssr: false }
+);
 
 // Metadata for client components must be exported from a separate file or parent layout.
 // Using head metadata via document title for client component pages.
@@ -336,35 +342,27 @@ export default function ContactPage() {
                         Working Hours
                       </p>
                       <p className="text-brand-slate text-sm">
-                        Sunday &ndash; Thursday: 9:00 AM &ndash; 6:00 PM
+                        Mon&ndash;Thu: 9:00 AM &ndash; 7:00 PM
                         <br />
-                        Saturday: 10:00 AM &ndash; 3:00 PM
+                        Fri: 9:00 AM &ndash; 12:00 PM, 2:00 PM &ndash; 6:00 PM
                         <br />
-                        Friday: Closed
+                        Sat: 10:00 AM &ndash; 5:00 PM
+                        <br />
+                        Sun: Closed
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Map Placeholder */}
-              <div className="bg-gray-100 rounded-xl overflow-hidden h-[280px] flex items-center justify-center relative">
-                <div className="text-center space-y-3">
-                  <MapPin className="w-10 h-10 text-brand-gold mx-auto" />
-                  <p className="text-brand-navy font-semibold">
-                    Bay Square, Business Bay
-                  </p>
-                  <p className="text-brand-slate text-sm">Dubai, UAE</p>
-                  <Link
-                    href="https://maps.google.com/?q=Bay+Square+Business+Bay+Dubai"
-                    target="_blank"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-navy text-white rounded-lg text-sm font-medium hover:bg-brand-navy-800 transition-colors"
-                  >
-                    <MapPin className="w-3.5 h-3.5" />
-                    Open in Google Maps
-                  </Link>
-                </div>
-              </div>
+              {/* Map */}
+              <LeafletMap
+                lat={25.186}
+                lng={55.2617}
+                zoom={15}
+                markerText="Shefa Real Estate - Bay Square, Business Bay"
+                height="350px"
+              />
             </div>
           </div>
         </div>

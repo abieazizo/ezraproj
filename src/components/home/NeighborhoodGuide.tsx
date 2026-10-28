@@ -1,7 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { listings } from "@/data/listings";
+import { staggerContainer, fadeInUp } from "@/lib/animations";
 
 const neighborhoods = [
   {
@@ -62,12 +66,18 @@ export default function NeighborhoodGuide() {
           action={{ label: "View All Areas", href: "/listings" }}
         />
 
-        <div className="mt-12 flex gap-5 overflow-x-auto pb-4 scrollbar-hide">
-          {neighborhoods.map((hood) => {
+        <motion.div
+          className="mt-12 flex gap-5 overflow-x-auto pb-4 scrollbar-hide"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          {neighborhoods.map((hood, i) => {
             const count = getPropertyCount(hood.name);
             return (
+              <motion.div key={hood.name} variants={fadeInUp} custom={i}>
               <Link
-                key={hood.name}
                 href={`/listings?city=${encodeURIComponent(hood.city)}`}
                 className="group relative w-72 h-96 flex-shrink-0 rounded-xl overflow-hidden border-2 border-transparent hover:border-brand-gold transition-all duration-300"
               >
@@ -91,9 +101,10 @@ export default function NeighborhoodGuide() {
                   </span>
                 </div>
               </Link>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

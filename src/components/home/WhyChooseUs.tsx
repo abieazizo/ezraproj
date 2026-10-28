@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Shield, Trophy, Briefcase, Lock } from "lucide-react";
+import { slideInLeft, staggerContainer, fadeInUp } from "@/lib/animations";
 
 const features = [
   {
@@ -34,7 +38,13 @@ export default function WhyChooseUs() {
       <div className="mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-center">
           {/* Left Column - 40% */}
-          <div className="lg:col-span-2">
+          <motion.div
+            className="lg:col-span-2"
+            variants={slideInLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
             <span className="text-brand-gold uppercase tracking-[0.15em] text-xs font-sans font-semibold">
               Why Choose Us
             </span>
@@ -56,15 +66,23 @@ export default function WhyChooseUs() {
               Learn About Us
               <span aria-hidden="true">&rarr;</span>
             </Link>
-          </div>
+          </motion.div>
 
           {/* Right Column - 60% */}
-          <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {features.map((feature) => {
+          <motion.div
+            className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
+            {features.map((feature, i) => {
               const Icon = feature.icon;
               return (
-                <div
+                <motion.div
                   key={feature.title}
+                  variants={fadeInUp}
+                  custom={i}
                   className="bg-brand-navy-800 rounded-xl p-7 hover:bg-brand-navy-700 transition-colors duration-300"
                 >
                   <Icon className="w-7 h-7 text-brand-gold mb-4" />
@@ -74,10 +92,10 @@ export default function WhyChooseUs() {
                   <p className="text-white/60 text-sm leading-relaxed">
                     {feature.description}
                   </p>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

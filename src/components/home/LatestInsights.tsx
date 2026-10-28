@@ -1,8 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { blogPosts } from "@/data/blog";
+import { staggerContainer, fadeInUp } from "@/lib/animations";
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString("en-US", {
@@ -23,10 +27,16 @@ export default function LatestInsights() {
           action={{ label: "View All Articles", href: "/blog" }}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-          {blogPosts.slice(0, 3).map((post) => (
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          {blogPosts.slice(0, 3).map((post, i) => (
+            <motion.div key={post.id} variants={fadeInUp} custom={i}>
             <Link
-              key={post.id}
               href={`/blog/${post.slug}`}
               className="group block bg-white rounded-xl overflow-hidden shadow-card hover:shadow-card-lg hover:-translate-y-1 transition-all duration-300"
             >
@@ -88,8 +98,9 @@ export default function LatestInsights() {
                 </p>
               </div>
             </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

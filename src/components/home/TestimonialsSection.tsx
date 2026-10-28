@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { testimonials } from "@/data/testimonials";
 import { cn } from "@/lib/utils";
+import { fadeIn } from "@/lib/animations";
 
 export default function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -46,7 +48,13 @@ export default function TestimonialsSection() {
   }, [isAutoPlaying, maxIndex]);
 
   return (
-    <section className="bg-white py-20">
+    <motion.section
+      className="bg-white py-20"
+      variants={fadeIn}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+    >
       <div className="mx-auto max-w-7xl px-4">
         <SectionHeader
           eyebrow="Testimonials"
@@ -139,6 +147,6 @@ export default function TestimonialsSection() {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

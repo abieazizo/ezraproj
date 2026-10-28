@@ -18,6 +18,8 @@ import {
   TreePine,
   Star,
   Flame,
+  Map,
+  BarChart3,
   Phone,
   MessageCircle,
 } from "lucide-react";
@@ -50,10 +52,12 @@ const propertyTypes = [
 const quickActions = [
   { label: "Featured Listings", href: "/listings?featured=true", icon: Star },
   { label: "Hot Deals", href: "/listings?badge=hot-deal", icon: Flame },
+  { label: "Map Search", href: "/listings?view=map", icon: Map },
+  { label: "Market Report", href: "/blog", icon: BarChart3 },
 ];
 
 export default function Navbar() {
-  const scrolled = useScrolled(50);
+  const scrolled = useScrolled(80);
   const { count: wishlistCount } = useWishlist();
   const pathname = usePathname();
 
@@ -167,9 +171,9 @@ export default function Navbar() {
                 <AnimatePresence>
                   {propertiesOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 8 }}
+                      initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
+                      exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
                       className="absolute left-1/2 -translate-x-1/2 top-full pt-2"
                     >
