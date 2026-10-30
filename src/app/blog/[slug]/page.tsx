@@ -56,6 +56,32 @@ export function generateMetadata({ params }: PageProps): Metadata {
   };
 }
 
+function extractHeadings(html: string): { id: string; text: string }[] {
+  const regex = /<h2[^>]*>(.*?)<\/h2>/gi;
+  const headings: { id: string; text: string }[] = [];
+  let match;
+  while ((match = regex.exec(html)) !== null) {
+    const text = match[1].replace(/<[^>]+>/g, "").trim();
+    const id = text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    headings.push({ id, text });
+  }
+  return headings;
+}
+
+function addHeadingIds(html: string): string {
+  return html.replace(/<h2([^>]*)>(.*?)<\/h2>/gi, (_match, attrs, content) => {
+    const text = content.replace(/<[^>]+>/g, "").trim();
+    const id = text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    return `<h2${attrs} id="${id}">${content}</h2>`;
+  });
+}
+
 export default function BlogPostPage({ params }: PageProps) {
   const post = getPostBySlug(params.slug);
 
@@ -70,6 +96,8 @@ export default function BlogPostPage({ params }: PageProps) {
   const latestListings = listings.slice(0, 3);
 
   const shareUrl = `https://shefa.ae/blog/${post.slug}`;
+  const headings = extractHeadings(post.content);
+  const contentWithIds = addHeadingIds(post.content);
 
   return (
     <>
@@ -152,7 +180,7 @@ export default function BlogPostPage({ params }: PageProps) {
                   prose-blockquote:border-l-brand-gold prose-blockquote:bg-brand-cream prose-blockquote:rounded-r-xl prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic
                   prose-blockquote:text-brand-navy prose-blockquote:font-display
                 "
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                dangerouslySetInnerHTML={{ __html: contentWithIds }}
               />
 
               {/* Tags */}
@@ -262,6 +290,22 @@ export default function BlogPostPage({ params }: PageProps) {
                   </div>
                 </div>
               )}
+              {/* CTA */}
+              <div className="mt-12 bg-brand-navy rounded-xl p-8 text-center">
+                <h3 className="font-display text-2xl font-bold text-white mb-2">
+                  Looking for Properties?
+                </h3>
+                <p className="text-white/70 text-sm mb-5">
+                  Browse our latest listings across Dubai&apos;s most sought-after neighborhoods.
+                </p>
+                <Link
+                  href="/listings"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-brand-gold text-white font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors"
+                >
+                  Browse All Listings
+                  <ArrowLeft className="w-4 h-4 rotate-180" />
+                </Link>
+              </div>
             </article>
 
             {/* Sidebar (30%) */}
@@ -287,6 +331,26 @@ export default function BlogPostPage({ params }: PageProps) {
                     Get in Touch
                   </Link>
                 </div>
+
+                {/* Table of Contents */}
+                {headings.length > 0 && (
+                  <div className="bg-white rounded-xl p-6 shadow-card">
+                    <h3 className="font-display text-lg font-bold text-brand-navy mb-4">
+                      In This Article
+                    </h3>
+                    <nav className="space-y-2">
+                      {headings.map((h) => (
+                        <a
+                          key={h.id}
+                          href={`#${h.id}`}
+                          className="block text-sm text-brand-slate hover:text-brand-gold transition-colors py-1 border-l-2 border-gray-100 hover:border-brand-gold pl-3"
+                        >
+                          {h.text}
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
+                )}
 
                 {/* Latest Listings */}
                 <div>

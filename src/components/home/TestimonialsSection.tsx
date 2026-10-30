@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Star } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { testimonials } from "@/data/testimonials";
 import { cn } from "@/lib/utils";
@@ -54,12 +54,39 @@ export default function TestimonialsSection() {
           subtitle="Trusted by hundreds of property buyers, sellers, and investors across the UAE."
         />
 
-        {/* Carousel */}
+        {/* Carousel with arrows */}
         <div
-          className="mt-12 overflow-hidden"
+          className="mt-12 relative group/carousel"
           onMouseEnter={() => setIsAutoPlaying(false)}
           onMouseLeave={() => setIsAutoPlaying(true)}
         >
+          {/* Left Arrow */}
+          <button
+            onClick={() => goTo(currentIndex - 1)}
+            disabled={currentIndex === 0}
+            className={cn(
+              "absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 hidden md:flex items-center justify-center w-10 h-10 rounded-full border border-brand-slate-400/30 bg-white/80 backdrop-blur-sm text-brand-navy transition-all duration-200 hover:bg-brand-navy hover:text-white hover:border-brand-navy",
+              currentIndex === 0 && "opacity-30 cursor-not-allowed hover:bg-white/80 hover:text-brand-navy hover:border-brand-slate-400/30"
+            )}
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          {/* Right Arrow */}
+          <button
+            onClick={() => goTo(currentIndex + 1)}
+            disabled={currentIndex >= maxIndex}
+            className={cn(
+              "absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 hidden md:flex items-center justify-center w-10 h-10 rounded-full border border-brand-slate-400/30 bg-white/80 backdrop-blur-sm text-brand-navy transition-all duration-200 hover:bg-brand-navy hover:text-white hover:border-brand-navy",
+              currentIndex >= maxIndex && "opacity-30 cursor-not-allowed hover:bg-white/80 hover:text-brand-navy hover:border-brand-slate-400/30"
+            )}
+            aria-label="Next testimonial"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          <div className="overflow-hidden">
           <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{
@@ -119,6 +146,7 @@ export default function TestimonialsSection() {
                 </div>
               </div>
             ))}
+          </div>
           </div>
         </div>
 

@@ -7,6 +7,7 @@ import {
   Mail,
   Clock,
   Send,
+  ExternalLink,
 } from "lucide-react";
 
 const quickLinks = [
@@ -241,6 +242,17 @@ export default function Footer() {
                   <br />
                   Sunday: By Appointment
                 </span>
+              </li>
+              <li>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Dubai+Marina+Dubai+UAE"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-brand-gold hover:text-brand-gold-400 transition-colors duration-200"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Get Directions
+                </a>
               </li>
             </ul>
           </div>

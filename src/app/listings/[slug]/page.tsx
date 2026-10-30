@@ -34,6 +34,7 @@ import { formatPrice, formatArea, formatBeds, cn } from "@/lib/utils";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import ScheduleViewingForm from "./ScheduleViewingForm";
 import ExpandableDescription from "./ExpandableDescription";
+import SharePrintButtons from "./SharePrintButtons";
 
 const PropertyGallery = dynamic(
   () => import("@/components/property/PropertyGallery"),
@@ -136,33 +137,36 @@ export default function PropertyDetailPage({ params }: PageProps) {
       <div className="min-h-screen bg-brand-cream/50">
         {/* Breadcrumb */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
-          <nav className="flex items-center gap-1.5 text-sm text-brand-slate flex-wrap">
-            <Link
-              href="/"
-              className="flex items-center gap-1 hover:text-brand-gold transition-colors"
-            >
-              <Home className="w-3.5 h-3.5" />
-              Home
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
-            <Link
-              href="/listings"
-              className="hover:text-brand-gold transition-colors"
-            >
-              Properties
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
-            <Link
-              href={`/listings?type=${property.type}`}
-              className="hover:text-brand-gold transition-colors capitalize"
-            >
-              {typeLabel}
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
-            <span className="text-brand-navy font-medium truncate max-w-[200px]">
-              {property.title}
-            </span>
-          </nav>
+          <div className="flex items-center justify-between gap-4">
+            <nav className="flex items-center gap-1.5 text-sm text-brand-slate flex-wrap min-w-0">
+              <Link
+                href="/"
+                className="flex items-center gap-1 hover:text-brand-gold transition-colors"
+              >
+                <Home className="w-3.5 h-3.5" />
+                Home
+              </Link>
+              <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
+              <Link
+                href="/listings"
+                className="hover:text-brand-gold transition-colors"
+              >
+                Properties
+              </Link>
+              <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
+              <Link
+                href={`/listings?type=${property.type}`}
+                className="hover:text-brand-gold transition-colors capitalize"
+              >
+                {typeLabel}
+              </Link>
+              <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
+              <span className="text-brand-navy font-medium truncate max-w-[200px]">
+                {property.title}
+              </span>
+            </nav>
+            <SharePrintButtons />
+          </div>
         </div>
 
         {/* Gallery */}

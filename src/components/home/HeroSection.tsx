@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MapPin, Building, ChevronDown, Search } from "lucide-react";
+import { MapPin, Building, ChevronDown, Search, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const propertyTypes = [
@@ -31,6 +31,8 @@ export default function HeroSection() {
   const [location, setLocation] = useState("");
   const [type, setType] = useState("All Types");
   const [dealType, setDealType] = useState<"sale" | "rent">("sale");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   const [scrollOpacity, setScrollOpacity] = useState(1);
 
   useEffect(() => {
@@ -47,6 +49,8 @@ export default function HeroSection() {
     if (location.trim()) params.set("city", location.trim());
     if (type !== "All Types") params.set("type", type.toLowerCase());
     params.set("dealType", dealType);
+    if (minPrice.trim()) params.set("minPrice", minPrice.trim());
+    if (maxPrice.trim()) params.set("maxPrice", maxPrice.trim());
     router.push(`/listings?${params.toString()}`);
   };
 
@@ -192,6 +196,40 @@ export default function HeroSection() {
                 >
                   For Rent
                 </button>
+              </div>
+
+              {/* Divider */}
+              <div className="hidden md:block w-px bg-brand-navy/10 self-stretch my-2" />
+
+              {/* Budget Field */}
+              <div className="flex items-center gap-2.5 px-4 py-2.5">
+                <DollarSign className="w-5 h-5 text-brand-gold flex-shrink-0" />
+                <div className="flex flex-col min-w-0">
+                  <label className="text-[10px] font-semibold text-brand-slate uppercase tracking-wider">
+                    Budget
+                  </label>
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="Min"
+                      value={minPrice}
+                      onChange={(e) => setMinPrice(e.target.value.replace(/[^0-9]/g, ""))}
+                      onKeyDown={handleKeyDown}
+                      className="w-20 text-sm text-brand-navy placeholder:text-brand-slate-400 bg-transparent outline-none"
+                    />
+                    <span className="text-brand-slate-400 text-xs">–</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="Max"
+                      value={maxPrice}
+                      onChange={(e) => setMaxPrice(e.target.value.replace(/[^0-9]/g, ""))}
+                      onKeyDown={handleKeyDown}
+                      className="w-20 text-sm text-brand-navy placeholder:text-brand-slate-400 bg-transparent outline-none"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Search Button */}
