@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MapPin, Building, ChevronDown, Search } from "lucide-react";
+import { MapPin, Building, DollarSign, ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const propertyTypes = [
@@ -31,6 +31,7 @@ export default function HeroSection() {
   const [location, setLocation] = useState("");
   const [type, setType] = useState("All Types");
   const [dealType, setDealType] = useState<"sale" | "rent">("sale");
+  const [budget, setBudget] = useState("Any Budget");
   const [scrollOpacity, setScrollOpacity] = useState(1);
 
   useEffect(() => {
@@ -47,6 +48,20 @@ export default function HeroSection() {
     if (location.trim()) params.set("city", location.trim());
     if (type !== "All Types") params.set("type", type.toLowerCase());
     params.set("dealType", dealType);
+    if (budget === "< 500K") {
+      params.set("maxPrice", "500000");
+    } else if (budget === "500K - 1M") {
+      params.set("minPrice", "500000");
+      params.set("maxPrice", "1000000");
+    } else if (budget === "1M - 3M") {
+      params.set("minPrice", "1000000");
+      params.set("maxPrice", "3000000");
+    } else if (budget === "3M - 5M") {
+      params.set("minPrice", "3000000");
+      params.set("maxPrice", "5000000");
+    } else if (budget === "5M+") {
+      params.set("minPrice", "5000000");
+    }
     router.push(`/listings?${params.toString()}`);
   };
 
@@ -194,13 +209,37 @@ export default function HeroSection() {
                 </button>
               </div>
 
+              {/* Divider */}
+              <div className="hidden md:block w-px bg-brand-navy/10 self-stretch my-2" />
+
+              {/* Budget Field */}
+              <div className="flex items-center gap-2.5 px-4 py-2.5 flex-1 min-w-0">
+                <DollarSign className="w-5 h-5 text-brand-gold flex-shrink-0" />
+                <div className="flex flex-col min-w-0 flex-1">
+                  <label className="text-[10px] font-semibold text-brand-slate uppercase tracking-wider">
+                    Budget
+                  </label>
+                  <select
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    className="text-sm text-brand-navy bg-transparent outline-none cursor-pointer w-full appearance-none"
+                  >
+                    {["Any Budget", "< 500K", "500K - 1M", "1M - 3M", "3M - 5M", "5M+"].map((b) => (
+                      <option key={b} value={b}>
+                        {b}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               {/* Search Button */}
               <button
                 onClick={handleSearch}
-                className="bg-brand-gold text-brand-navy font-semibold px-8 py-3 rounded-lg hover:-translate-y-0.5 hover:shadow-gold transition-all duration-200 flex items-center justify-center gap-2"
+                className="bg-brand-gold text-brand-navy font-semibold px-8 py-3 rounded-lg hover:-translate-y-0.5 hover:shadow-gold transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 <Search className="w-4 h-4" />
-                <span>Search</span>
+                <span>Search Properties</span>
               </button>
             </div>
           </div>

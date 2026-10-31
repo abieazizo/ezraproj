@@ -21,7 +21,6 @@ import {
   Hash,
   Clock,
   Activity,
-  ExternalLink,
   Building,
   TreePine,
   GraduationCap,
@@ -32,8 +31,19 @@ import { getPropertyBySlug, getAllSlugs, getPropertiesByIds } from "@/data/listi
 import { generatePropertyMeta } from "@/lib/metadata";
 import { formatPrice, formatArea, formatBeds, cn } from "@/lib/utils";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
+import SharePrintButtons from "@/components/property/SharePrintButtons";
 import ScheduleViewingForm from "./ScheduleViewingForm";
 import ExpandableDescription from "./ExpandableDescription";
+
+const PropertyMap = dynamic(
+  () => import("@/components/property/PropertyMap"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[400px] rounded-xl bg-brand-cream animate-pulse" />
+    ),
+  }
+);
 
 const PropertyGallery = dynamic(
   () => import("@/components/property/PropertyGallery"),
@@ -136,33 +146,36 @@ export default function PropertyDetailPage({ params }: PageProps) {
       <div className="min-h-screen bg-brand-cream/50">
         {/* Breadcrumb */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
-          <nav className="flex items-center gap-1.5 text-sm text-brand-slate flex-wrap">
-            <Link
-              href="/"
-              className="flex items-center gap-1 hover:text-brand-gold transition-colors"
-            >
-              <Home className="w-3.5 h-3.5" />
-              Home
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
-            <Link
-              href="/listings"
-              className="hover:text-brand-gold transition-colors"
-            >
-              Properties
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
-            <Link
-              href={`/listings?type=${property.type}`}
-              className="hover:text-brand-gold transition-colors capitalize"
-            >
-              {typeLabel}
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
-            <span className="text-brand-navy font-medium truncate max-w-[200px]">
-              {property.title}
-            </span>
-          </nav>
+          <div className="flex items-center justify-between">
+            <nav className="flex items-center gap-1.5 text-sm text-brand-slate flex-wrap">
+              <Link
+                href="/"
+                className="flex items-center gap-1 hover:text-brand-gold transition-colors"
+              >
+                <Home className="w-3.5 h-3.5" />
+                Home
+              </Link>
+              <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
+              <Link
+                href="/listings"
+                className="hover:text-brand-gold transition-colors"
+              >
+                Properties
+              </Link>
+              <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
+              <Link
+                href={`/listings?type=${property.type}`}
+                className="hover:text-brand-gold transition-colors capitalize"
+              >
+                {typeLabel}
+              </Link>
+              <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
+              <span className="text-brand-navy font-medium truncate max-w-[200px]">
+                {property.title}
+              </span>
+            </nav>
+            <SharePrintButtons />
+          </div>
         </div>
 
         {/* Gallery */}
@@ -362,26 +375,12 @@ export default function PropertyDetailPage({ params }: PageProps) {
                   Location
                 </h2>
 
-                {/* Map placeholder */}
-                <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 h-[300px] flex flex-col items-center justify-center">
-                  <MapPin className="w-10 h-10 text-brand-gold mb-3" />
-                  <p className="text-brand-navy font-semibold mb-1">
-                    {property.location.address}
-                  </p>
-                  <p className="text-sm text-brand-slate mb-4">
-                    {property.location.neighborhood},{" "}
-                    {property.location.city}
-                  </p>
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${property.location.lat},${property.location.lng}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-brand-gold text-white text-sm font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View on Google Maps
-                  </a>
-                </div>
+                <PropertyMap
+                  lat={property.location.lat}
+                  lng={property.location.lng}
+                  zoom={property.location.mapZoom || 15}
+                  title={property.title}
+                />
 
                 {/* Nearby Places */}
                 <div className="bg-white rounded-xl p-6 shadow-card">

@@ -12,6 +12,7 @@ const CATEGORIES = [
   "Market Trends",
   "Buying Guide",
   "Investment",
+  "Lifestyle",
   "Legal & Finance",
 ] as const;
 

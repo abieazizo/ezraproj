@@ -9,6 +9,7 @@ import {
   Zap,
   TrendingUp,
   Heart,
+  Star,
 } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import ValuationForm from "./ValuationForm";
@@ -201,8 +202,87 @@ export default function SellPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Seller Testimonials */}
       <section className="py-20 bg-brand-cream">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="Success Stories"
+            title="Hear from Our Sellers"
+            align="center"
+          />
+          <div className="grid md:grid-cols-2 gap-8 mt-12">
+            <div className="bg-white rounded-xl shadow-card p-8">
+              <div className="flex gap-1 mb-4">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className="w-5 h-5 fill-brand-gold text-brand-gold"
+                  />
+                ))}
+              </div>
+              <p className="text-brand-navy font-display italic leading-relaxed mb-6">
+                &ldquo;Shefa helped us sell our 3-bedroom villa in Palm Jumeirah
+                at 12% above asking price. Their marketing strategy and
+                professional photography attracted multiple offers within the
+                first week. The entire process from listing to handover took just
+                45 days.&rdquo;
+              </p>
+              <div className="flex items-center gap-4">
+                <Image
+                  src="https://randomuser.me/api/portraits/women/44.jpg"
+                  alt="Layla Hassan"
+                  width={48}
+                  height={48}
+                  className="rounded-full"
+                />
+                <div>
+                  <p className="font-semibold text-brand-navy">Layla Hassan</p>
+                  <p className="text-sm text-brand-slate">
+                    Villa Seller, Palm Jumeirah
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl shadow-card p-8">
+              <div className="flex gap-1 mb-4">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className="w-5 h-5 fill-brand-gold text-brand-gold"
+                  />
+                ))}
+              </div>
+              <p className="text-brand-navy font-display italic leading-relaxed mb-6">
+                &ldquo;I was worried about selling my apartment in a competitive
+                market, but Shefa&apos;s team provided accurate pricing guidance
+                and their dedicated agent handled everything seamlessly. They
+                secured a cash buyer within three weeks and managed all the
+                paperwork with DLD.&rdquo;
+              </p>
+              <div className="flex items-center gap-4">
+                <Image
+                  src="https://randomuser.me/api/portraits/men/67.jpg"
+                  alt="Thomas Anderson"
+                  width={48}
+                  height={48}
+                  className="rounded-full"
+                />
+                <div>
+                  <p className="font-semibold text-brand-navy">
+                    Thomas Anderson
+                  </p>
+                  <p className="text-sm text-brand-slate">
+                    Apartment Seller, Downtown Dubai
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4">
           <SectionHeader
             eyebrow="Common Questions"

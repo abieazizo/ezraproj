@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-brand-cream">
+    <div className="min-h-screen flex items-center justify-center px-4 pt-20 bg-brand-cream">
       <div className="text-center max-w-lg">
         {/* Inline SVG House Illustration */}
         <svg

@@ -20,6 +20,8 @@ import {
   Flame,
   Phone,
   MessageCircle,
+  Map,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useScrolled } from "@/hooks/useScrolled";
@@ -50,6 +52,8 @@ const propertyTypes = [
 const quickActions = [
   { label: "Featured Listings", href: "/listings?featured=true", icon: Star },
   { label: "Hot Deals", href: "/listings?badge=hot-deal", icon: Flame },
+  { label: "Map Search", href: "/listings", icon: Map },
+  { label: "Market Report", href: "/blog/dubai-real-estate-market-outlook-2025", icon: BarChart3 },
 ];
 
 export default function Navbar() {
@@ -96,6 +100,12 @@ export default function Navbar() {
     }, 150);
   };
 
+  const heroPages = ["/", "/about", "/buy", "/rent", "/sell", "/blog", "/listings", "/contact", "/wishlist"];
+  const hasHero = heroPages.some((p) =>
+    p === "/" ? pathname === "/" : pathname.startsWith(p)
+  );
+  const isSolid = scrolled || !hasHero;
+
   const isActive = (href: string): boolean => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href.split("?")[0]);
@@ -106,7 +116,7 @@ export default function Navbar() {
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-40 transition-all duration-300",
-          scrolled
+          isSolid
             ? "bg-white shadow-md"
             : "bg-transparent"
         )}
@@ -119,7 +129,7 @@ export default function Navbar() {
                 <span
                   className={cn(
                     "font-display font-bold text-2xl leading-none transition-colors duration-300",
-                    scrolled ? "text-brand-navy" : "text-white"
+                    isSolid ? "text-brand-navy" : "text-white"
                   )}
                 >
                   SHEFA
@@ -128,7 +138,7 @@ export default function Navbar() {
                 <span
                   className={cn(
                     "font-sans text-[10px] tracking-[0.35em] uppercase leading-none transition-colors duration-300",
-                    scrolled ? "text-brand-navy" : "text-white"
+                    isSolid ? "text-brand-navy" : "text-white"
                   )}
                 >
                   Real Estate
@@ -148,11 +158,11 @@ export default function Navbar() {
                 <button
                   className={cn(
                     "flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors duration-300 rounded-md",
-                    scrolled
+                    isSolid
                       ? "text-brand-navy hover:text-brand-gold"
                       : "text-white/90 hover:text-white",
-                    isActive("/listings") && !scrolled && "text-white",
-                    isActive("/listings") && scrolled && "text-brand-gold"
+                    isActive("/listings") && !isSolid && "text-white",
+                    isActive("/listings") && isSolid && "text-brand-gold"
                   )}
                 >
                   Properties
@@ -245,11 +255,11 @@ export default function Navbar() {
                   href={link.href}
                   className={cn(
                     "px-4 py-2 text-sm font-medium transition-colors duration-300 rounded-md",
-                    scrolled
+                    isSolid
                       ? "text-brand-navy hover:text-brand-gold"
                       : "text-white/90 hover:text-white",
-                    isActive(link.href) && !scrolled && "text-white",
-                    isActive(link.href) && scrolled && "text-brand-gold"
+                    isActive(link.href) && !isSolid && "text-white",
+                    isActive(link.href) && isSolid && "text-brand-gold"
                   )}
                 >
                   {link.label}
@@ -268,7 +278,7 @@ export default function Navbar() {
                 <Heart
                   className={cn(
                     "h-5 w-5 transition-colors duration-300",
-                    scrolled
+                    isSolid
                       ? "text-brand-navy hover:text-brand-gold"
                       : "text-white hover:text-brand-gold"
                   )}
@@ -285,7 +295,7 @@ export default function Navbar() {
                 href="/sell"
                 className={cn(
                   "px-5 py-2.5 text-sm font-semibold rounded-lg transition-all duration-300",
-                  scrolled
+                  isSolid
                     ? "bg-brand-gold text-brand-navy hover:bg-brand-gold-400"
                     : "border-2 border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-navy"
                 )}
@@ -303,7 +313,7 @@ export default function Navbar() {
               <Menu
                 className={cn(
                   "h-6 w-6 transition-colors duration-300",
-                  scrolled ? "text-brand-navy" : "text-white"
+                  isSolid ? "text-brand-navy" : "text-white"
                 )}
               />
             </button>

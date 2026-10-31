@@ -13,10 +13,10 @@ const quickLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Our Team", href: "/about#team" },
-  { label: "Careers", href: "/careers" },
+  { label: "Careers", href: "/contact" },
   { label: "Blog", href: "/blog" },
   { label: "Market Reports", href: "/blog?category=Market+Trends" },
-  { label: "Area Guides", href: "/area-guides" },
+  { label: "Area Guides", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -69,7 +69,7 @@ const policyLinks = [
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms of Service", href: "/terms" },
   { label: "Cookie Policy", href: "/cookies" },
-  { label: "Sitemap", href: "/sitemap" },
+  { label: "Sitemap", href: "/sitemap.xml" },
 ];
 
 export default function Footer() {
@@ -210,11 +210,21 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
-                <span className="text-sm text-white/70 leading-relaxed">
-                  Office 1204, Marina Plaza,
-                  <br />
-                  Dubai Marina, Dubai, UAE
-                </span>
+                <div>
+                  <span className="text-sm text-white/70 leading-relaxed">
+                    Office 1204, Marina Plaza,
+                    <br />
+                    Dubai Marina, Dubai, UAE
+                  </span>
+                  <a
+                    href="https://maps.google.com/?q=Office+1204+Marina+Plaza+Dubai+Marina+Dubai+UAE"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-xs text-brand-gold hover:text-brand-gold-400 mt-1 transition-colors duration-200"
+                  >
+                    Get Directions &rarr;
+                  </a>
+                </div>
               </li>
               <li>
                 <a
@@ -237,9 +247,13 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <Clock className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
                 <span className="text-sm text-white/70 leading-relaxed">
-                  Mon - Sat: 9:00 AM - 7:00 PM
+                  Mon&ndash;Thu: 9:00 AM &ndash; 7:00 PM
                   <br />
-                  Sunday: By Appointment
+                  Fri: 9:00 AM &ndash; 12:00 PM, 2:00 &ndash; 6:00 PM
+                  <br />
+                  Sat: 10:00 AM &ndash; 5:00 PM
+                  <br />
+                  Sun: Closed
                 </span>
               </li>
             </ul>
