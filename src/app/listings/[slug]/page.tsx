@@ -45,6 +45,11 @@ const MortgageCalculator = dynamic(
   { ssr: false }
 );
 
+const LocationMap = dynamic(
+  () => import("@/components/property/LocationMap"),
+  { ssr: false }
+);
+
 interface PageProps {
   params: { slug: string };
 }
@@ -362,26 +367,22 @@ export default function PropertyDetailPage({ params }: PageProps) {
                   Location
                 </h2>
 
-                {/* Map placeholder */}
-                <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 h-[300px] flex flex-col items-center justify-center">
-                  <MapPin className="w-10 h-10 text-brand-gold mb-3" />
-                  <p className="text-brand-navy font-semibold mb-1">
-                    {property.location.address}
-                  </p>
-                  <p className="text-sm text-brand-slate mb-4">
-                    {property.location.neighborhood},{" "}
-                    {property.location.city}
-                  </p>
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${property.location.lat},${property.location.lng}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-brand-gold text-white text-sm font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View on Google Maps
-                  </a>
-                </div>
+                <LocationMap
+                  lat={property.location.lat}
+                  lng={property.location.lng}
+                  address={property.location.address}
+                  neighborhood={property.location.neighborhood}
+                  city={property.location.city}
+                />
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${property.location.lat},${property.location.lng}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 mt-3 text-brand-gold text-sm font-semibold hover:text-brand-gold-400 transition-colors"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Open in Google Maps
+                </a>
 
                 {/* Nearby Places */}
                 <div className="bg-white rounded-xl p-6 shadow-card">
