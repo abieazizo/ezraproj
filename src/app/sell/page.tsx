@@ -9,10 +9,17 @@ import {
   Zap,
   TrendingUp,
   Heart,
+  Star,
+  Quote,
 } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
+import { testimonials } from "@/data/testimonials";
 import ValuationForm from "./ValuationForm";
 import SellFAQ from "./SellFAQ";
+
+const sellerTestimonials = testimonials.filter(
+  (t) => t.role === "Seller" || t.role === "Homeowner"
+);
 
 export const metadata: Metadata = {
   title: "Sell Your Property",
@@ -201,8 +208,60 @@ export default function SellPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Seller Testimonials */}
       <section className="py-20 bg-brand-cream">
+        <div className="max-w-5xl mx-auto px-4">
+          <SectionHeader
+            eyebrow="Success Stories"
+            title="What Our Sellers Say"
+            subtitle="Hear from property owners who trusted Shefa to deliver results."
+          />
+          <div className="mt-14 space-y-6">
+            {sellerTestimonials.map((t) => (
+              <div
+                key={t.id}
+                className="flex flex-col sm:flex-row gap-6 bg-white rounded-xl p-6 sm:p-8 shadow-card hover:shadow-card-lg transition-shadow duration-300"
+              >
+                <div className="flex-shrink-0 flex flex-col items-center sm:items-start gap-2">
+                  <Image
+                    src={t.photo}
+                    alt={t.name}
+                    width={72}
+                    height={72}
+                    className="rounded-full object-cover w-[72px] h-[72px]"
+                  />
+                  <div className="flex gap-0.5">
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-4 h-4 fill-brand-gold text-brand-gold"
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <Quote className="w-8 h-8 text-brand-gold/20 mb-2" />
+                  <p className="text-brand-navy leading-relaxed text-sm sm:text-base">
+                    {t.content}
+                  </p>
+                  <div className="mt-4 flex items-center gap-2 text-sm">
+                    <span className="font-semibold text-brand-navy">
+                      {t.name}
+                    </span>
+                    <span className="text-brand-slate">·</span>
+                    <span className="text-brand-gold font-medium">{t.role}</span>
+                    <span className="text-brand-slate">·</span>
+                    <span className="text-brand-slate">{t.location}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4">
           <SectionHeader
             eyebrow="Common Questions"

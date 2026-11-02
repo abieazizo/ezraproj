@@ -280,6 +280,13 @@ export default function AboutPage() {
                       Email
                     </Link>
                   </div>
+
+                  <Link
+                    href={`/listings?agent=${agent.id}`}
+                    className="block text-center text-sm font-semibold text-brand-gold hover:text-brand-gold-400 transition-colors"
+                  >
+                    View Listings &rarr;
+                  </Link>
                 </div>
               </div>
             ))}
