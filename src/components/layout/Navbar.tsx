@@ -31,8 +31,8 @@ interface NavLink {
 }
 
 const mainLinks: NavLink[] = [
-  { label: "Buy", href: "/listings?dealType=sale" },
-  { label: "Rent", href: "/listings?dealType=rent" },
+  { label: "Buy", href: "/buy" },
+  { label: "Rent", href: "/rent" },
   { label: "About", href: "/about" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
