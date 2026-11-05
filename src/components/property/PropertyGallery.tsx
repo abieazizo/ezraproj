@@ -4,6 +4,11 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 interface PropertyGalleryProps {
   images: string[];
@@ -36,11 +41,6 @@ export default function PropertyGallery({
 
   const goPrev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
   const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
-
-  const goMobilePrev = () =>
-    setMobileIndex((prev) => (prev - 1 + images.length) % images.length);
-  const goMobileNext = () =>
-    setMobileIndex((prev) => (prev + 1) % images.length);
 
   // Keyboard support
   useEffect(() => {
@@ -131,46 +131,35 @@ export default function PropertyGallery({
         })}
       </div>
 
-      {/* Mobile single image carousel */}
+      {/* Mobile swipe carousel (Swiper) */}
       <div className="md:hidden relative rounded-xl overflow-hidden h-[300px]">
-        <Image
-          src={images[mobileIndex]}
-          alt={`${title} - ${mobileIndex + 1}`}
-          fill
-          className="object-cover"
-          sizes="100vw"
-          priority={mobileIndex === 0}
-        />
+        <Swiper
+          modules={[Navigation, Pagination]}
+          spaceBetween={0}
+          slidesPerView={1}
+          pagination={{ type: "fraction" }}
+          onSlideChange={(swiper) => setMobileIndex(swiper.activeIndex)}
+          className="h-full [&_.swiper-pagination]:!bottom-3 [&_.swiper-pagination]:!left-1/2 [&_.swiper-pagination]:!-translate-x-1/2 [&_.swiper-pagination]:!w-auto [&_.swiper-pagination]:bg-black/50 [&_.swiper-pagination]:backdrop-blur-sm [&_.swiper-pagination]:text-white [&_.swiper-pagination]:text-xs [&_.swiper-pagination]:font-medium [&_.swiper-pagination]:px-3 [&_.swiper-pagination]:py-1 [&_.swiper-pagination]:rounded-full"
+        >
+          {images.map((img, i) => (
+            <SwiperSlide key={i}>
+              <div className="relative w-full h-full">
+                <Image
+                  src={img}
+                  alt={`${title} - ${i + 1}`}
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                  priority={i === 0}
+                />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
-        {/* Mobile nav arrows */}
-        {images.length > 1 && (
-          <>
-            <button
-              onClick={goMobilePrev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md"
-              aria-label="Previous image"
-            >
-              <ChevronLeft className="w-5 h-5 text-brand-navy" />
-            </button>
-            <button
-              onClick={goMobileNext}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md"
-              aria-label="Next image"
-            >
-              <ChevronRight className="w-5 h-5 text-brand-navy" />
-            </button>
-          </>
-        )}
-
-        {/* Dots / counter */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full">
-          {mobileIndex + 1} / {images.length}
-        </div>
-
-        {/* Tap to open lightbox */}
         <button
           onClick={() => openLightbox(mobileIndex)}
-          className="absolute bottom-3 right-3 bg-white/80 backdrop-blur-sm text-brand-navy text-xs font-semibold px-3 py-1.5 rounded-full"
+          className="absolute bottom-3 right-3 z-10 bg-white/80 backdrop-blur-sm text-brand-navy text-xs font-semibold px-3 py-1.5 rounded-full"
         >
           View All
         </button>

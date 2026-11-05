@@ -6,9 +6,12 @@ import {
   SlidersHorizontal,
   X,
   LayoutGrid,
+  Grid2x2,
   List,
+  MapPin,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Home,
   ChevronRight as ChevronBreadcrumb,
   Search,
@@ -52,6 +55,54 @@ const SORT_OPTIONS: { label: string; value: FilterState["sortBy"] }[] = [
   { label: "Most Popular", value: "popular" },
 ];
 
+const FURNISHING_OPTIONS = [
+  { label: "Unfurnished", value: "unfurnished" },
+  { label: "Semi-Furnished", value: "semi-furnished" },
+  { label: "Fully Furnished", value: "fully-furnished" },
+];
+
+const AMENITY_OPTIONS = [
+  "Pool",
+  "Gym",
+  "Sea View",
+  "Parking",
+  "24/7 Security",
+  "Private Garden",
+];
+
+type ViewMode = "grid-3" | "grid-2" | "list" | "map";
+
+function FilterSection({
+  title,
+  defaultOpen = true,
+  children,
+}: {
+  title: string;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border-b border-gray-100 pb-5">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-between w-full text-left mb-3"
+      >
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          {title}
+        </h3>
+        <ChevronDown
+          className={cn(
+            "w-4 h-4 text-brand-slate transition-transform duration-200",
+            open && "rotate-180"
+          )}
+        />
+      </button>
+      {open && children}
+    </div>
+  );
+}
+
 function ListingsContent() {
   const {
     filters,
@@ -63,18 +114,16 @@ function ListingsContent() {
     hasActiveFilters,
   } = useFilters();
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid-3");
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  // Pagination
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
   const paginatedProperties = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredProperties.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProperties, currentPage]);
 
-  // Reset page when filters change
   const handleFilterChange = useCallback(
     <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
       setFilter(key, value);
@@ -88,7 +137,6 @@ function ListingsContent() {
     setCurrentPage(1);
   }, [resetFilters]);
 
-  // Count properties per type from all listings for the filter sidebar
   const typeCountMap = useMemo(() => {
     const counts: Partial<Record<PropertyType, number>> = {};
     filteredProperties.forEach((p) => {
@@ -115,7 +163,28 @@ function ListingsContent() {
     [handleFilterChange]
   );
 
-  // Page numbers to show
+  const handleFurnishingToggle = useCallback(
+    (value: string) => {
+      const current = filters.furnished;
+      const next = current.includes(value)
+        ? current.filter((f) => f !== value)
+        : [...current, value];
+      handleFilterChange("furnished", next);
+    },
+    [filters.furnished, handleFilterChange]
+  );
+
+  const handleAmenityToggle = useCallback(
+    (value: string) => {
+      const current = filters.amenities;
+      const next = current.includes(value)
+        ? current.filter((a) => a !== value)
+        : [...current, value];
+      handleFilterChange("amenities", next);
+    },
+    [filters.amenities, handleFilterChange]
+  );
+
   const pageNumbers = useMemo(() => {
     const pages: number[] = [];
     const maxVisible = 5;
@@ -129,7 +198,7 @@ function ListingsContent() {
   }, [currentPage, totalPages]);
 
   const filterSidebar = (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -152,11 +221,31 @@ function ListingsContent() {
         )}
       </div>
 
+      {/* Sort — at the very top, outside collapsible sections */}
+      <div className="space-y-2 pb-4 border-b border-gray-100">
+        <label className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Sort By
+        </label>
+        <select
+          value={filters.sortBy}
+          onChange={(e) =>
+            handleFilterChange(
+              "sortBy",
+              e.target.value as FilterState["sortBy"]
+            )
+          }
+          className="w-full py-2.5 px-3 border border-gray-200 rounded-lg text-sm text-brand-navy bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold appearance-none cursor-pointer"
+        >
+          {SORT_OPTIONS.map(({ label, value }) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {/* Deal Type */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
-          Deal Type
-        </h3>
+      <FilterSection title="Deal Type">
         <div className="flex rounded-lg overflow-hidden border border-gray-200">
           {(["all", "sale", "rent"] as const).map((deal) => (
             <button
@@ -177,13 +266,10 @@ function ListingsContent() {
             </button>
           ))}
         </div>
-      </div>
+      </FilterSection>
 
       {/* Property Type */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
-          Property Type
-        </h3>
+      <FilterSection title="Property Type">
         <div className="space-y-2">
           {PROPERTY_TYPES.map(({ value, label }) => (
             <label
@@ -205,44 +291,34 @@ function ListingsContent() {
             </label>
           ))}
         </div>
-      </div>
+      </FilterSection>
 
       {/* Price Range */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
-          Price Range (AED)
-        </h3>
+      <FilterSection title="Price Range (AED)">
         <div className="grid grid-cols-2 gap-3">
-          <div className="relative">
-            <input
-              type="number"
-              placeholder="Min"
-              value={filters.minPrice || ""}
-              onChange={(e) =>
-                handleFilterChange("minPrice", Number(e.target.value) || 0)
-              }
-              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
-            />
-          </div>
-          <div className="relative">
-            <input
-              type="number"
-              placeholder="Max"
-              value={filters.maxPrice || ""}
-              onChange={(e) =>
-                handleFilterChange("maxPrice", Number(e.target.value) || 0)
-              }
-              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
-            />
-          </div>
+          <input
+            type="number"
+            placeholder="Min"
+            value={filters.minPrice || ""}
+            onChange={(e) =>
+              handleFilterChange("minPrice", Number(e.target.value) || 0)
+            }
+            className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+          />
+          <input
+            type="number"
+            placeholder="Max"
+            value={filters.maxPrice || ""}
+            onChange={(e) =>
+              handleFilterChange("maxPrice", Number(e.target.value) || 0)
+            }
+            className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+          />
         </div>
-      </div>
+      </FilterSection>
 
       {/* Bedrooms */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
-          Bedrooms
-        </h3>
+      <FilterSection title="Bedrooms">
         <div className="flex flex-wrap gap-2">
           {BEDROOM_OPTIONS.map(({ label, value }) => (
             <button
@@ -264,13 +340,10 @@ function ListingsContent() {
             </button>
           ))}
         </div>
-      </div>
+      </FilterSection>
 
       {/* Bathrooms */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
-          Bathrooms
-        </h3>
+      <FilterSection title="Bathrooms">
         <div className="flex flex-wrap gap-2">
           {BATHROOM_OPTIONS.map(({ label, value }) => (
             <button
@@ -292,31 +365,216 @@ function ListingsContent() {
             </button>
           ))}
         </div>
-      </div>
+      </FilterSection>
 
-      {/* Sort By */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
-          Sort By
-        </h3>
-        <select
-          value={filters.sortBy}
-          onChange={(e) =>
-            handleFilterChange(
-              "sortBy",
-              e.target.value as FilterState["sortBy"]
-            )
-          }
-          className="w-full py-2.5 px-3 border border-gray-200 rounded-lg text-sm text-brand-navy bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold appearance-none cursor-pointer"
-        >
-          {SORT_OPTIONS.map(({ label, value }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
+      {/* Area (sqm) */}
+      <FilterSection title="Area (sqm)" defaultOpen={false}>
+        <div className="space-y-3">
+          <input
+            type="range"
+            min={0}
+            max={1000}
+            step={50}
+            value={filters.maxArea || 1000}
+            onChange={(e) =>
+              handleFilterChange("maxArea", Number(e.target.value))
+            }
+            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand-gold"
+          />
+          <div className="grid grid-cols-2 gap-3">
+            <input
+              type="number"
+              placeholder="Min sqm"
+              value={filters.minArea || ""}
+              onChange={(e) =>
+                handleFilterChange("minArea", Number(e.target.value) || 0)
+              }
+              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+            />
+            <input
+              type="number"
+              placeholder="Max sqm"
+              value={filters.maxArea || ""}
+              onChange={(e) =>
+                handleFilterChange("maxArea", Number(e.target.value) || 0)
+              }
+              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+            />
+          </div>
+        </div>
+      </FilterSection>
+
+      {/* Furnishing */}
+      <FilterSection title="Furnishing" defaultOpen={false}>
+        <div className="space-y-2">
+          {FURNISHING_OPTIONS.map(({ label, value }) => (
+            <label
+              key={value}
+              className="flex items-center gap-3 cursor-pointer group"
+            >
+              <input
+                type="checkbox"
+                checked={filters.furnished.includes(value)}
+                onChange={() => handleFurnishingToggle(value)}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {label}
+              </span>
+            </label>
           ))}
-        </select>
-      </div>
+        </div>
+      </FilterSection>
+
+      {/* Amenities */}
+      <FilterSection title="Amenities" defaultOpen={false}>
+        <div className="grid grid-cols-2 gap-2">
+          {AMENITY_OPTIONS.map((amenity) => (
+            <label
+              key={amenity}
+              className="flex items-center gap-2 cursor-pointer group"
+            >
+              <input
+                type="checkbox"
+                checked={filters.amenities.includes(amenity)}
+                onChange={() => handleAmenityToggle(amenity)}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {amenity}
+              </span>
+            </label>
+          ))}
+        </div>
+      </FilterSection>
     </div>
+  );
+
+  const propertyGrid = (
+    <>
+      {paginatedProperties.length > 0 ? (
+        <>
+          <div
+            className={cn(
+              viewMode === "grid-3"
+                ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
+                : viewMode === "grid-2"
+                  ? "grid grid-cols-1 sm:grid-cols-2 gap-6"
+                  : "flex flex-col gap-4"
+            )}
+          >
+            {paginatedProperties.map((property) => (
+              <PropertyCard
+                key={property.id}
+                property={property}
+                variant={viewMode === "list" ? "horizontal" : "default"}
+              />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-10">
+              <button
+                onClick={() =>
+                  setCurrentPage((p) => Math.max(1, p - 1))
+                }
+                disabled={currentPage === 1}
+                className={cn(
+                  "flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                  currentPage === 1
+                    ? "text-gray-300 cursor-not-allowed"
+                    : "text-brand-navy hover:bg-white hover:shadow-card"
+                )}
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Prev
+              </button>
+
+              {pageNumbers[0] > 1 && (
+                <>
+                  <button
+                    onClick={() => setCurrentPage(1)}
+                    className="w-10 h-10 rounded-lg text-sm font-medium text-brand-navy hover:bg-white hover:shadow-card transition-all duration-200"
+                  >
+                    1
+                  </button>
+                  {pageNumbers[0] > 2 && (
+                    <span className="text-brand-slate px-1">...</span>
+                  )}
+                </>
+              )}
+
+              {pageNumbers.map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={cn(
+                    "w-10 h-10 rounded-lg text-sm font-medium transition-all duration-200",
+                    page === currentPage
+                      ? "bg-brand-navy text-white shadow-md"
+                      : "text-brand-navy hover:bg-white hover:shadow-card"
+                  )}
+                >
+                  {page}
+                </button>
+              ))}
+
+              {pageNumbers[pageNumbers.length - 1] < totalPages && (
+                <>
+                  {pageNumbers[pageNumbers.length - 1] <
+                    totalPages - 1 && (
+                    <span className="text-brand-slate px-1">...</span>
+                  )}
+                  <button
+                    onClick={() => setCurrentPage(totalPages)}
+                    className="w-10 h-10 rounded-lg text-sm font-medium text-brand-navy hover:bg-white hover:shadow-card transition-all duration-200"
+                  >
+                    {totalPages}
+                  </button>
+                </>
+              )}
+
+              <button
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
+                disabled={currentPage === totalPages}
+                className={cn(
+                  "flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                  currentPage === totalPages
+                    ? "text-gray-300 cursor-not-allowed"
+                    : "text-brand-navy hover:bg-white hover:shadow-card"
+                )}
+              >
+                Next
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </>
+      ) : (
+        /* Empty State */
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="w-20 h-20 rounded-full bg-brand-cream flex items-center justify-center mb-6">
+            <Search className="w-8 h-8 text-brand-slate-400" />
+          </div>
+          <h3 className="font-display text-xl font-bold text-brand-navy mb-2">
+            No properties match your criteria
+          </h3>
+          <p className="text-sm text-brand-slate mb-6 max-w-md">
+            Try adjusting your filters or clearing them to see all
+            available properties.
+          </p>
+          <button
+            onClick={handleReset}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-brand-gold text-white font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors duration-200"
+          >
+            Reset All Filters
+          </button>
+        </div>
+      )}
+    </>
   );
 
   return (
@@ -398,19 +656,33 @@ function ListingsContent() {
                 </p>
               </div>
 
-              {/* View Toggle */}
+              {/* View Toggle — 4 modes */}
               <div className="flex items-center gap-1 bg-white rounded-lg shadow-card p-1">
                 <button
-                  onClick={() => setViewMode("grid")}
+                  onClick={() => setViewMode("grid-3")}
                   className={cn(
                     "p-2 rounded-md transition-all duration-200",
-                    viewMode === "grid"
+                    viewMode === "grid-3"
                       ? "bg-brand-navy text-white"
                       : "text-brand-slate hover:text-brand-navy"
                   )}
-                  aria-label="Grid view"
+                  aria-label="Grid 3-column view"
+                  title="3 Columns"
                 >
                   <LayoutGrid className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode("grid-2")}
+                  className={cn(
+                    "p-2 rounded-md transition-all duration-200",
+                    viewMode === "grid-2"
+                      ? "bg-brand-navy text-white"
+                      : "text-brand-slate hover:text-brand-navy"
+                  )}
+                  aria-label="Grid 2-column view"
+                  title="2 Columns"
+                >
+                  <Grid2x2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setViewMode("list")}
@@ -421,132 +693,60 @@ function ListingsContent() {
                       : "text-brand-slate hover:text-brand-navy"
                   )}
                   aria-label="List view"
+                  title="List"
                 >
                   <List className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode("map")}
+                  className={cn(
+                    "p-2 rounded-md transition-all duration-200",
+                    viewMode === "map"
+                      ? "bg-brand-navy text-white"
+                      : "text-brand-slate hover:text-brand-navy"
+                  )}
+                  aria-label="Map view"
+                  title="Map"
+                >
+                  <MapPin className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
-            {/* Property Grid / List */}
-            {paginatedProperties.length > 0 ? (
-              <>
-                <div
-                  className={cn(
-                    viewMode === "grid"
-                      ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
-                      : "flex flex-col gap-4"
+            {/* Property Grid / List / Map */}
+            {viewMode === "map" ? (
+              <div className="flex gap-4 h-[calc(100vh-260px)] min-h-[500px]">
+                {/* Card list — 40% */}
+                <div className="w-2/5 overflow-y-auto space-y-4 pr-2">
+                  {paginatedProperties.length > 0 ? (
+                    paginatedProperties.map((property) => (
+                      <PropertyCard
+                        key={property.id}
+                        property={property}
+                        variant="horizontal"
+                      />
+                    ))
+                  ) : (
+                    <p className="text-sm text-brand-slate text-center py-10">
+                      No properties match your filters.
+                    </p>
                   )}
-                >
-                  {paginatedProperties.map((property) => (
-                    <PropertyCard
-                      key={property.id}
-                      property={property}
-                      variant={viewMode === "list" ? "horizontal" : "default"}
-                    />
-                  ))}
                 </div>
-
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 mt-10">
-                    <button
-                      onClick={() =>
-                        setCurrentPage((p) => Math.max(1, p - 1))
-                      }
-                      disabled={currentPage === 1}
-                      className={cn(
-                        "flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                        currentPage === 1
-                          ? "text-gray-300 cursor-not-allowed"
-                          : "text-brand-navy hover:bg-white hover:shadow-card"
-                      )}
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                      Prev
-                    </button>
-
-                    {pageNumbers[0] > 1 && (
-                      <>
-                        <button
-                          onClick={() => setCurrentPage(1)}
-                          className="w-10 h-10 rounded-lg text-sm font-medium text-brand-navy hover:bg-white hover:shadow-card transition-all duration-200"
-                        >
-                          1
-                        </button>
-                        {pageNumbers[0] > 2 && (
-                          <span className="text-brand-slate px-1">...</span>
-                        )}
-                      </>
-                    )}
-
-                    {pageNumbers.map((page) => (
-                      <button
-                        key={page}
-                        onClick={() => setCurrentPage(page)}
-                        className={cn(
-                          "w-10 h-10 rounded-lg text-sm font-medium transition-all duration-200",
-                          page === currentPage
-                            ? "bg-brand-navy text-white shadow-md"
-                            : "text-brand-navy hover:bg-white hover:shadow-card"
-                        )}
-                      >
-                        {page}
-                      </button>
-                    ))}
-
-                    {pageNumbers[pageNumbers.length - 1] < totalPages && (
-                      <>
-                        {pageNumbers[pageNumbers.length - 1] <
-                          totalPages - 1 && (
-                          <span className="text-brand-slate px-1">...</span>
-                        )}
-                        <button
-                          onClick={() => setCurrentPage(totalPages)}
-                          className="w-10 h-10 rounded-lg text-sm font-medium text-brand-navy hover:bg-white hover:shadow-card transition-all duration-200"
-                        >
-                          {totalPages}
-                        </button>
-                      </>
-                    )}
-
-                    <button
-                      onClick={() =>
-                        setCurrentPage((p) => Math.min(totalPages, p + 1))
-                      }
-                      disabled={currentPage === totalPages}
-                      className={cn(
-                        "flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                        currentPage === totalPages
-                          ? "text-gray-300 cursor-not-allowed"
-                          : "text-brand-navy hover:bg-white hover:shadow-card"
-                      )}
-                    >
-                      Next
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
+                {/* Map area — 60% */}
+                <div className="w-3/5 rounded-xl overflow-hidden bg-brand-navy-800 flex items-center justify-center">
+                  <div className="text-center">
+                    <MapPin className="w-12 h-12 text-brand-gold mx-auto mb-3" />
+                    <p className="text-white/80 text-sm font-medium">
+                      Map View
+                    </p>
+                    <p className="text-white/50 text-xs mt-1">
+                      {totalCount} properties in this area
+                    </p>
                   </div>
-                )}
-              </>
-            ) : (
-              /* Empty State */
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <div className="w-20 h-20 rounded-full bg-brand-cream flex items-center justify-center mb-6">
-                  <Search className="w-8 h-8 text-brand-slate-400" />
                 </div>
-                <h3 className="font-display text-xl font-bold text-brand-navy mb-2">
-                  No properties match your criteria
-                </h3>
-                <p className="text-sm text-brand-slate mb-6 max-w-md">
-                  Try adjusting your filters or clearing them to see all
-                  available properties.
-                </p>
-                <button
-                  onClick={handleReset}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-brand-gold text-white font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors duration-200"
-                >
-                  Reset All Filters
-                </button>
               </div>
+            ) : (
+              propertyGrid
             )}
           </div>
         </div>

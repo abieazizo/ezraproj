@@ -242,6 +242,16 @@ export default function Footer() {
                   Sunday: By Appointment
                 </span>
               </li>
+              <li>
+                <a
+                  href="https://www.google.com/maps/search/Bay+Square+Business+Bay+Dubai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-sm text-brand-gold hover:text-brand-gold-300 transition-colors duration-200"
+                >
+                  Get Directions &rarr;
+                </a>
+              </li>
             </ul>
           </div>
         </div>
