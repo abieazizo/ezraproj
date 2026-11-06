@@ -45,6 +45,11 @@ const MortgageCalculator = dynamic(
   { ssr: false }
 );
 
+const LeafletMap = dynamic(
+  () => import("@/components/ui-custom/LeafletMap"),
+  { ssr: false }
+);
+
 interface PageProps {
   params: { slug: string };
 }
@@ -362,16 +367,15 @@ export default function PropertyDetailPage({ params }: PageProps) {
                   Location
                 </h2>
 
-                {/* Map placeholder */}
-                <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 h-[300px] flex flex-col items-center justify-center">
-                  <MapPin className="w-10 h-10 text-brand-gold mb-3" />
-                  <p className="text-brand-navy font-semibold mb-1">
-                    {property.location.address}
-                  </p>
-                  <p className="text-sm text-brand-slate mb-4">
-                    {property.location.neighborhood},{" "}
-                    {property.location.city}
-                  </p>
+                {/* Interactive Map */}
+                <LeafletMap
+                  lat={property.location.lat}
+                  lng={property.location.lng}
+                  zoom={property.location.mapZoom || 15}
+                  height="400px"
+                  popupText={`${property.location.address}, ${property.location.neighborhood}`}
+                />
+                <div className="mt-3">
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${property.location.lat},${property.location.lng}`}
                     target="_blank"

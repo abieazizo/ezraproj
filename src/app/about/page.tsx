@@ -11,6 +11,7 @@ import {
   Star,
   Globe,
   Building,
+  ExternalLink,
 } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { agents } from "@/data/agents";
@@ -279,6 +280,17 @@ export default function AboutPage() {
                       <Mail className="w-3.5 h-3.5" />
                       Email
                     </Link>
+                    {agent.linkedin && (
+                      <Link
+                        href={agent.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center w-10 px-0 py-2 rounded-lg border border-brand-navy text-brand-navy text-sm font-medium hover:bg-brand-cream transition-colors"
+                        aria-label={`${agent.name} LinkedIn`}
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

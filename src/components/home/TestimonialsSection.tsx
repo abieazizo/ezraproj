@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Star } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { testimonials } from "@/data/testimonials";
 import { cn } from "@/lib/utils";
@@ -56,10 +56,29 @@ export default function TestimonialsSection() {
 
         {/* Carousel */}
         <div
-          className="mt-12 overflow-hidden"
+          className="mt-12 relative group"
           onMouseEnter={() => setIsAutoPlaying(false)}
           onMouseLeave={() => setIsAutoPlaying(true)}
         >
+          {/* Arrow Navigation */}
+          <button
+            onClick={() => goTo(currentIndex - 1)}
+            className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full border border-brand-slate-400/30 bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-card text-brand-slate hover:text-brand-gold hover:border-brand-gold hover:scale-110 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+            disabled={currentIndex === 0}
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => goTo(currentIndex + 1)}
+            className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full border border-brand-slate-400/30 bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-card text-brand-slate hover:text-brand-gold hover:border-brand-gold hover:scale-110 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+            disabled={currentIndex >= maxIndex}
+            aria-label="Next testimonial"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          <div className="overflow-hidden">
           <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{
@@ -119,6 +138,7 @@ export default function TestimonialsSection() {
                 </div>
               </div>
             ))}
+          </div>
           </div>
         </div>
 

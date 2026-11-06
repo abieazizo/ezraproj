@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MapPin, Building, ChevronDown, Search } from "lucide-react";
+import { MapPin, Building, ChevronDown, Search, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const propertyTypes = [
@@ -31,6 +31,7 @@ export default function HeroSection() {
   const [location, setLocation] = useState("");
   const [type, setType] = useState("All Types");
   const [dealType, setDealType] = useState<"sale" | "rent">("sale");
+  const [budget, setBudget] = useState("");
   const [scrollOpacity, setScrollOpacity] = useState(1);
 
   useEffect(() => {
@@ -46,7 +47,19 @@ export default function HeroSection() {
     const params = new URLSearchParams();
     if (location.trim()) params.set("city", location.trim());
     if (type !== "All Types") params.set("type", type.toLowerCase());
-    params.set("dealType", dealType);
+    params.set("deal", dealType);
+    if (budget) {
+      const ranges: Record<string, { min?: number; max?: number }> = {
+        "lt500k": { max: 500000 },
+        "500k-1m": { min: 500000, max: 1000000 },
+        "1m-3m": { min: 1000000, max: 3000000 },
+        "3m-5m": { min: 3000000, max: 5000000 },
+        "5m+": { min: 5000000 },
+      };
+      const range = ranges[budget];
+      if (range?.min) params.set("minPrice", String(range.min));
+      if (range?.max) params.set("maxPrice", String(range.max));
+    }
     router.push(`/listings?${params.toString()}`);
   };
 
@@ -118,7 +131,7 @@ export default function HeroSection() {
 
         {/* Search Bar */}
         <div
-          className="w-full max-w-3xl mx-auto animate-fadeInUp"
+          className="w-full max-w-4xl mx-auto animate-fadeInUp"
           style={{ animationDelay: "0.7s", animationFillMode: "both" }}
         >
           <div className="bg-white rounded-xl shadow-card-lg p-1.5">
@@ -194,13 +207,38 @@ export default function HeroSection() {
                 </button>
               </div>
 
+              {/* Divider */}
+              <div className="hidden md:block w-px bg-brand-navy/10 self-stretch my-2" />
+
+              {/* Budget Field */}
+              <div className="flex items-center gap-2.5 px-4 py-2.5 flex-1 min-w-0">
+                <DollarSign className="w-5 h-5 text-brand-gold flex-shrink-0" />
+                <div className="flex flex-col min-w-0 flex-1">
+                  <label className="text-[10px] font-semibold text-brand-slate uppercase tracking-wider">
+                    Budget
+                  </label>
+                  <select
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    className="text-sm text-brand-navy bg-transparent outline-none cursor-pointer w-full appearance-none"
+                  >
+                    <option value="">Any Budget</option>
+                    <option value="lt500k">&lt; 500K</option>
+                    <option value="500k-1m">500K – 1M</option>
+                    <option value="1m-3m">1M – 3M</option>
+                    <option value="3m-5m">3M – 5M</option>
+                    <option value="5m+">5M+</option>
+                  </select>
+                </div>
+              </div>
+
               {/* Search Button */}
               <button
                 onClick={handleSearch}
-                className="bg-brand-gold text-brand-navy font-semibold px-8 py-3 rounded-lg hover:-translate-y-0.5 hover:shadow-gold transition-all duration-200 flex items-center justify-center gap-2"
+                className="bg-brand-gold text-brand-navy font-semibold px-8 py-3 rounded-lg hover:-translate-y-0.5 hover:shadow-gold transition-all duration-200 flex items-center justify-center gap-2 w-full md:w-[180px] flex-shrink-0"
               >
                 <Search className="w-4 h-4" />
-                <span>Search</span>
+                <span>Search Properties</span>
               </button>
             </div>
           </div>

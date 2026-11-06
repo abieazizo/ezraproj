@@ -9,10 +9,12 @@ import {
   Zap,
   TrendingUp,
   Heart,
+  Star,
 } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import ValuationForm from "./ValuationForm";
 import SellFAQ from "./SellFAQ";
+import { testimonials } from "@/data/testimonials";
 
 export const metadata: Metadata = {
   title: "Sell Your Property",
@@ -201,8 +203,69 @@ export default function SellPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Seller Testimonials */}
       <section className="py-20 bg-brand-cream">
+        <div className="max-w-5xl mx-auto px-4">
+          <SectionHeader
+            eyebrow="Client Success"
+            title="What Our Sellers Say"
+          />
+
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+            {(() => {
+              const sellerTestimonials = testimonials.filter(
+                (t) => t.role === "Seller"
+              );
+              const displayTestimonials =
+                sellerTestimonials.length >= 2
+                  ? sellerTestimonials.slice(0, 2)
+                  : [...sellerTestimonials, ...testimonials.filter((t) => t.role !== "Seller")].slice(0, 2);
+
+              return displayTestimonials.map((t) => (
+                <div
+                  key={t.id}
+                  className="bg-white rounded-xl shadow-card p-6 md:p-8 flex flex-col sm:flex-row gap-6"
+                >
+                  <div className="flex-1">
+                    <div className="flex gap-0.5 mb-3">
+                      {Array.from({ length: t.rating }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className="w-4 h-4 fill-brand-gold text-brand-gold"
+                        />
+                      ))}
+                    </div>
+                    <p className="font-display italic text-brand-navy leading-relaxed">
+                      &ldquo;{t.content.slice(0, 200)}...&rdquo;
+                    </p>
+                  </div>
+                  <div className="flex sm:flex-col items-center gap-3 sm:min-w-[100px]">
+                    <Image
+                      src={t.photo}
+                      alt={t.name}
+                      width={48}
+                      height={48}
+                      className="rounded-full object-cover"
+                    />
+                    <div className="sm:text-center">
+                      <p className="text-sm font-semibold text-brand-navy">
+                        {t.name}
+                      </p>
+                      <p className="text-xs text-brand-gold">{t.role}</p>
+                      <p className="text-xs text-brand-slate mt-0.5">
+                        {t.location}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ));
+            })()}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4">
           <SectionHeader
             eyebrow="Common Questions"
