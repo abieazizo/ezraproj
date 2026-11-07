@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import { listings } from "@/data/listings";
 import { cn } from "@/lib/utils";
+import { staggerContainer, fadeInUp } from "@/lib/animations";
 import type { DealType } from "@/types";
 
 type FilterTab = "all" | DealType;
@@ -52,15 +54,22 @@ export default function FeaturedProperties() {
         </div>
 
         {/* Property Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featured.slice(0, 6).map((property) => (
-            <PropertyCard
-              key={property.id}
-              property={property}
-              variant="featured"
-            />
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          {featured.slice(0, 6).map((property, i) => (
+            <motion.div key={property.id} variants={fadeInUp} custom={i}>
+              <PropertyCard
+                property={property}
+                variant="featured"
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {featured.length === 0 && (
           <p className="text-center text-brand-slate py-12">
