@@ -27,6 +27,7 @@ const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
   { value: "townhouse", label: "Townhouse" },
   { value: "office", label: "Office" },
   { value: "land", label: "Land" },
+  { value: "retail", label: "Retail" },
 ];
 
 const BEDROOM_OPTIONS = [
@@ -43,6 +44,21 @@ const BATHROOM_OPTIONS = [
   { label: "2", value: 2 },
   { label: "3", value: 3 },
   { label: "4+", value: 4 },
+];
+
+const FURNISHING_OPTIONS = [
+  { label: "Unfurnished", value: "unfurnished" },
+  { label: "Semi-Furnished", value: "semi-furnished" },
+  { label: "Fully Furnished", value: "fully-furnished" },
+];
+
+const AMENITY_OPTIONS = [
+  "Pool",
+  "Gym",
+  "Sea View",
+  "Parking",
+  "24/7 Security",
+  "Garden",
 ];
 
 const SORT_OPTIONS: { label: string; value: FilterState["sortBy"] }[] = [
@@ -115,6 +131,28 @@ function ListingsContent() {
     [handleFilterChange]
   );
 
+  const handleFurnishedToggle = useCallback(
+    (value: string) => {
+      const current = filters.furnished;
+      const next = current.includes(value)
+        ? current.filter((f) => f !== value)
+        : [...current, value];
+      handleFilterChange("furnished", next);
+    },
+    [filters.furnished, handleFilterChange]
+  );
+
+  const handleAmenityToggle = useCallback(
+    (value: string) => {
+      const current = filters.amenities;
+      const next = current.includes(value)
+        ? current.filter((a) => a !== value)
+        : [...current, value];
+      handleFilterChange("amenities", next);
+    },
+    [filters.amenities, handleFilterChange]
+  );
+
   // Page numbers to show
   const pageNumbers = useMemo(() => {
     const pages: number[] = [];
@@ -150,6 +188,29 @@ function ListingsContent() {
             Clear All
           </button>
         )}
+      </div>
+
+      {/* Sort By */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Sort By
+        </h3>
+        <select
+          value={filters.sortBy}
+          onChange={(e) =>
+            handleFilterChange(
+              "sortBy",
+              e.target.value as FilterState["sortBy"]
+            )
+          }
+          className="w-full py-2.5 px-3 border border-gray-200 rounded-lg text-sm text-brand-navy bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold appearance-none cursor-pointer"
+        >
+          {SORT_OPTIONS.map(({ label, value }) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Deal Type */}
@@ -294,27 +355,85 @@ function ListingsContent() {
         </div>
       </div>
 
-      {/* Sort By */}
+      {/* Area (sqm) */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
-          Sort By
+          Area (sqm)
         </h3>
-        <select
-          value={filters.sortBy}
-          onChange={(e) =>
-            handleFilterChange(
-              "sortBy",
-              e.target.value as FilterState["sortBy"]
-            )
-          }
-          className="w-full py-2.5 px-3 border border-gray-200 rounded-lg text-sm text-brand-navy bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold appearance-none cursor-pointer"
-        >
-          {SORT_OPTIONS.map(({ label, value }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="relative">
+            <input
+              type="number"
+              placeholder="Min"
+              value={filters.minArea || ""}
+              onChange={(e) =>
+                handleFilterChange("minArea", Number(e.target.value) || 0)
+              }
+              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+            />
+          </div>
+          <div className="relative">
+            <input
+              type="number"
+              placeholder="Max"
+              value={filters.maxArea || ""}
+              onChange={(e) =>
+                handleFilterChange("maxArea", Number(e.target.value) || 0)
+              }
+              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Furnishing */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Furnishing
+        </h3>
+        <div className="space-y-2">
+          {FURNISHING_OPTIONS.map(({ label, value }) => (
+            <label
+              key={value}
+              className="flex items-center gap-3 cursor-pointer group"
+            >
+              <input
+                type="checkbox"
+                checked={filters.furnished.includes(value)}
+                onChange={() => handleFurnishedToggle(value)}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="flex-1 text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {label}
+              </span>
+            </label>
           ))}
-        </select>
+        </div>
+      </div>
+
+      {/* Amenities */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Amenities
+        </h3>
+        <div className="space-y-2">
+          {AMENITY_OPTIONS.map((amenity) => (
+            <label
+              key={amenity}
+              className="flex items-center gap-3 cursor-pointer group"
+            >
+              <input
+                type="checkbox"
+                checked={filters.amenities.includes(amenity)}
+                onChange={() => handleAmenityToggle(amenity)}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="flex-1 text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {amenity}
+              </span>
+            </label>
+          ))}
+        </div>
       </div>
     </div>
   );
