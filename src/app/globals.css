@@ -3,6 +3,29 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 215 45% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 45% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 45% 11%;
+    --primary: 42 55% 54%;
+    --primary-foreground: 215 45% 11%;
+    --secondary: 36 27% 95%;
+    --secondary-foreground: 215 45% 11%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 36 27% 95%;
+    --accent-foreground: 215 45% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 42 55% 54%;
+    --radius: 0.5rem;
+  }
+
   * {
     @apply border-gray-200;
   }
