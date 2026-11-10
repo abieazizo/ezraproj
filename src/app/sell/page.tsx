@@ -9,6 +9,8 @@ import {
   Zap,
   TrendingUp,
   Heart,
+  Star,
+  Quote,
 } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import ValuationForm from "./ValuationForm";
@@ -201,8 +203,67 @@ export default function SellPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Seller Testimonials */}
       <section className="py-20 bg-brand-cream">
+        <div className="max-w-5xl mx-auto px-4">
+          <SectionHeader
+            eyebrow="Client Success"
+            title="What Our Sellers Say"
+          />
+
+          <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[
+              {
+                quote:
+                  "Shefa sold our villa in Palm Jumeirah for AED 8.2 million — over AED 500,000 above our asking price. Omar Al-Rashid's market knowledge and negotiation skills are unmatched. The entire process, from photography to DLD transfer, was handled flawlessly in just 28 days.",
+                name: "Khalid Al-Mansouri",
+                role: "Seller",
+                propertyType: "6BR Villa",
+                location: "Palm Jumeirah, Dubai",
+              },
+              {
+                quote:
+                  "We were nervous about selling our first property, but Sarah Mitchell made it completely stress-free. She secured a buyer for our Downtown apartment within two weeks at full asking price. Her staging advice and marketing strategy were brilliant — we couldn't be happier with the result.",
+                name: "Priya Sharma",
+                role: "Seller",
+                propertyType: "2BR Apartment",
+                location: "Downtown Dubai",
+              },
+            ].map((t) => (
+              <div
+                key={t.name}
+                className="bg-white rounded-xl p-8 shadow-card hover:shadow-card-lg transition-shadow duration-300 relative"
+              >
+                <Quote className="absolute top-6 right-6 w-10 h-10 text-brand-gold/15" />
+
+                <div className="flex gap-0.5 mb-4">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-4 h-4 fill-brand-gold text-brand-gold"
+                    />
+                  ))}
+                </div>
+
+                <p className="font-display italic text-brand-navy leading-relaxed mb-6">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+
+                <div className="border-t border-brand-cream-200 pt-4">
+                  <p className="font-semibold text-brand-navy">{t.name}</p>
+                  <p className="text-sm text-brand-gold">{t.role}</p>
+                  <p className="text-xs text-brand-slate mt-1">
+                    {t.propertyType} · {t.location}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4">
           <SectionHeader
             eyebrow="Common Questions"

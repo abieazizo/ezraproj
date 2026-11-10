@@ -45,7 +45,7 @@ export function generatePropertyMeta(property: Property): Metadata {
       ],
       type: "website",
       siteName: SITE_NAME,
-      url: `${SITE_URL}/property/${property.slug}`,
+      url: `${SITE_URL}/listings/${property.slug}`,
     },
     twitter: {
       card: "summary_large_image",

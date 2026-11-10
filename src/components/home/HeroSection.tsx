@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MapPin, Building, ChevronDown, Search } from "lucide-react";
+import { MapPin, Building, DollarSign, ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const propertyTypes = [
@@ -15,6 +15,15 @@ const propertyTypes = [
   "Office",
   "Land",
   "Retail",
+];
+
+const budgetOptions = [
+  { label: "Any Budget", min: 0, max: 0 },
+  { label: "< 500K", min: 0, max: 500000 },
+  { label: "500K - 1M", min: 500000, max: 1000000 },
+  { label: "1M - 3M", min: 1000000, max: 3000000 },
+  { label: "3M - 5M", min: 3000000, max: 5000000 },
+  { label: "5M+", min: 5000000, max: 0 },
 ];
 
 const particles = [
@@ -31,6 +40,7 @@ export default function HeroSection() {
   const [location, setLocation] = useState("");
   const [type, setType] = useState("All Types");
   const [dealType, setDealType] = useState<"sale" | "rent">("sale");
+  const [budget, setBudget] = useState("Any Budget");
   const [scrollOpacity, setScrollOpacity] = useState(1);
 
   useEffect(() => {
@@ -47,6 +57,11 @@ export default function HeroSection() {
     if (location.trim()) params.set("city", location.trim());
     if (type !== "All Types") params.set("type", type.toLowerCase());
     params.set("dealType", dealType);
+    const selected = budgetOptions.find((b) => b.label === budget);
+    if (selected && (selected.min > 0 || selected.max > 0)) {
+      if (selected.min > 0) params.set("minPrice", String(selected.min));
+      if (selected.max > 0) params.set("maxPrice", String(selected.max));
+    }
     router.push(`/listings?${params.toString()}`);
   };
 
@@ -192,6 +207,30 @@ export default function HeroSection() {
                 >
                   For Rent
                 </button>
+              </div>
+
+              {/* Divider */}
+              <div className="hidden md:block w-px bg-brand-navy/10 self-stretch my-2" />
+
+              {/* Budget Field */}
+              <div className="flex items-center gap-2.5 px-4 py-2.5 flex-1 min-w-0">
+                <DollarSign className="w-5 h-5 text-brand-gold flex-shrink-0" />
+                <div className="flex flex-col min-w-0 flex-1">
+                  <label className="text-[10px] font-semibold text-brand-slate uppercase tracking-wider">
+                    Budget
+                  </label>
+                  <select
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    className="text-sm text-brand-navy bg-transparent outline-none cursor-pointer w-full appearance-none"
+                  >
+                    {budgetOptions.map((b) => (
+                      <option key={b.label} value={b.label}>
+                        {b.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {/* Search Button */}

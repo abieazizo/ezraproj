@@ -6,6 +6,7 @@ const nextConfig = {
       { protocol: "https", hostname: "plus.unsplash.com" },
       { protocol: "https", hostname: "randomuser.me" },
     ],
+    unoptimized: process.env.NODE_ENV === "development",
   },
   experimental: {
     optimizePackageImports: ["framer-motion", "lucide-react"],

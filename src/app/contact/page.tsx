@@ -12,7 +12,13 @@ import {
   CheckCircle,
   MessageCircle,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
+
+const LeafletMap = dynamic(
+  () => import("@/components/ui-custom/LeafletMap"),
+  { ssr: false }
+);
 import { agents } from "@/data/agents";
 import { z } from "zod";
 
@@ -347,23 +353,15 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Map Placeholder */}
-              <div className="bg-gray-100 rounded-xl overflow-hidden h-[280px] flex items-center justify-center relative">
-                <div className="text-center space-y-3">
-                  <MapPin className="w-10 h-10 text-brand-gold mx-auto" />
-                  <p className="text-brand-navy font-semibold">
-                    Bay Square, Business Bay
-                  </p>
-                  <p className="text-brand-slate text-sm">Dubai, UAE</p>
-                  <Link
-                    href="https://maps.google.com/?q=Bay+Square+Business+Bay+Dubai"
-                    target="_blank"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-navy text-white rounded-lg text-sm font-medium hover:bg-brand-navy-800 transition-colors"
-                  >
-                    <MapPin className="w-3.5 h-3.5" />
-                    Open in Google Maps
-                  </Link>
-                </div>
+              {/* Map */}
+              <div className="h-[350px] rounded-xl overflow-hidden border border-gray-200">
+                <LeafletMap
+                  lat={25.1866}
+                  lng={55.2617}
+                  zoom={16}
+                  markerLabel="Shefa Real Estate Office"
+                  className="h-full"
+                />
               </div>
             </div>
           </div>
