@@ -24,24 +24,21 @@ const reasons = [
     title: "RERA-Certified Expertise",
     description:
       "Every Shefa agent holds a valid RERA broker license and undergoes continuous professional development. We adhere to the highest ethical standards mandated by the Dubai Land Department, ensuring your purchase is fully compliant and transparent from the first viewing to final registration.",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&q=80",
+    image: "/images/property-2.svg",
   },
   {
     icon: TrendingUp,
     title: "Data-Driven Pricing",
     description:
       "Our proprietary market analytics engine draws on live DLD transaction data, comparable sales, and neighborhood-level supply metrics to determine the true market value of every property. You will never overpay, because our recommendations are backed by numbers, not guesswork.",
-    image:
-      "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=800&auto=format&q=80",
+    image: "/images/property-3.svg",
   },
   {
     icon: Home,
     title: "End-to-End Support",
     description:
       "From mortgage pre-approval coordination with leading UAE banks, to legal review, DLD registration, and post-purchase handover inspections, Shefa manages every step so you can focus on choosing the home you love. Our dedicated transaction managers ensure nothing is missed.",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&auto=format&q=80",
+    image: "/images/property-4.svg",
   },
 ];
 
@@ -51,7 +48,7 @@ export default function BuyPage() {
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
         <Image
-          src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600&auto=format&q=80"
+          src="/images/buy-hero.svg"
           alt="Luxury villa in Dubai"
           fill
           className="object-cover"

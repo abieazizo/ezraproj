@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <linearGradient id="bg6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A1628"/>
+      <stop offset="60%" stop-color="#1a3050"/>
+      <stop offset="100%" stop-color="#0A1628"/>
+    </linearGradient>
+    <linearGradient id="shine6" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#DFCA88" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#DFCA88" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#DFCA88" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg6)"/>
+  <rect width="1200" height="800" fill="url(#shine6)"/>
+  <circle cx="600" cy="400" r="180" fill="none" stroke="#DFCA88" stroke-width="1.5" opacity="0.1"/>
+        <circle cx="600" cy="400" r="130" fill="none" stroke="#DFCA88" stroke-width="1.5" opacity="0.08"/>
+        <circle cx="600" cy="400" r="80" fill="none" stroke="#DFCA88" stroke-width="1.5" opacity="0.06"/>
+        <circle cx="600" cy="400" r="30" fill="#DFCA88" opacity="0.1"/>
+        <circle cx="420" cy="280" r="20" fill="#DFCA88" opacity="0.05"/>
+        <circle cx="780" cy="520" r="25" fill="#DFCA88" opacity="0.05"/>
+  <rect x="0" y="600" width="1200" height="200" fill="url(#bg6)" opacity="0.5"/>
+</svg>

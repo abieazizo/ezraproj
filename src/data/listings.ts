@@ -2,21 +2,21 @@ import type { Property } from "@/types";
 import { agents } from "./agents";
 
 const IMG = {
-  villa1: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&auto=format&q=80",
-  villa2: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format&q=80",
-  modern: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&auto=format&q=80",
-  luxury: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1200&auto=format&q=80",
-  pool: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&auto=format&q=80",
-  apt1: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&auto=format&q=80",
-  kitchen: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&auto=format&q=80",
-  exterior: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1200&auto=format&q=80",
-  tower: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&auto=format&q=80",
-  living: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&auto=format&q=80",
-  marina: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=1200&auto=format&q=80",
-  bedroom: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&auto=format&q=80",
-  bath: "https://images.unsplash.com/photo-1617104551722-3b2d51729932?w=1200&auto=format&q=80",
-  office: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&auto=format&q=80",
-  land: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&auto=format&q=80",
+  villa1: "/images/property-1.svg",
+  villa2: "/images/property-2.svg",
+  modern: "/images/property-3.svg",
+  luxury: "/images/property-4.svg",
+  pool: "/images/property-5.svg",
+  apt1: "/images/property-6.svg",
+  kitchen: "/images/property-7.svg",
+  exterior: "/images/property-8.svg",
+  tower: "/images/property-9.svg",
+  living: "/images/property-10.svg",
+  marina: "/images/property-11.svg",
+  bedroom: "/images/property-12.svg",
+  bath: "/images/property-13.svg",
+  office: "/images/property-14.svg",
+  land: "/images/property-15.svg",
 };
 
 export const listings: Property[] = [

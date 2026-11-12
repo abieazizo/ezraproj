@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <linearGradient id="bg13" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#152A52"/>
+      <stop offset="60%" stop-color="#1a3a5c"/>
+      <stop offset="100%" stop-color="#152A52"/>
+    </linearGradient>
+    <linearGradient id="shine13" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#C9A84C" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg13)"/>
+  <rect width="1200" height="800" fill="url(#shine13)"/>
+  <line x1="300" y1="600" x2="600" y2="200" stroke="#C9A84C" stroke-width="1" opacity="0.1"/>
+        <line x1="350" y1="600" x2="650" y2="200" stroke="#C9A84C" stroke-width="1" opacity="0.08"/>
+        <line x1="400" y1="600" x2="700" y2="200" stroke="#C9A84C" stroke-width="1" opacity="0.06"/>
+        <line x1="550" y1="600" x2="850" y2="200" stroke="#C9A84C" stroke-width="1" opacity="0.1"/>
+        <line x1="600" y1="600" x2="900" y2="200" stroke="#C9A84C" stroke-width="1" opacity="0.08"/>
+        <line x1="650" y1="600" x2="950" y2="200" stroke="#C9A84C" stroke-width="1" opacity="0.06"/>
+  <rect x="0" y="600" width="1200" height="200" fill="url(#bg13)" opacity="0.5"/>
+</svg>

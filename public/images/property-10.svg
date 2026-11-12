@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <linearGradient id="bg9" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#152A52"/>
+      <stop offset="60%" stop-color="#0A1628"/>
+      <stop offset="100%" stop-color="#152A52"/>
+    </linearGradient>
+    <linearGradient id="shine9" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#C9A84C" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg9)"/>
+  <rect width="1200" height="800" fill="url(#shine9)"/>
+  <polygon points="600,300 650,335 650,395 600,430 550,395 550,335" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity="0.1"/>
+        <polygon points="700,370 750,405 750,465 700,500 650,465 650,405" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity="0.08"/>
+        <polygon points="500,370 550,405 550,465 500,500 450,465 450,405" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity="0.08"/>
+        <polygon points="600,440 650,475 650,535 600,570 550,535 550,475" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity="0.06"/>
+  <rect x="0" y="600" width="1200" height="200" fill="url(#bg9)" opacity="0.5"/>
+</svg>

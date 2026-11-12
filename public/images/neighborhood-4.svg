@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <linearGradient id="nbg3" x1="0%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#1a2f4a"/>
+      <stop offset="100%" stop-color="#0A1628"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#nbg3)"/>
+  <rect x="80" y="491" width="40" height="309" fill="#C9A84C" opacity="0.04"/>
+  <rect x="195.55555555555554" y="454" width="57" height="346" fill="#C9A84C" opacity="0.06"/>
+  <rect x="311.1111111111111" y="417" width="74" height="383" fill="#C9A84C" opacity="0.08"/>
+  <rect x="426.6666666666667" y="630" width="41" height="170" fill="#C9A84C" opacity="0.04"/>
+  <rect x="542.2222222222222" y="593" width="58" height="207" fill="#C9A84C" opacity="0.06"/>
+  <rect x="657.7777777777778" y="556" width="75" height="244" fill="#C9A84C" opacity="0.08"/>
+  <rect x="773.3333333333334" y="519" width="42" height="281" fill="#C9A84C" opacity="0.04"/>
+  <rect x="888.8888888888889" y="482" width="59" height="318" fill="#C9A84C" opacity="0.06"/>
+  <rect x="1004.4444444444445" y="445" width="76" height="355" fill="#C9A84C" opacity="0.08"/>
+  <line x1="0" y1="750" x2="1200" y2="750" stroke="#C9A84C" stroke-width="0.5" opacity="0.1"/>
+</svg>

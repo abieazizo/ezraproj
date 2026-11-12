@@ -31,12 +31,11 @@ export const blogPosts: BlogPost[] = [
       <h2>What This Means for Buyers and Investors</h2>
       <p>For buyers, the message is clear: Dubai real estate remains one of the most attractive asset classes globally when measured by rental yield, capital appreciation potential, and lifestyle value. However, the market is becoming more nuanced. The days of blanket appreciation across all areas are giving way to a market where location quality, developer reputation, and community infrastructure matter more than ever. Working with experienced agents who understand micro-market dynamics is essential to making informed decisions in 2025's evolving landscape.</p>
     `,
-    coverImage:
-      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&auto=format&q=80",
+    coverImage: "/images/blog-1.svg",
     category: "Market Trends",
     author: {
       name: "Omar Al-Rashid",
-      photo: "https://randomuser.me/api/portraits/men/32.jpg",
+      photo: "/images/agent-1.svg",
       title: "Senior Property Consultant",
     },
     readTime: 8,
@@ -75,12 +74,11 @@ export const blogPosts: BlogPost[] = [
       <h2>Common Mistakes to Avoid</h2>
       <p>First-time buyers often underestimate the total cost of ownership, which includes annual service charges that can range from AED 10 to 30 per square foot depending on the building and community. Others rush into purchases without adequate due diligence on the developer, the building's sinking fund status, or the community's future development plans. Finally, some buyers overlook the importance of working with an experienced, RERA-registered agent who can provide objective advice and protect your interests throughout the transaction.</p>
     `,
-    coverImage:
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&auto=format&q=80",
+    coverImage: "/images/blog-2.svg",
     category: "Buying Guide",
     author: {
       name: "Elena Petrova",
-      photo: "https://randomuser.me/api/portraits/women/68.jpg",
+      photo: "/images/agent-4.svg",
       title: "Investment Advisor",
     },
     readTime: 12,
@@ -115,12 +113,11 @@ export const blogPosts: BlogPost[] = [
       <h2>Making Your Investment Decision</h2>
       <p>The best neighborhood for your investment depends on your budget, risk appetite, and time horizon. Yield-focused investors with shorter horizons should consider JVC and Business Bay for their strong immediate returns. Those seeking a balance of income and appreciation should look at Dubai Hills and Dubai Marina. And investors who prioritize stability and long-term wealth preservation will find Arabian Ranches an excellent choice. Regardless of your strategy, working with an experienced investment advisor who understands each micro-market's dynamics is the most important step you can take to maximize your returns.</p>
     `,
-    coverImage:
-      "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=1200&auto=format&q=80",
+    coverImage: "/images/blog-3.svg",
     category: "Investment",
     author: {
       name: "Sarah Mitchell",
-      photo: "https://randomuser.me/api/portraits/women/44.jpg",
+      photo: "/images/agent-2.svg",
       title: "Residential Sales Director",
     },
     readTime: 10,

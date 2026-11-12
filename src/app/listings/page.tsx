@@ -294,6 +294,109 @@ function ListingsContent() {
         </div>
       </div>
 
+      {/* Area (sqm) */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Area (sqm)
+        </h3>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="relative">
+            <input
+              type="number"
+              placeholder="Min"
+              value={filters.minArea || ""}
+              onChange={(e) =>
+                handleFilterChange("minArea", Number(e.target.value) || 0)
+              }
+              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+            />
+          </div>
+          <div className="relative">
+            <input
+              type="number"
+              placeholder="Max"
+              value={filters.maxArea || ""}
+              onChange={(e) =>
+                handleFilterChange("maxArea", Number(e.target.value) || 0)
+              }
+              className="w-full pl-3 pr-2 py-2.5 border border-gray-200 rounded-lg text-sm text-brand-navy placeholder:text-brand-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Furnishing */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Furnishing
+        </h3>
+        <div className="space-y-2">
+          {(["unfurnished", "semi-furnished", "fully-furnished"] as const).map(
+            (value) => {
+              const label =
+                value === "unfurnished"
+                  ? "Unfurnished"
+                  : value === "semi-furnished"
+                    ? "Semi-Furnished"
+                    : "Fully Furnished";
+              return (
+                <label
+                  key={value}
+                  className="flex items-center gap-3 cursor-pointer group"
+                >
+                  <input
+                    type="checkbox"
+                    checked={filters.furnished.includes(value)}
+                    onChange={() => {
+                      const next = filters.furnished.includes(value)
+                        ? filters.furnished.filter((f) => f !== value)
+                        : [...filters.furnished, value];
+                      handleFilterChange("furnished", next);
+                    }}
+                    className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+                  />
+                  <span className="text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                    {label}
+                  </span>
+                </label>
+              );
+            }
+          )}
+        </div>
+      </div>
+
+      {/* Amenities */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Amenities
+        </h3>
+        <div className="grid grid-cols-2 gap-2">
+          {["Pool", "Gym", "Sea View", "Parking", "24/7 Security", "Private Garden"].map(
+            (amenity) => (
+              <label
+                key={amenity}
+                className="flex items-center gap-2 cursor-pointer group"
+              >
+                <input
+                  type="checkbox"
+                  checked={filters.amenities.includes(amenity)}
+                  onChange={() => {
+                    const next = filters.amenities.includes(amenity)
+                      ? filters.amenities.filter((a) => a !== amenity)
+                      : [...filters.amenities, amenity];
+                    handleFilterChange("amenities", next);
+                  }}
+                  className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+                />
+                <span className="text-xs text-brand-navy group-hover:text-brand-gold transition-colors">
+                  {amenity}
+                </span>
+              </label>
+            )
+          )}
+        </div>
+      </div>
+
       {/* Sort By */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c3553"/>
+      <stop offset="60%" stop-color="#0A1628"/>
+      <stop offset="100%" stop-color="#1c3553"/>
+    </linearGradient>
+    <linearGradient id="shine4" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D4B96A" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#D4B96A" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#D4B96A" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg4)"/>
+  <rect width="1200" height="800" fill="url(#shine4)"/>
+  <path d="M400,550 Q400,350 500,350 Q600,350 600,550" fill="none" stroke="#D4B96A" stroke-width="2" opacity="0.12"/>
+        <path d="M500,550 Q500,300 600,300 Q700,300 700,550" fill="none" stroke="#D4B96A" stroke-width="2" opacity="0.1"/>
+        <path d="M600,550 Q600,250 700,250 Q800,250 800,550" fill="none" stroke="#D4B96A" stroke-width="2" opacity="0.08"/>
+        <circle cx="600" cy="400" r="80" fill="#D4B96A" opacity="0.05"/>
+  <rect x="0" y="600" width="1200" height="200" fill="url(#bg4)" opacity="0.5"/>
+</svg>

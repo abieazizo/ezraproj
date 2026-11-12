@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 600" width="1920" height="600">
+  <defs>
+    <linearGradient id="sell-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F2040"/>
+      <stop offset="100%" stop-color="#0A1628"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="600" fill="url(#sell-bg)"/>
+  <polygon points="960,150 1060,350 860,350" fill="#C9A84C" opacity="0.05"/>
+  <rect x="860" y="350" width="200" height="150" fill="#C9A84C" opacity="0.04"/>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <linearGradient id="bg11" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a3050"/>
+      <stop offset="60%" stop-color="#0F2040"/>
+      <stop offset="100%" stop-color="#1a3050"/>
+    </linearGradient>
+    <linearGradient id="shine11" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#C9A84C" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg11)"/>
+  <rect width="1200" height="800" fill="url(#shine11)"/>
+  <line x1="400" y1="200" x2="800" y2="600" stroke="#C9A84C" stroke-width="1.5" opacity="0.08"/>
+        <line x1="800" y1="200" x2="400" y2="600" stroke="#C9A84C" stroke-width="1.5" opacity="0.08"/>
+        <rect x="550" y="350" width="100" height="100" rx="50" fill="#C9A84C" opacity="0.06"/>
+        <rect x="570" y="370" width="60" height="60" rx="30" fill="#C9A84C" opacity="0.08"/>
+  <rect x="0" y="600" width="1200" height="200" fill="url(#bg11)" opacity="0.5"/>
+</svg>

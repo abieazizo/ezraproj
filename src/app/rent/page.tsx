@@ -24,24 +24,21 @@ const promises = [
     title: "48-Hour Move-In Guarantee",
     description:
       "Once your tenancy contract is signed and payment is processed, we guarantee that you can move into your new home within 48 hours. Our operations team handles key collection, utility connections, and building access cards so there is no waiting, no confusion, and no delays.",
-    image:
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&auto=format&q=80",
+    image: "/images/property-6.svg",
   },
   {
     icon: Wrench,
     title: "Maintenance Coordination",
     description:
       "Throughout your lease, our dedicated property management desk coordinates all maintenance requests with your landlord and building management. From HVAC servicing to plumbing emergencies, one call to Shefa is all it takes. We track every request until resolution and follow up to ensure your satisfaction.",
-    image:
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&auto=format&q=80",
+    image: "/images/property-10.svg",
   },
   {
     icon: HeartHandshake,
     title: "Fair & Transparent Terms",
     description:
       "We believe in honest, straightforward rental agreements. Every lease we broker is reviewed by our in-house legal team to ensure terms are balanced and compliant with RERA regulations. No hidden charges, no ambiguous clauses. We explain every line so you sign with complete confidence.",
-    image:
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&auto=format&q=80",
+    image: "/images/property-11.svg",
   },
 ];
 
@@ -51,7 +48,7 @@ export default function RentPage() {
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
         <Image
-          src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&auto=format&q=80"
+          src="/images/rent-hero.svg"
           alt="Modern apartment interior in Dubai"
           fill
           className="object-cover"

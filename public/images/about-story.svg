@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="story-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#152A52"/>
+      <stop offset="100%" stop-color="#0A1628"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#story-bg)"/>
+  <rect x="100" y="150" width="200" height="300" rx="8" fill="#C9A84C" opacity="0.06"/>
+  <rect x="350" y="200" width="150" height="250" rx="8" fill="#D4B96A" opacity="0.06"/>
+  <rect x="550" y="100" width="150" height="350" rx="8" fill="#C9A84C" opacity="0.05"/>
+</svg>

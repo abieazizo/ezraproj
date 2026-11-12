@@ -74,7 +74,7 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[380px] flex items-center justify-center">
         <Image
-          src="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1600&auto=format&q=80"
+          src="/images/about-hero.svg"
           alt="Shefa Real Estate team in office"
           fill
           className="object-cover"
@@ -99,7 +99,7 @@ export default function AboutPage() {
             <div className="w-full md:w-1/2">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden">
                 <Image
-                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&auto=format&q=80"
+                  src="/images/about-story.svg"
                   alt="Shefa Real Estate office"
                   fill
                   className="object-cover"

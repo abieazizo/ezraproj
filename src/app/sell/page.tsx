@@ -9,10 +9,13 @@ import {
   Zap,
   TrendingUp,
   Heart,
+  Star,
+  Quote,
 } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import ValuationForm from "./ValuationForm";
 import SellFAQ from "./SellFAQ";
+import { testimonials } from "@/data/testimonials";
 
 export const metadata: Metadata = {
   title: "Sell Your Property",
@@ -88,7 +91,7 @@ export default function SellPage() {
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
         <Image
-          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&auto=format&q=80"
+          src="/images/sell-hero.svg"
           alt="Luxury property for sale"
           fill
           className="object-cover"
@@ -197,6 +200,61 @@ export default function SellPage() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Seller Testimonials */}
+      <section className="py-20 bg-brand-navy">
+        <div className="max-w-5xl mx-auto px-4">
+          <SectionHeader
+            eyebrow="Success Stories"
+            title="What Our Sellers Say"
+            subtitle="Real stories from property owners who sold with Shefa."
+            align="center"
+          />
+
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+            {testimonials
+              .filter((t) => t.role === "Seller" || t.role === "Property Investor")
+              .slice(0, 2)
+              .map((t) => (
+                <div
+                  key={t.id}
+                  className="bg-brand-navy-800 rounded-xl p-8 relative"
+                >
+                  <Quote className="w-10 h-10 text-brand-gold/20 absolute top-6 right-6" />
+                  <div className="flex items-center gap-1 mb-4">
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-4 h-4 fill-brand-gold text-brand-gold"
+                      />
+                    ))}
+                  </div>
+                  <p className="text-white/80 text-sm leading-relaxed mb-6 line-clamp-5 italic font-display">
+                    &ldquo;{t.content}&rdquo;
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <Image
+                      src={t.photo}
+                      alt={t.name}
+                      width={48}
+                      height={48}
+                      className="rounded-full object-cover"
+                      unoptimized
+                    />
+                    <div>
+                      <p className="text-white font-semibold text-sm">
+                        {t.name}
+                      </p>
+                      <p className="text-brand-gold text-xs">
+                        {t.role} &middot; {t.propertyType} in {t.location}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
       </section>
