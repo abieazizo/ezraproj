@@ -222,7 +222,7 @@ export default function MortgageCalculator({
       {/* CTA */}
       <Link
         href="/contact?inquiry=mortgage"
-        className="group flex items-center justify-center gap-2 w-full py-3 bg-brand-gold text-white font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors duration-200"
+        className="group flex items-center justify-center gap-2 w-full py-3 bg-brand-gold text-brand-navy font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors duration-200"
       >
         Apply for Pre-Approval
         <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />

@@ -16,7 +16,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useFilters } from "@/hooks/useFilters";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
-import type { PropertyType, DealType, FilterState } from "@/types";
+import { listings as allListings } from "@/data/listings";
+import type { Property, PropertyType, DealType, FilterState } from "@/types";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -88,14 +89,14 @@ function ListingsContent() {
     setCurrentPage(1);
   }, [resetFilters]);
 
-  // Count properties per type from all listings for the filter sidebar
+  // Count properties per type from ALL listings (not filtered) for sidebar counts
   const typeCountMap = useMemo(() => {
     const counts: Partial<Record<PropertyType, number>> = {};
-    filteredProperties.forEach((p) => {
+    allListings.forEach((p: Property) => {
       counts[p.type] = (counts[p.type] || 0) + 1;
     });
     return counts;
-  }, [filteredProperties]);
+  }, []);
 
   const handleTypeToggle = useCallback(
     (type: PropertyType) => {
@@ -150,6 +151,29 @@ function ListingsContent() {
             Clear All
           </button>
         )}
+      </div>
+
+      {/* Sort By — at the top, outside accordion */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Sort By
+        </h3>
+        <select
+          value={filters.sortBy}
+          onChange={(e) =>
+            handleFilterChange(
+              "sortBy",
+              e.target.value as FilterState["sortBy"]
+            )
+          }
+          className="w-full py-2.5 px-3 border border-gray-200 rounded-lg text-sm text-brand-navy bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold appearance-none cursor-pointer"
+        >
+          {SORT_OPTIONS.map(({ label, value }) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Deal Type */}
@@ -294,35 +318,13 @@ function ListingsContent() {
         </div>
       </div>
 
-      {/* Sort By */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
-          Sort By
-        </h3>
-        <select
-          value={filters.sortBy}
-          onChange={(e) =>
-            handleFilterChange(
-              "sortBy",
-              e.target.value as FilterState["sortBy"]
-            )
-          }
-          className="w-full py-2.5 px-3 border border-gray-200 rounded-lg text-sm text-brand-navy bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold/30 focus:border-brand-gold appearance-none cursor-pointer"
-        >
-          {SORT_OPTIONS.map(({ label, value }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </div>
     </div>
   );
 
   return (
     <div className="min-h-screen bg-brand-cream/50">
-      {/* Sticky Header */}
-      <div className="sticky top-0 z-30 bg-brand-navy">
+      {/* Page Header */}
+      <div className="bg-brand-navy">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-sm text-brand-slate-400 mb-4">
@@ -356,7 +358,7 @@ function ListingsContent() {
         <div className="flex gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block w-[280px] flex-shrink-0">
-            <div className="sticky top-[180px] bg-white rounded-xl shadow-card p-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+            <div className="sticky top-[80px] bg-white rounded-xl shadow-card p-6 max-h-[calc(100vh-100px)] overflow-y-auto">
               {filterSidebar}
             </div>
           </aside>
