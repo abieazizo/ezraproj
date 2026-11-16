@@ -9,6 +9,8 @@ import {
   Zap,
   TrendingUp,
   Heart,
+  Star,
+  Quote,
 } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import ValuationForm from "./ValuationForm";
@@ -79,6 +81,25 @@ const advantages = [
     stat: "End-to-End Service",
     description:
       "From initial valuation to final key handover, a dedicated transaction manager handles every detail so you can focus on what matters most to you.",
+  },
+];
+
+const sellerTestimonials = [
+  {
+    name: "Khalid Bin Rashid",
+    photo: "https://randomuser.me/api/portraits/men/28.jpg",
+    content:
+      "I listed my five-bedroom villa in Arabian Ranches with Shefa after two other agencies failed to find a buyer in over six months. Fatima Al-Zahra took over the listing, recommended strategic staging improvements, arranged professional photography, and repositioned the pricing. Within three weeks, we had multiple offers above the asking price. She turned a frustrating experience into a triumphant sale.",
+    propertyType: "Villa",
+    location: "Arabian Ranches",
+  },
+  {
+    name: "Natasha Ivanova",
+    photo: "https://randomuser.me/api/portraits/women/39.jpg",
+    content:
+      "Selling my penthouse in Dubai Marina felt overwhelming until I connected with James Chen at Shefa. His discreet marketing strategy attracted serious buyers from day one. James coordinated every detail between my legal team and the buyer's bank, and we closed at a price 12% above what I expected. The entire process took just 25 days from listing to handover. I cannot recommend Shefa highly enough.",
+    propertyType: "Penthouse",
+    location: "Dubai Marina",
   },
 ];
 
@@ -201,8 +222,61 @@ export default function SellPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Seller Testimonials */}
       <section className="py-20 bg-brand-cream">
+        <div className="max-w-5xl mx-auto px-4">
+          <SectionHeader
+            eyebrow="Success Stories"
+            title="What Our Sellers Say"
+          />
+
+          <div className="mt-14 space-y-6">
+            {sellerTestimonials.map((t) => (
+              <div
+                key={t.name}
+                className="bg-white rounded-xl shadow-card p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8 items-start"
+              >
+                <div className="flex-1 min-w-0">
+                  <Quote className="w-8 h-8 text-brand-gold/20 mb-3" />
+                  <div className="flex gap-0.5 mb-3">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-4 h-4 fill-brand-gold text-brand-gold"
+                      />
+                    ))}
+                  </div>
+                  <p className="font-display text-base md:text-lg text-brand-navy leading-relaxed italic">
+                    &ldquo;{t.content}&rdquo;
+                  </p>
+                </div>
+
+                <div className="flex md:flex-col items-center md:items-end gap-4 md:gap-3 flex-shrink-0 md:w-44 md:text-right">
+                  <Image
+                    src={t.photo}
+                    alt={t.name}
+                    width={56}
+                    height={56}
+                    className="rounded-full object-cover"
+                  />
+                  <div>
+                    <p className="font-semibold text-brand-navy text-sm">
+                      {t.name}
+                    </p>
+                    <p className="text-brand-gold text-xs font-medium">
+                      Seller &middot; {t.propertyType}
+                    </p>
+                    <p className="text-brand-slate text-xs">{t.location}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4">
           <SectionHeader
             eyebrow="Common Questions"

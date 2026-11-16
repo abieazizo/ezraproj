@@ -45,6 +45,21 @@ const BATHROOM_OPTIONS = [
   { label: "4+", value: 4 },
 ];
 
+const FURNISHING_OPTIONS = [
+  { value: "unfurnished", label: "Unfurnished" },
+  { value: "semi-furnished", label: "Semi-Furnished" },
+  { value: "fully-furnished", label: "Fully Furnished" },
+];
+
+const AMENITY_OPTIONS = [
+  "Pool",
+  "Gym",
+  "Sea View",
+  "Parking",
+  "24/7 Security",
+  "Garden",
+];
+
 const SORT_OPTIONS: { label: string; value: FilterState["sortBy"] }[] = [
   { label: "Newest", value: "newest" },
   { label: "Price: Low to High", value: "price-asc" },
@@ -113,6 +128,28 @@ function ListingsContent() {
       handleFilterChange("dealType", deal);
     },
     [handleFilterChange]
+  );
+
+  const handleFurnishingToggle = useCallback(
+    (value: string) => {
+      const current = filters.furnished;
+      const next = current.includes(value)
+        ? current.filter((v) => v !== value)
+        : [...current, value];
+      handleFilterChange("furnished", next);
+    },
+    [filters.furnished, handleFilterChange]
+  );
+
+  const handleAmenityToggle = useCallback(
+    (amenity: string) => {
+      const current = filters.amenities;
+      const next = current.includes(amenity)
+        ? current.filter((a) => a !== amenity)
+        : [...current, amenity];
+      handleFilterChange("amenities", next);
+    },
+    [filters.amenities, handleFilterChange]
   );
 
   // Page numbers to show
@@ -290,6 +327,56 @@ function ListingsContent() {
             >
               {label}
             </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Furnishing */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Furnishing
+        </h3>
+        <div className="space-y-2">
+          {FURNISHING_OPTIONS.map(({ value, label }) => (
+            <label
+              key={value}
+              className="flex items-center gap-3 cursor-pointer group"
+            >
+              <input
+                type="checkbox"
+                checked={filters.furnished.includes(value)}
+                onChange={() => handleFurnishingToggle(value)}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {label}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Amenities */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-brand-navy uppercase tracking-wider">
+          Amenities
+        </h3>
+        <div className="grid grid-cols-2 gap-2">
+          {AMENITY_OPTIONS.map((amenity) => (
+            <label
+              key={amenity}
+              className="flex items-center gap-2 cursor-pointer group"
+            >
+              <input
+                type="checkbox"
+                checked={filters.amenities.includes(amenity)}
+                onChange={() => handleAmenityToggle(amenity)}
+                className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold accent-brand-gold"
+              />
+              <span className="text-sm text-brand-navy group-hover:text-brand-gold transition-colors">
+                {amenity}
+              </span>
+            </label>
           ))}
         </div>
       </div>
