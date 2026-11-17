@@ -88,7 +88,7 @@ export default function SellPage() {
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
         <Image
-          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&auto=format&q=80"
+          src="/images/misc/sell-hero.jpg"
           alt="Luxury property for sale"
           fill
           className="object-cover"

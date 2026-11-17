@@ -7,32 +7,27 @@ const neighborhoods = [
   {
     name: "Downtown Dubai",
     city: "Dubai",
-    image:
-      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&auto=format&q=80",
+    image: "/images/neighborhoods/neighborhood-01.jpg",
   },
   {
     name: "Palm Jumeirah",
     city: "Dubai",
-    image:
-      "https://images.unsplash.com/photo-1580674684081-7617fbf3d745?w=600&auto=format&q=80",
+    image: "/images/neighborhoods/neighborhood-02.jpg",
   },
   {
     name: "Dubai Marina",
     city: "Dubai",
-    image:
-      "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=600&auto=format&q=80",
+    image: "/images/neighborhoods/neighborhood-03.jpg",
   },
   {
     name: "Business Bay",
     city: "Dubai",
-    image:
-      "https://images.unsplash.com/photo-1586500036706-41963de24d8b?w=600&auto=format&q=80",
+    image: "/images/neighborhoods/neighborhood-04.jpg",
   },
   {
     name: "JVC",
     city: "Dubai",
-    image:
-      "https://images.unsplash.com/photo-1546412414-e1885259563a?w=600&auto=format&q=80",
+    image: "/images/neighborhoods/neighborhood-05.jpg",
   },
 ];
 

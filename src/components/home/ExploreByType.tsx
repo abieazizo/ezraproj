@@ -4,18 +4,12 @@ import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { listings } from "@/data/listings";
 
 const typeImages: Record<string, string> = {
-  Apartments:
-    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&auto=format&q=80",
-  Villas:
-    "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400&auto=format&q=80",
-  Penthouses:
-    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&auto=format&q=80",
-  Townhouses:
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&auto=format&q=80",
-  Commercial:
-    "https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&auto=format&q=80",
-  Land:
-    "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&auto=format&q=80",
+  Apartments: "/images/properties/prop-01.jpg",
+  Villas: "/images/properties/prop-03.jpg",
+  Penthouses: "/images/properties/prop-04.jpg",
+  Townhouses: "/images/properties/prop-05.jpg",
+  Commercial: "/images/properties/prop-06.jpg",
+  Land: "/images/properties/prop-09.jpg",
 };
 
 const typeToSlug: Record<string, string> = {

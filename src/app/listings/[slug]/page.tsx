@@ -21,7 +21,6 @@ import {
   Hash,
   Clock,
   Activity,
-  ExternalLink,
   Building,
   TreePine,
   GraduationCap,
@@ -32,6 +31,7 @@ import { getPropertyBySlug, getAllSlugs, getPropertiesByIds } from "@/data/listi
 import { generatePropertyMeta } from "@/lib/metadata";
 import { formatPrice, formatArea, formatBeds, cn } from "@/lib/utils";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
+import StaticMap from "@/components/ui-custom/StaticMap";
 import ScheduleViewingForm from "./ScheduleViewingForm";
 import ExpandableDescription from "./ExpandableDescription";
 
@@ -362,26 +362,14 @@ export default function PropertyDetailPage({ params }: PageProps) {
                   Location
                 </h2>
 
-                {/* Map placeholder */}
-                <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 h-[300px] flex flex-col items-center justify-center">
-                  <MapPin className="w-10 h-10 text-brand-gold mb-3" />
-                  <p className="text-brand-navy font-semibold mb-1">
-                    {property.location.address}
-                  </p>
-                  <p className="text-sm text-brand-slate mb-4">
-                    {property.location.neighborhood},{" "}
-                    {property.location.city}
-                  </p>
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${property.location.lat},${property.location.lng}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-brand-gold text-white text-sm font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View on Google Maps
-                  </a>
-                </div>
+                <StaticMap
+                  lat={property.location.lat}
+                  lng={property.location.lng}
+                  address={property.location.address}
+                  neighborhood={property.location.neighborhood}
+                  city={property.location.city}
+                  height="h-[350px]"
+                />
 
                 {/* Nearby Places */}
                 <div className="bg-white rounded-xl p-6 shadow-card">

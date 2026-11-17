@@ -58,7 +58,7 @@ export default function HeroSection() {
     <section className="relative h-svh w-full overflow-hidden">
       {/* Background Image */}
       <Image
-        src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&auto=format&q=80"
+        src="/images/hero/hero-main.jpg"
         alt="Luxury property exterior"
         fill
         priority
