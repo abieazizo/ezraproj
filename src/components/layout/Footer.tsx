@@ -13,16 +13,16 @@ const quickLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Our Team", href: "/about#team" },
-  { label: "Careers", href: "/careers" },
+  { label: "Careers", href: "/contact" },
   { label: "Blog", href: "/blog" },
   { label: "Market Reports", href: "/blog?category=Market+Trends" },
-  { label: "Area Guides", href: "/area-guides" },
+  { label: "Area Guides", href: "/blog?category=Investment" },
   { label: "Contact", href: "/contact" },
 ];
 
 const propertyLinks = [
-  { label: "Apartments for Sale", href: "/listings?type=apartment&dealType=sale" },
-  { label: "Villas for Sale", href: "/listings?type=villa&dealType=sale" },
+  { label: "Apartments for Sale", href: "/listings?type=apartment&deal=sale" },
+  { label: "Villas for Sale", href: "/listings?type=villa&deal=sale" },
   { label: "Penthouses", href: "/listings?type=penthouse" },
   { label: "Townhouses", href: "/listings?type=townhouse" },
   { label: "Commercial", href: "/listings?type=office" },
@@ -66,9 +66,10 @@ const socialLinks: SocialLink[] = [
 ];
 
 const policyLinks = [
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms of Service", href: "/terms" },
-  { label: "Cookie Policy", href: "/cookies" },
+  { label: "Privacy Policy", href: "/contact" },
+  { label: "Terms of Service", href: "/contact" },
+  { label: "Cookie Policy", href: "/contact" },
+  { label: "Sitemap", href: "/sitemap.xml" },
   { label: "Sitemap", href: "/sitemap" },
 ];
 
