@@ -2,11 +2,34 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Clock, Calendar, Tag, Share2, ExternalLink, Link2 } from "lucide-react";
+import { ArrowLeft, Clock, Calendar, Tag, Share2, ExternalLink, Link2, List } from "lucide-react";
 import { blogPosts } from "@/data/blog";
 import { listings } from "@/data/listings";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import { format } from "date-fns";
+
+function extractHeadings(html: string): { id: string; text: string }[] {
+  const matches = html.matchAll(/<h2[^>]*>(.*?)<\/h2>/gi);
+  return Array.from(matches).map((m) => {
+    const text = m[1].replace(/<[^>]+>/g, "").trim();
+    const id = text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+    return { id, text };
+  });
+}
+
+function addHeadingIds(html: string): string {
+  return html.replace(/<h2([^>]*)>(.*?)<\/h2>/gi, (_match, attrs, inner) => {
+    const text = inner.replace(/<[^>]+>/g, "").trim();
+    const id = text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+    return `<h2${attrs} id="${id}">${inner}</h2>`;
+  });
+}
 
 interface PageProps {
   params: { slug: string };
@@ -70,6 +93,8 @@ export default function BlogPostPage({ params }: PageProps) {
   const latestListings = listings.slice(0, 3);
 
   const shareUrl = `https://shefa.ae/blog/${post.slug}`;
+  const headings = extractHeadings(post.content);
+  const processedContent = addHeadingIds(post.content);
 
   return (
     <>
@@ -152,7 +177,7 @@ export default function BlogPostPage({ params }: PageProps) {
                   prose-blockquote:border-l-brand-gold prose-blockquote:bg-brand-cream prose-blockquote:rounded-r-xl prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:not-italic
                   prose-blockquote:text-brand-navy prose-blockquote:font-display
                 "
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                dangerouslySetInnerHTML={{ __html: processedContent }}
               />
 
               {/* Tags */}
@@ -287,6 +312,27 @@ export default function BlogPostPage({ params }: PageProps) {
                     Get in Touch
                   </Link>
                 </div>
+
+                {/* In This Article TOC */}
+                {headings.length > 0 && (
+                  <div className="bg-white rounded-xl shadow-card p-6">
+                    <h3 className="font-semibold text-brand-navy flex items-center gap-2 mb-4">
+                      <List className="w-4 h-4 text-brand-gold" />
+                      In This Article
+                    </h3>
+                    <nav className="space-y-1">
+                      {headings.map((h) => (
+                        <a
+                          key={h.id}
+                          href={`#${h.id}`}
+                          className="block text-sm text-brand-slate py-1.5 pl-3 border-l-2 border-transparent hover:border-brand-gold hover:text-brand-navy transition-all duration-200"
+                        >
+                          {h.text}
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
+                )}
 
                 {/* Latest Listings */}
                 <div>

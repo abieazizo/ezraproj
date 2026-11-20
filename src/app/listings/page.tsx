@@ -6,7 +6,9 @@ import {
   SlidersHorizontal,
   X,
   LayoutGrid,
+  Columns2,
   List,
+  Map,
   ChevronLeft,
   ChevronRight,
   Home,
@@ -15,8 +17,16 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useFilters } from "@/hooks/useFilters";
+import dynamic from "next/dynamic";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import type { PropertyType, DealType, FilterState } from "@/types";
+
+const DynamicMap = dynamic(() => import("@/components/ui-custom/LeafletMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full bg-brand-cream rounded-xl animate-pulse" />
+  ),
+});
 
 const ITEMS_PER_PAGE = 12;
 
@@ -63,7 +73,7 @@ function ListingsContent() {
     hasActiveFilters,
   } = useFilters();
 
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid-3" | "grid-2" | "list" | "map">("grid-3");
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -399,52 +409,80 @@ function ListingsContent() {
               </div>
 
               {/* View Toggle */}
-              <div className="flex items-center gap-1 bg-white rounded-lg shadow-card p-1">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={cn(
-                    "p-2 rounded-md transition-all duration-200",
-                    viewMode === "grid"
-                      ? "bg-brand-navy text-white"
-                      : "text-brand-slate hover:text-brand-navy"
-                  )}
-                  aria-label="Grid view"
-                >
-                  <LayoutGrid className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode("list")}
-                  className={cn(
-                    "p-2 rounded-md transition-all duration-200",
-                    viewMode === "list"
-                      ? "bg-brand-navy text-white"
-                      : "text-brand-slate hover:text-brand-navy"
-                  )}
-                  aria-label="List view"
-                >
-                  <List className="w-4 h-4" />
-                </button>
+              <div className="hidden sm:flex items-center gap-1 bg-white rounded-lg shadow-card p-1">
+                {([
+                  { mode: "grid-3" as const, icon: LayoutGrid, label: "Grid 3 columns" },
+                  { mode: "grid-2" as const, icon: Columns2, label: "Grid 2 columns" },
+                  { mode: "list" as const, icon: List, label: "List view" },
+                  { mode: "map" as const, icon: Map, label: "Map view" },
+                ]).map(({ mode, icon: Icon, label }) => (
+                  <button
+                    key={mode}
+                    onClick={() => setViewMode(mode)}
+                    className={cn(
+                      "p-2 rounded-md transition-all duration-200",
+                      viewMode === mode
+                        ? "bg-brand-navy text-white"
+                        : "text-brand-slate hover:text-brand-navy"
+                    )}
+                    aria-label={label}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Property Grid / List */}
+            {/* Property Grid / List / Map */}
             {paginatedProperties.length > 0 ? (
               <>
-                <div
-                  className={cn(
-                    viewMode === "grid"
-                      ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
-                      : "flex flex-col gap-4"
-                  )}
-                >
-                  {paginatedProperties.map((property) => (
-                    <PropertyCard
-                      key={property.id}
-                      property={property}
-                      variant={viewMode === "list" ? "horizontal" : "default"}
-                    />
-                  ))}
-                </div>
+                {viewMode === "map" ? (
+                  <div className="flex gap-4 h-[calc(100vh-280px)] min-h-[500px]">
+                    <div className="w-2/5 overflow-y-auto space-y-3 pr-2 scrollbar-thin">
+                      {paginatedProperties.map((property) => (
+                        <PropertyCard
+                          key={property.id}
+                          property={property}
+                          variant="compact"
+                        />
+                      ))}
+                    </div>
+                    <div className="w-3/5 rounded-xl overflow-hidden">
+                      <DynamicMap
+                        center={[
+                          paginatedProperties[0]?.location.lat ?? 25.2048,
+                          paginatedProperties[0]?.location.lng ?? 55.2708,
+                        ]}
+                        zoom={12}
+                        markers={paginatedProperties.map((p) => ({
+                          lat: p.location.lat,
+                          lng: p.location.lng,
+                          label: p.title,
+                          id: p.slug,
+                        }))}
+                        className="h-full w-full"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className={cn(
+                      viewMode === "grid-3"
+                        ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
+                        : viewMode === "grid-2"
+                          ? "grid grid-cols-1 sm:grid-cols-2 gap-6"
+                          : "flex flex-col gap-4"
+                    )}
+                  >
+                    {paginatedProperties.map((property) => (
+                      <PropertyCard
+                        key={property.id}
+                        property={property}
+                        variant={viewMode === "list" ? "horizontal" : "default"}
+                      />
+                    ))}
+                  </div>
+                )}
 
                 {/* Pagination */}
                 {totalPages > 1 && (
