@@ -34,6 +34,7 @@ import { formatPrice, formatArea, formatBeds, cn } from "@/lib/utils";
 import PropertyCard from "@/components/ui-custom/PropertyCard";
 import ScheduleViewingForm from "./ScheduleViewingForm";
 import ExpandableDescription from "./ExpandableDescription";
+import SharePrintButtons from "./SharePrintButtons";
 
 const PropertyGallery = dynamic(
   () => import("@/components/property/PropertyGallery"),
@@ -42,6 +43,11 @@ const PropertyGallery = dynamic(
 
 const MortgageCalculator = dynamic(
   () => import("@/components/property/MortgageCalculator"),
+  { ssr: false }
+);
+
+const LeafletMap = dynamic(
+  () => import("@/components/ui-custom/LeafletMap"),
   { ssr: false }
 );
 
@@ -61,13 +67,47 @@ export function generateMetadata({ params }: PageProps): Metadata {
   return generatePropertyMeta(property);
 }
 
-const NEARBY_PLACES = [
-  { icon: <ShoppingBag className="w-4 h-4" />, label: "Shopping Mall", distance: "0.8 km" },
-  { icon: <GraduationCap className="w-4 h-4" />, label: "International School", distance: "1.2 km" },
-  { icon: <Stethoscope className="w-4 h-4" />, label: "Hospital", distance: "2.5 km" },
-  { icon: <TreePine className="w-4 h-4" />, label: "Park", distance: "0.5 km" },
-  { icon: <Building className="w-4 h-4" />, label: "Metro Station", distance: "1.0 km" },
-];
+const NEARBY_BY_AREA: Record<string, { icon: React.ReactNode; label: string; distance: string }[]> = {
+  "Downtown Dubai": [
+    { icon: <ShoppingBag className="w-4 h-4" />, label: "Dubai Mall", distance: "0.3 km" },
+    { icon: <GraduationCap className="w-4 h-4" />, label: "GEMS Wellington Academy", distance: "1.5 km" },
+    { icon: <Stethoscope className="w-4 h-4" />, label: "Mediclinic Parkview", distance: "2.0 km" },
+    { icon: <TreePine className="w-4 h-4" />, label: "Burj Park", distance: "0.4 km" },
+    { icon: <Building className="w-4 h-4" />, label: "Burj Khalifa Metro", distance: "0.5 km" },
+  ],
+  "Dubai Marina": [
+    { icon: <ShoppingBag className="w-4 h-4" />, label: "Marina Mall", distance: "0.4 km" },
+    { icon: <GraduationCap className="w-4 h-4" />, label: "Dubai International Academy", distance: "2.0 km" },
+    { icon: <Stethoscope className="w-4 h-4" />, label: "Emirates Hospital", distance: "1.8 km" },
+    { icon: <TreePine className="w-4 h-4" />, label: "Marina Walk", distance: "0.2 km" },
+    { icon: <Building className="w-4 h-4" />, label: "DMCC Metro Station", distance: "0.6 km" },
+  ],
+  "Palm Jumeirah": [
+    { icon: <ShoppingBag className="w-4 h-4" />, label: "Nakheel Mall", distance: "0.5 km" },
+    { icon: <GraduationCap className="w-4 h-4" />, label: "GEMS FirstPoint School", distance: "3.0 km" },
+    { icon: <Stethoscope className="w-4 h-4" />, label: "Al Das Medical Clinic", distance: "1.2 km" },
+    { icon: <TreePine className="w-4 h-4" />, label: "Palm West Beach", distance: "0.3 km" },
+    { icon: <Building className="w-4 h-4" />, label: "Palm Jumeirah Monorail", distance: "0.8 km" },
+  ],
+  "Business Bay": [
+    { icon: <ShoppingBag className="w-4 h-4" />, label: "Bay Avenue Mall", distance: "0.3 km" },
+    { icon: <GraduationCap className="w-4 h-4" />, label: "JSS International School", distance: "1.8 km" },
+    { icon: <Stethoscope className="w-4 h-4" />, label: "Aster Clinic", distance: "0.6 km" },
+    { icon: <TreePine className="w-4 h-4" />, label: "Dubai Water Canal", distance: "0.2 km" },
+    { icon: <Building className="w-4 h-4" />, label: "Business Bay Metro", distance: "0.4 km" },
+  ],
+  default: [
+    { icon: <ShoppingBag className="w-4 h-4" />, label: "Shopping Mall", distance: "0.8 km" },
+    { icon: <GraduationCap className="w-4 h-4" />, label: "International School", distance: "1.2 km" },
+    { icon: <Stethoscope className="w-4 h-4" />, label: "Hospital", distance: "2.5 km" },
+    { icon: <TreePine className="w-4 h-4" />, label: "Park", distance: "0.5 km" },
+    { icon: <Building className="w-4 h-4" />, label: "Metro Station", distance: "1.0 km" },
+  ],
+};
+
+function getNearbyPlaces(neighborhood: string) {
+  return NEARBY_BY_AREA[neighborhood] || NEARBY_BY_AREA.default;
+}
 
 export default function PropertyDetailPage({ params }: PageProps) {
   const property = getPropertyBySlug(params.slug);
@@ -136,33 +176,36 @@ export default function PropertyDetailPage({ params }: PageProps) {
       <div className="min-h-screen bg-brand-cream/50">
         {/* Breadcrumb */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
-          <nav className="flex items-center gap-1.5 text-sm text-brand-slate flex-wrap">
-            <Link
-              href="/"
-              className="flex items-center gap-1 hover:text-brand-gold transition-colors"
-            >
-              <Home className="w-3.5 h-3.5" />
-              Home
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
-            <Link
-              href="/listings"
-              className="hover:text-brand-gold transition-colors"
-            >
-              Properties
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
-            <Link
-              href={`/listings?type=${property.type}`}
-              className="hover:text-brand-gold transition-colors capitalize"
-            >
-              {typeLabel}
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
-            <span className="text-brand-navy font-medium truncate max-w-[200px]">
-              {property.title}
-            </span>
-          </nav>
+          <div className="flex items-center justify-between gap-4">
+            <nav className="flex items-center gap-1.5 text-sm text-brand-slate flex-wrap min-w-0">
+              <Link
+                href="/"
+                className="flex items-center gap-1 hover:text-brand-gold transition-colors"
+              >
+                <Home className="w-3.5 h-3.5" />
+                Home
+              </Link>
+              <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
+              <Link
+                href="/listings"
+                className="hover:text-brand-gold transition-colors"
+              >
+                Properties
+              </Link>
+              <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
+              <Link
+                href={`/listings?type=${property.type}`}
+                className="hover:text-brand-gold transition-colors capitalize"
+              >
+                {typeLabel}
+              </Link>
+              <ChevronRight className="w-3.5 h-3.5 text-brand-slate-400" />
+              <span className="text-brand-navy font-medium truncate max-w-[200px]">
+                {property.title}
+              </span>
+            </nav>
+            <SharePrintButtons title={property.title} slug={property.slug} />
+          </div>
         </div>
 
         {/* Gallery */}
@@ -362,26 +405,22 @@ export default function PropertyDetailPage({ params }: PageProps) {
                   Location
                 </h2>
 
-                {/* Map placeholder */}
-                <div className="relative bg-white rounded-xl overflow-hidden border border-gray-200 h-[300px] flex flex-col items-center justify-center">
-                  <MapPin className="w-10 h-10 text-brand-gold mb-3" />
-                  <p className="text-brand-navy font-semibold mb-1">
-                    {property.location.address}
-                  </p>
-                  <p className="text-sm text-brand-slate mb-4">
-                    {property.location.neighborhood},{" "}
-                    {property.location.city}
-                  </p>
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${property.location.lat},${property.location.lng}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-brand-gold text-white text-sm font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    View on Google Maps
-                  </a>
-                </div>
+                <LeafletMap
+                  lat={property.location.lat}
+                  lng={property.location.lng}
+                  zoom={property.location.mapZoom || 15}
+                  markerLabel={`${property.location.address}, ${property.location.neighborhood}`}
+                  height="400px"
+                />
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${property.location.lat},${property.location.lng}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 mt-3 bg-brand-gold text-white text-sm font-semibold rounded-lg hover:bg-brand-gold-400 transition-colors"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  View on Google Maps
+                </a>
 
                 {/* Nearby Places */}
                 <div className="bg-white rounded-xl p-6 shadow-card">
@@ -389,7 +428,7 @@ export default function PropertyDetailPage({ params }: PageProps) {
                     Nearby Places
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {NEARBY_PLACES.map((place) => (
+                    {getNearbyPlaces(property.location.neighborhood).map((place) => (
                       <div
                         key={place.label}
                         className="flex items-center gap-3"
