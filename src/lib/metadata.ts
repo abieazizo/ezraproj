@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import type { Property } from "@/types";
 
 const SITE_NAME = "Shefa Real Estate";
-const SITE_URL = "https://www.shefarealestate.com";
+const SITE_URL = "https://shefa.ae";
 
 export function generatePropertyMeta(property: Property): Metadata {
   const beds =

@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
 
 interface PropertyGalleryProps {
   images: string[];
@@ -17,6 +22,7 @@ export default function PropertyGallery({
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [mobileIndex, setMobileIndex] = useState(0);
+  const swiperRef = useRef<SwiperType | null>(null);
 
   const openLightbox = (index: number) => {
     setActiveIndex(index);
@@ -36,11 +42,6 @@ export default function PropertyGallery({
 
   const goPrev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
   const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
-
-  const goMobilePrev = () =>
-    setMobileIndex((prev) => (prev - 1 + images.length) % images.length);
-  const goMobileNext = () =>
-    setMobileIndex((prev) => (prev + 1) % images.length);
 
   // Keyboard support
   useEffect(() => {
@@ -131,30 +132,42 @@ export default function PropertyGallery({
         })}
       </div>
 
-      {/* Mobile single image carousel */}
+      {/* Mobile swiper carousel */}
       <div className="md:hidden relative rounded-xl overflow-hidden h-[300px]">
-        <Image
-          src={images[mobileIndex]}
-          alt={`${title} - ${mobileIndex + 1}`}
-          fill
-          className="object-cover"
-          sizes="100vw"
-          priority={mobileIndex === 0}
-        />
+        <Swiper
+          modules={[Navigation]}
+          onSwiper={(swiper) => { swiperRef.current = swiper; }}
+          onSlideChange={(swiper) => setMobileIndex(swiper.activeIndex)}
+          className="h-full"
+          loop={false}
+        >
+          {images.map((img, i) => (
+            <SwiperSlide key={i} className="relative h-full">
+              <Image
+                src={img}
+                alt={`${title} - ${i + 1}`}
+                fill
+                className="object-cover"
+                sizes="100vw"
+                priority={i === 0}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
-        {/* Mobile nav arrows */}
+        {/* Nav arrows */}
         {images.length > 1 && (
           <>
             <button
-              onClick={goMobilePrev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md"
+              onClick={() => swiperRef.current?.slidePrev()}
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md"
               aria-label="Previous image"
             >
               <ChevronLeft className="w-5 h-5 text-brand-navy" />
             </button>
             <button
-              onClick={goMobileNext}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md"
+              onClick={() => swiperRef.current?.slideNext()}
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-md"
               aria-label="Next image"
             >
               <ChevronRight className="w-5 h-5 text-brand-navy" />
@@ -162,15 +175,15 @@ export default function PropertyGallery({
           </>
         )}
 
-        {/* Dots / counter */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full">
+        {/* Counter */}
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 bg-black/50 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full">
           {mobileIndex + 1} / {images.length}
         </div>
 
         {/* Tap to open lightbox */}
         <button
           onClick={() => openLightbox(mobileIndex)}
-          className="absolute bottom-3 right-3 bg-white/80 backdrop-blur-sm text-brand-navy text-xs font-semibold px-3 py-1.5 rounded-full"
+          className="absolute bottom-3 right-3 z-10 bg-white/80 backdrop-blur-sm text-brand-navy text-xs font-semibold px-3 py-1.5 rounded-full"
         >
           View All
         </button>

@@ -18,6 +18,8 @@ import {
   TreePine,
   Star,
   Flame,
+  Map,
+  BarChart3,
   Phone,
   MessageCircle,
 } from "lucide-react";
@@ -50,6 +52,8 @@ const propertyTypes = [
 const quickActions = [
   { label: "Featured Listings", href: "/listings?featured=true", icon: Star },
   { label: "Hot Deals", href: "/listings?badge=hot-deal", icon: Flame },
+  { label: "Map Search", href: "/listings?view=map", icon: Map },
+  { label: "Market Report", href: "/blog/dubai-real-estate-market-outlook-2025", icon: BarChart3 },
 ];
 
 export default function Navbar() {

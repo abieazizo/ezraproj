@@ -9,10 +9,20 @@ import {
   Zap,
   TrendingUp,
   Heart,
+  Star,
+  Quote,
 } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
+import { testimonials } from "@/data/testimonials";
 import ValuationForm from "./ValuationForm";
 import SellFAQ from "./SellFAQ";
+
+const sellerTestimonials = testimonials.filter(
+  (t) =>
+    t.role === "Seller" ||
+    t.role === "International Investor" ||
+    t.role === "Property Investor"
+).slice(0, 2);
 
 export const metadata: Metadata = {
   title: "Sell Your Property",
@@ -201,8 +211,62 @@ export default function SellPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Seller Testimonials */}
       <section className="py-20 bg-brand-cream">
+        <div className="max-w-5xl mx-auto px-4">
+          <SectionHeader
+            eyebrow="Success Stories"
+            title="What Our Sellers Say"
+            subtitle="Hear from property owners who trusted Shefa with their most valuable asset."
+          />
+
+          <div className="mt-14 space-y-6">
+            {sellerTestimonials.map((testimonial) => (
+              <div
+                key={testimonial.id}
+                className="bg-white rounded-xl shadow-card p-6 sm:p-8 flex flex-col sm:flex-row gap-6"
+              >
+                <div className="flex-shrink-0 flex flex-col items-center sm:items-start gap-3">
+                  <Image
+                    src={testimonial.photo}
+                    alt={testimonial.name}
+                    width={72}
+                    height={72}
+                    className="rounded-full object-cover w-[72px] h-[72px]"
+                  />
+                  <div className="text-center sm:text-left">
+                    <p className="font-semibold text-brand-navy">
+                      {testimonial.name}
+                    </p>
+                    <p className="text-xs text-brand-slate">{testimonial.role}</p>
+                    <p className="text-xs text-brand-gold mt-0.5">
+                      {testimonial.propertyType} &middot; {testimonial.location}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-0.5 mb-3">
+                    {Array.from({ length: testimonial.rating }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-4 h-4 fill-brand-gold text-brand-gold"
+                      />
+                    ))}
+                  </div>
+                  <Quote className="w-6 h-6 text-brand-gold/20 mb-2" />
+                  <p className="text-brand-navy/80 leading-relaxed text-sm">
+                    {testimonial.content}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4">
           <SectionHeader
             eyebrow="Common Questions"
