@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { Star } from "lucide-react";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { testimonials } from "@/data/testimonials";
 import { cn } from "@/lib/utils";
@@ -100,13 +100,9 @@ export default function TestimonialsSection() {
 
                   {/* Author */}
                   <div className="flex items-center gap-3 relative z-10">
-                    <Image
-                      src={testimonial.photo}
-                      alt={testimonial.name}
-                      width={48}
-                      height={48}
-                      className="rounded-full object-cover"
-                    />
+                    <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                      <PlaceholderImage variant="portrait" seed={testimonial.id} width={48} height={48} />
+                    </div>
                     <div>
                       <p className="text-sm font-semibold text-brand-navy">
                         {testimonial.name}

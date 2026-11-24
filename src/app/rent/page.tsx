@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Clock, HeartHandshake, Wrench } from "lucide-react";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { listings } from "@/data/listings";
 import RentListingsGrid from "./RentListingsGrid";
@@ -50,13 +50,7 @@ export default function RentPage() {
     <>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
-        <Image
-          src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&auto=format&q=80"
-          alt="Modern apartment interior in Dubai"
-          fill
-          className="object-cover"
-          priority
-        />
+        <PlaceholderImage variant="property" seed="rent-hero" fill />
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
           <p className="text-brand-gold uppercase tracking-[0.2em] text-sm font-semibold mb-4">
@@ -92,12 +86,7 @@ export default function RentPage() {
                 >
                   <div className="w-full md:w-1/2">
                     <div className="relative h-[320px] md:h-[400px] rounded-2xl overflow-hidden">
-                      <Image
-                        src={promise.image}
-                        alt={promise.title}
-                        fill
-                        className="object-cover"
-                      />
+                      <PlaceholderImage variant="property" seed={promise.title} fill />
                     </div>
                   </div>
 

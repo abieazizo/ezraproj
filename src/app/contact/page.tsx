@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import { useForm } from "react-hook-form";
 import {
   MapPin,
@@ -385,13 +385,9 @@ export default function ContactPage() {
                 key={agent.id}
                 className="bg-white rounded-xl p-5 shadow-card flex items-center gap-4"
               >
-                <Image
-                  src={agent.photo}
-                  alt={agent.name}
-                  width={64}
-                  height={64}
-                  className="rounded-full object-cover flex-shrink-0"
-                />
+                <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
+                  <PlaceholderImage variant="portrait" seed={agent.id} width={64} height={64} />
+                </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="font-semibold text-brand-navy text-sm truncate">
                     {agent.name}

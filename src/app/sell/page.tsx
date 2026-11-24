@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import {
   ClipboardCheck,
   Megaphone,
@@ -87,13 +87,7 @@ export default function SellPage() {
     <>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
-        <Image
-          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&auto=format&q=80"
-          alt="Luxury property for sale"
-          fill
-          className="object-cover"
-          priority
-        />
+        <PlaceholderImage variant="property" seed="sell-hero" fill />
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
           <p className="text-brand-gold uppercase tracking-[0.2em] text-sm font-semibold mb-4">

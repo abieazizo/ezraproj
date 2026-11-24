@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Clock, Calendar, Tag, Share2, ExternalLink, Link2 } from "lucide-react";
 import { blogPosts } from "@/data/blog";
@@ -75,13 +75,7 @@ export default function BlogPostPage({ params }: PageProps) {
     <>
       {/* Hero Header */}
       <section className="relative h-[40vh] min-h-[300px]">
-        <Image
-          src={post.coverImage}
-          alt={post.title}
-          fill
-          className="object-cover"
-          priority
-        />
+        <PlaceholderImage variant="blog" seed={post.id} fill />
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 flex items-end">
           <div className="max-w-7xl mx-auto px-4 pb-10 w-full">
@@ -111,13 +105,9 @@ export default function BlogPostPage({ params }: PageProps) {
               {/* Meta Row */}
               <div className="flex flex-wrap items-center gap-4 mb-8 pb-6 border-b border-gray-100">
                 <div className="flex items-center gap-2">
-                  <Image
-                    src={post.author.photo}
-                    alt={post.author.name}
-                    width={40}
-                    height={40}
-                    className="rounded-full object-cover"
-                  />
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                    <PlaceholderImage variant="portrait" seed={post.author.name} width={40} height={40} />
+                  </div>
                   <div>
                     <p className="text-sm font-semibold text-brand-navy">
                       {post.author.name}
@@ -204,13 +194,9 @@ export default function BlogPostPage({ params }: PageProps) {
 
               {/* Author Bio */}
               <div className="mt-10 bg-brand-cream rounded-xl p-6 flex flex-col sm:flex-row gap-4 items-start">
-                <Image
-                  src={post.author.photo}
-                  alt={post.author.name}
-                  width={64}
-                  height={64}
-                  className="rounded-full object-cover flex-shrink-0"
-                />
+                <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
+                  <PlaceholderImage variant="portrait" seed={post.author.name} width={64} height={64} />
+                </div>
                 <div>
                   <p className="text-xs text-brand-gold font-semibold uppercase tracking-wider mb-1">
                     Written by
@@ -242,12 +228,7 @@ export default function BlogPostPage({ params }: PageProps) {
                         className="group flex gap-4 bg-brand-cream rounded-xl p-4 hover:shadow-card transition-all duration-300"
                       >
                         <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                          <Image
-                            src={rp.coverImage}
-                            alt={rp.title}
-                            fill
-                            className="object-cover"
-                          />
+                          <PlaceholderImage variant="blog" seed={rp.id} fill />
                         </div>
                         <div className="flex-1">
                           <h4 className="text-sm font-semibold text-brand-navy line-clamp-2 group-hover:text-brand-gold transition-colors">
@@ -269,13 +250,9 @@ export default function BlogPostPage({ params }: PageProps) {
               <div className="lg:sticky lg:top-24 space-y-8">
                 {/* Author Card */}
                 <div className="bg-brand-cream rounded-xl p-6 text-center">
-                  <Image
-                    src={post.author.photo}
-                    alt={post.author.name}
-                    width={80}
-                    height={80}
-                    className="rounded-full object-cover mx-auto mb-3"
-                  />
+                  <div className="w-20 h-20 rounded-full overflow-hidden mx-auto mb-3">
+                    <PlaceholderImage variant="portrait" seed={post.author.name} width={80} height={80} />
+                  </div>
                   <p className="font-display text-lg font-bold text-brand-navy">
                     {post.author.name}
                   </p>

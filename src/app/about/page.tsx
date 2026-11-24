@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import {
   Shield,
   Lightbulb,
@@ -73,13 +73,7 @@ export default function AboutPage() {
     <>
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[380px] flex items-center justify-center">
-        <Image
-          src="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1600&auto=format&q=80"
-          alt="Shefa Real Estate team in office"
-          fill
-          className="object-cover"
-          priority
-        />
+        <PlaceholderImage variant="office" seed="about-hero" fill />
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
           <p className="text-brand-gold uppercase tracking-[0.2em] text-sm font-semibold mb-4">
@@ -98,12 +92,7 @@ export default function AboutPage() {
             {/* Left Image */}
             <div className="w-full md:w-1/2">
               <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden">
-                <Image
-                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&auto=format&q=80"
-                  alt="Shefa Real Estate office"
-                  fill
-                  className="object-cover"
-                />
+                <PlaceholderImage variant="office" seed="about-story" fill />
               </div>
             </div>
 
@@ -214,12 +203,7 @@ export default function AboutPage() {
               >
                 {/* Photo */}
                 <div className="relative h-[280px]">
-                  <Image
-                    src={agent.photo}
-                    alt={agent.name}
-                    fill
-                    className="object-cover"
-                  />
+                  <PlaceholderImage variant="portrait" seed={agent.id} fill />
                 </div>
 
                 {/* Info */}

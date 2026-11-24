@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Home, Shield, TrendingUp } from "lucide-react";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { listings } from "@/data/listings";
 import BuyListingsGrid from "./BuyListingsGrid";
@@ -50,13 +50,7 @@ export default function BuyPage() {
     <>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center">
-        <Image
-          src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600&auto=format&q=80"
-          alt="Luxury villa in Dubai"
-          fill
-          className="object-cover"
-          priority
-        />
+        <PlaceholderImage variant="property" seed="buy-hero" fill />
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
           <p className="text-brand-gold uppercase tracking-[0.2em] text-sm font-semibold mb-4">
@@ -93,12 +87,7 @@ export default function BuyPage() {
                   {/* Image */}
                   <div className="w-full md:w-1/2">
                     <div className="relative h-[320px] md:h-[400px] rounded-2xl overflow-hidden">
-                      <Image
-                        src={reason.image}
-                        alt={reason.title}
-                        fill
-                        className="object-cover"
-                      />
+                      <PlaceholderImage variant="property" seed={reason.title} fill />
                     </div>
                   </div>
 

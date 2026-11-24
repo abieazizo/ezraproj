@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import { Clock } from "lucide-react";
 import SectionHeader from "@/components/ui-custom/SectionHeader";
 import { blogPosts } from "@/data/blog";
@@ -32,12 +32,11 @@ export default function LatestInsights() {
             >
               {/* Image */}
               <div className="relative h-48 overflow-hidden">
-                <Image
-                  src={post.coverImage}
-                  alt={post.title}
+                <PlaceholderImage
+                  variant="blog"
+                  seed={post.id}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="transition-transform duration-500 group-hover:scale-105"
                 />
                 {/* Category badge */}
                 <span className="absolute top-3 left-3 bg-brand-gold text-white text-xs font-semibold px-2.5 py-1 rounded-full">
@@ -66,13 +65,9 @@ export default function LatestInsights() {
                 {/* Author + Date */}
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-2">
-                    <Image
-                      src={post.author.photo}
-                      alt={post.author.name}
-                      width={28}
-                      height={28}
-                      className="rounded-full object-cover"
-                    />
+                    <div className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0">
+                      <PlaceholderImage variant="portrait" seed={post.author.name} width={28} height={28} />
+                    </div>
                     <span className="text-xs font-medium text-brand-navy">
                       {post.author.name}
                     </span>

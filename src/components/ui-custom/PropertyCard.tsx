@@ -2,11 +2,11 @@
 
 import { MouseEvent } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Heart, MapPin, Bed, Bath, Maximize, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatPrice, formatArea, formatBeds } from "@/lib/utils";
 import { useWishlist } from "@/hooks/useWishlist";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import type { Property } from "@/types";
 
 interface PropertyCardProps {
@@ -63,21 +63,18 @@ export default function PropertyCard({
         className
       )}
     >
-      {/* Image area */}
       <div className={cn("relative overflow-hidden", imageHeight)}>
-        <Image
-          src={property.coverImage}
-          alt={property.title}
+        <PlaceholderImage
+          variant="property"
+          seed={property.id}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="transition-transform duration-500 group-hover:scale-105"
         />
 
-        {/* Top-left badge */}
         {badge && (
           <span
             className={cn(
-              "absolute top-3 left-3 px-2.5 py-1 rounded-full text-white text-xs font-semibold",
+              "absolute top-3 left-3 px-2.5 py-1 rounded-full text-white text-xs font-semibold z-10",
               badge.bg
             )}
           >
@@ -85,10 +82,9 @@ export default function PropertyCard({
           </span>
         )}
 
-        {/* Top-right heart */}
         <button
           onClick={handleHeartClick}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center transition-transform duration-200 hover:scale-110 active:scale-95"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center transition-transform duration-200 hover:scale-110 active:scale-95 z-10"
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart
@@ -99,14 +95,12 @@ export default function PropertyCard({
           />
         </button>
 
-        {/* Bottom-left deal type pill */}
-        <span className="absolute bottom-3 left-3 px-2.5 py-1 rounded-full bg-white text-brand-navy text-xs font-semibold">
+        <span className="absolute bottom-3 left-3 px-2.5 py-1 rounded-full bg-white text-brand-navy text-xs font-semibold z-10">
           {property.dealType === "sale" ? "For Sale" : "For Rent"}
         </span>
 
-        {/* Featured variant: amenity tags at bottom of image */}
         {isFeatured && property.amenities.length > 0 && (
-          <div className="absolute bottom-3 right-3 flex gap-1.5">
+          <div className="absolute bottom-3 right-3 flex gap-1.5 z-10">
             {property.amenities.slice(0, 3).map((amenity) => (
               <span
                 key={amenity}
@@ -119,7 +113,6 @@ export default function PropertyCard({
         )}
       </div>
 
-      {/* Content area */}
       <div className={cn("p-4 flex flex-col justify-between", contentHeight)}>
         <div className="space-y-1.5">
           <p className="text-xl font-display font-bold text-brand-navy">
@@ -137,7 +130,6 @@ export default function PropertyCard({
         </div>
 
         <div>
-          {/* Specs row */}
           <div className="flex items-center gap-3 text-xs text-brand-slate mb-3">
             <span className="flex items-center gap-1">
               <Bed className="w-3.5 h-3.5" />
@@ -155,7 +147,6 @@ export default function PropertyCard({
             </span>
           </div>
 
-          {/* Bottom row */}
           <div className="flex items-center justify-between">
             <span className="bg-brand-cream text-brand-navy text-xs font-medium px-2 py-0.5 rounded-full capitalize">
               {property.type}
@@ -170,10 +161,6 @@ export default function PropertyCard({
     </Link>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/* Horizontal variant                                                  */
-/* ------------------------------------------------------------------ */
 
 function HorizontalCard({
   property,
@@ -198,19 +185,17 @@ function HorizontalCard({
         className
       )}
     >
-      {/* Image - 40% width, 200px height */}
       <div className="relative w-[40%] min-h-[200px] flex-shrink-0 overflow-hidden">
-        <Image
-          src={property.coverImage}
-          alt={property.title}
+        <PlaceholderImage
+          variant="property"
+          seed={property.id}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 40vw"
+          className="transition-transform duration-500 group-hover:scale-105"
         />
         {badge && (
           <span
             className={cn(
-              "absolute top-3 left-3 px-2.5 py-1 rounded-full text-white text-xs font-semibold",
+              "absolute top-3 left-3 px-2.5 py-1 rounded-full text-white text-xs font-semibold z-10",
               badge.bg
             )}
           >
@@ -219,7 +204,7 @@ function HorizontalCard({
         )}
         <button
           onClick={onHeartClick}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center transition-transform duration-200 hover:scale-110 active:scale-95"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center transition-transform duration-200 hover:scale-110 active:scale-95 z-10"
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart
@@ -229,12 +214,11 @@ function HorizontalCard({
             )}
           />
         </button>
-        <span className="absolute bottom-3 left-3 px-2.5 py-1 rounded-full bg-white text-brand-navy text-xs font-semibold">
+        <span className="absolute bottom-3 left-3 px-2.5 py-1 rounded-full bg-white text-brand-navy text-xs font-semibold z-10">
           {property.dealType === "sale" ? "For Sale" : "For Rent"}
         </span>
       </div>
 
-      {/* Content - 60% */}
       <div className="w-[60%] p-4 flex flex-col justify-between">
         <div className="space-y-1.5">
           <p className="text-xl font-display font-bold text-brand-navy">
@@ -284,13 +268,9 @@ function HorizontalCard({
 
           {showAgent && (
             <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-              <Image
-                src={property.agent.photo}
-                alt={property.agent.name}
-                width={24}
-                height={24}
-                className="rounded-full object-cover"
-              />
+              <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0">
+                <PlaceholderImage variant="portrait" seed={property.agent.id} width={24} height={24} />
+              </div>
               <span className="text-xs text-brand-slate">
                 {property.agent.name}
               </span>
@@ -301,10 +281,6 @@ function HorizontalCard({
     </Link>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/* Compact variant                                                     */
-/* ------------------------------------------------------------------ */
 
 function CompactCard({
   property,
@@ -325,18 +301,16 @@ function CompactCard({
         className
       )}
     >
-      {/* Image 100px square */}
       <div className="relative w-[100px] h-full flex-shrink-0 overflow-hidden">
-        <Image
-          src={property.coverImage}
-          alt={property.title}
+        <PlaceholderImage
+          variant="property"
+          seed={property.id}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="100px"
+          className="transition-transform duration-500 group-hover:scale-105"
         />
         <button
           onClick={onHeartClick}
-          className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center"
+          className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center z-10"
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart
@@ -348,7 +322,6 @@ function CompactCard({
         </button>
       </div>
 
-      {/* Content */}
       <div className="flex-1 p-3 flex flex-col justify-center gap-1">
         <h3 className="text-sm font-semibold text-brand-navy line-clamp-1">
           {property.title}

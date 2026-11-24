@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MapPin, Building, ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -56,14 +55,28 @@ export default function HeroSection() {
 
   return (
     <section className="relative h-svh w-full overflow-hidden">
-      {/* Background Image */}
-      <Image
-        src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&auto=format&q=80"
-        alt="Luxury property exterior"
-        fill
-        priority
-        className="object-cover"
-        sizes="100vw"
+      {/* Gradient background replacing external image */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "linear-gradient(160deg, #050d1a 0%, #0A1628 30%, #152A52 60%, #0F2040 100%)",
+        }}
+      />
+
+      {/* Subtle architectural pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: "repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(201,168,76,0.3) 80px, rgba(201,168,76,0.3) 81px), repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(201,168,76,0.3) 80px, rgba(201,168,76,0.3) 81px)",
+        }}
+      />
+
+      {/* Radial glow */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse at 50% 40%, rgba(201,168,76,0.08) 0%, transparent 60%)",
+        }}
       />
 
       {/* Overlay */}
@@ -88,7 +101,6 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-4">
         <div className="text-center max-w-3xl mx-auto">
-          {/* Eyebrow */}
           <p
             className="text-brand-gold text-sm tracking-widest uppercase mb-6 animate-fadeInUp"
             style={{ animationDelay: "0.1s", animationFillMode: "both" }}
@@ -96,7 +108,6 @@ export default function HeroSection() {
             Welcome to Shefa Real Estate
           </p>
 
-          {/* H1 */}
           <h1
             className="font-display text-5xl md:text-7xl font-bold leading-tight mb-6 animate-fadeInUp"
             style={{ animationDelay: "0.3s", animationFillMode: "both" }}
@@ -106,7 +117,6 @@ export default function HeroSection() {
             <span className="text-brand-gold">Property Today</span>
           </h1>
 
-          {/* Subtitle */}
           <p
             className="text-white/80 text-lg max-w-xl mx-auto mb-10 animate-fadeInUp"
             style={{ animationDelay: "0.5s", animationFillMode: "both" }}
@@ -123,7 +133,6 @@ export default function HeroSection() {
         >
           <div className="bg-white rounded-xl shadow-card-lg p-1.5">
             <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-0">
-              {/* Location Field */}
               <div className="flex items-center gap-2.5 px-4 py-2.5 flex-1 min-w-0">
                 <MapPin className="w-5 h-5 text-brand-gold flex-shrink-0" />
                 <div className="flex flex-col min-w-0 flex-1">
@@ -141,10 +150,8 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Divider */}
               <div className="hidden md:block w-px bg-brand-navy/10 self-stretch my-2" />
 
-              {/* Type Field */}
               <div className="flex items-center gap-2.5 px-4 py-2.5 flex-1 min-w-0">
                 <Building className="w-5 h-5 text-brand-gold flex-shrink-0" />
                 <div className="flex flex-col min-w-0 flex-1">
@@ -165,10 +172,8 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Divider */}
               <div className="hidden md:block w-px bg-brand-navy/10 self-stretch my-2" />
 
-              {/* Deal Type Toggle */}
               <div className="flex items-center gap-1.5 px-4 py-2.5">
                 <button
                   onClick={() => setDealType("sale")}
@@ -194,7 +199,6 @@ export default function HeroSection() {
                 </button>
               </div>
 
-              {/* Search Button */}
               <button
                 onClick={handleSearch}
                 className="bg-brand-gold text-brand-navy font-semibold px-8 py-3 rounded-lg hover:-translate-y-0.5 hover:shadow-gold transition-all duration-200 flex items-center justify-center gap-2"

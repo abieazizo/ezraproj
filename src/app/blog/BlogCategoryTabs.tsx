@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import { Clock, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { BlogPost } from "@/types";
@@ -58,12 +58,11 @@ export default function BlogCategoryTabs({ posts }: BlogCategoryTabsProps) {
             >
               {/* Cover Image */}
               <div className="relative h-[200px] overflow-hidden">
-                <Image
-                  src={post.coverImage}
-                  alt={post.title}
+                <PlaceholderImage
+                  variant="blog"
+                  seed={post.id}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="transition-transform duration-500 group-hover:scale-105"
                 />
                 <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-brand-gold text-white text-xs font-semibold">
                   {post.category}
@@ -81,13 +80,9 @@ export default function BlogCategoryTabs({ posts }: BlogCategoryTabsProps) {
 
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex items-center gap-2">
-                    <Image
-                      src={post.author.photo}
-                      alt={post.author.name}
-                      width={28}
-                      height={28}
-                      className="rounded-full object-cover"
-                    />
+                    <div className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0">
+                      <PlaceholderImage variant="portrait" seed={post.author.name} width={28} height={28} />
+                    </div>
                     <span className="text-xs text-brand-slate">
                       {post.author.name}
                     </span>

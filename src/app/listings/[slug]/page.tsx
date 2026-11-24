@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import Link from "next/link";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import {
   MapPin,
   Bed,
@@ -432,13 +432,9 @@ export default function PropertyDetailPage({ params }: PageProps) {
                 {/* Agent Card */}
                 <div className="bg-white rounded-xl shadow-card p-6 space-y-4">
                   <div className="flex items-start gap-4">
-                    <Image
-                      src={property.agent.photo}
-                      alt={property.agent.name}
-                      width={64}
-                      height={64}
-                      className="rounded-full object-cover w-16 h-16"
-                    />
+                    <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
+                      <PlaceholderImage variant="portrait" seed={property.agent.id} width={64} height={64} />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-brand-navy text-lg">
                         {property.agent.name}

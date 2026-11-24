@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { X, ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import PlaceholderImage from "@/components/ui-custom/PlaceholderImage";
 import { cn } from "@/lib/utils";
 
 interface PropertyGalleryProps {
@@ -93,13 +93,11 @@ export default function PropertyGallery({
           onClick={() => openLightbox(0)}
           className="col-span-2 row-span-2 relative overflow-hidden cursor-pointer group"
         >
-          <Image
-            src={images[0]}
-            alt={`${title} - Main`}
+          <PlaceholderImage
+            variant="property"
+            seed={`${title}-0`}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="50vw"
-            priority
+            className="transition-transform duration-500 group-hover:scale-105"
           />
         </button>
 
@@ -112,12 +110,11 @@ export default function PropertyGallery({
               onClick={() => openLightbox(i + 1)}
               className="relative overflow-hidden cursor-pointer group"
             >
-              <Image
-                src={img}
-                alt={`${title} - ${i + 2}`}
+              <PlaceholderImage
+                variant="property"
+                seed={`${title}-${i + 1}`}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                sizes="25vw"
+                className="transition-transform duration-500 group-hover:scale-105"
               />
               {isLast && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -133,13 +130,10 @@ export default function PropertyGallery({
 
       {/* Mobile single image carousel */}
       <div className="md:hidden relative rounded-xl overflow-hidden h-[300px]">
-        <Image
-          src={images[mobileIndex]}
-          alt={`${title} - ${mobileIndex + 1}`}
+        <PlaceholderImage
+          variant="property"
+          seed={`${title}-${mobileIndex}`}
           fill
-          className="object-cover"
-          sizes="100vw"
-          priority={mobileIndex === 0}
         />
 
         {/* Mobile nav arrows */}
@@ -200,12 +194,10 @@ export default function PropertyGallery({
           {/* Main image area */}
           <div className="flex-1 relative flex items-center justify-center px-16">
             <div className="relative w-full h-full max-w-5xl max-h-[70vh]">
-              <Image
-                src={images[activeIndex]}
-                alt={`${title} - ${activeIndex + 1}`}
+              <PlaceholderImage
+                variant="property"
+                seed={`${title}-${activeIndex}`}
                 fill
-                className="object-contain"
-                sizes="100vw"
               />
             </div>
 
@@ -244,12 +236,10 @@ export default function PropertyGallery({
                       : "border-transparent opacity-50 hover:opacity-80"
                   )}
                 >
-                  <Image
-                    src={img}
-                    alt={`Thumbnail ${i + 1}`}
+                  <PlaceholderImage
+                    variant="property"
+                    seed={`${title}-${i}`}
                     fill
-                    className="object-cover"
-                    sizes="80px"
                   />
                 </button>
               ))}
