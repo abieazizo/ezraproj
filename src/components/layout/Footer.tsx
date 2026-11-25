@@ -150,6 +150,8 @@ export default function Footer() {
                 >
                   <svg
                     viewBox="0 0 24 24"
+                    width={16}
+                    height={16}
                     className="h-4 w-4"
                     fill="none"
                     stroke="currentColor"
